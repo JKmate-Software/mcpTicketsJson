@@ -64,6 +64,7 @@ En JSON las barras invertidas van dobles (`\\`), o podés usar barras normales (
 | Variable | Obligatoria | Default | Descripción |
 |---|---|---|---|
 | `MCP_COD_USUARIO` | Sí | — | `COD_USUARIO` de JKMate. Es la identidad de todas las consultas y lo que significa `"yo"` en los filtros. |
+| `MCP_CATALOGO` | No | `tickets` | Qué MCP publica: el nombre de un archivo de la carpeta `funciones/` (`tickets`, `prospeccion` u otro). |
 | `FIREBIRD_DATABASE` | Sí | — | Ruta o alias de la base de tickets. |
 | `FIREBIRD_HOST` | No | `127.0.0.1` | Servidor Firebird. |
 | `FIREBIRD_PORT` | No | `3050` | Puerto de Firebird. |
@@ -121,3 +122,51 @@ npx @modelcontextprotocol/inspector node dist/index.js
 ```
 
 Cargá las mismas variables de entorno en la pantalla del inspector, conectá y probá las tools desde ahí.
+
+## Publicarlo por HTTP
+
+En lugar de que cada persona corra su propio proceso, el servidor puede quedar publicado como un servicio al que se conectan varios usuarios, cada uno con su propio inicio de sesión. Es el mismo inicio de sesión que el del MCP de tickets v1.
+
+1. Compilá (`npm install` y `npm run build`).
+2. Definí las variables del servicio. Además de las `FIREBIRD_*` de la base:
+
+   ```
+   MCP_TRANSPORTE=http
+   MCP_HTTP_PUERTO=7020
+   MCP_JWT_SIGNING_KEY=<secreto largo; el mismo de la v1 si querés que los tokens sirvan en los dos>
+   MCP_AUTH_TIPO=alias/clave
+   MCP_AUTH_TITULO_AUTORIZACION=Tickets JKMate
+   ```
+
+   `MCP_COD_USUARIO` no hace falta: cada usuario se identifica al iniciar sesión. Si el servicio queda detrás de un proxy, agregá `MCP_URL_PUBLICA` con la dirección pública. La lista completa de variables está en el [README](../README.md#publicarlo-por-http).
+
+3. Levantalo con `npm start` (lee el `.env`) o con `node dist/index.js` y las variables en el entorno del servicio.
+4. Conectate desde Claude Code:
+
+   ```bash
+   claude mcp add --transport http tickets-v2 http://<host>:7020/mcp
+   ```
+
+   La primera vez se abre en el navegador la página de inicio de sesión. Ingresá tus datos y autorizá. Para Claude Desktop o claude.ai, agregalo como conector personalizado con la misma URL.
+
+| Síntoma | Causa | Solución |
+|---|---|---|
+| `Configuración inválida: MCP_JWT_SIGNING_KEY ...` al arrancar | Falta el secreto en modo http. | Definí `MCP_JWT_SIGNING_KEY`. |
+| La página dice "Credenciales incorrectas, o no tenés acceso habilitado al MCP." | Datos incorrectos o, con `alias/clave`, el usuario no tiene una fila activa en `MCP_OAUTH_CREDENCIALES`. | Revisá los datos o pedí que habiliten el acceso. |
+| Las llamadas devuelven 403 con un mensaje sobre `COD_USUARIO` | El tipo de inicio de sesión configurado no identifica a un usuario de JKMate. | Usá un tipo que resuelva `COD_USUARIO` (por ejemplo `alias/clave`). |
+| Las llamadas devuelven 401 | Token vencido, revocado o credencial desactivada. | Volvé a iniciar sesión (o renová con `POST /token/renovar`). |
+
+## MCP de prospección
+
+El mismo proyecto publica el MCP de prospección (CRM de vendedores) con `MCP_CATALOGO=prospeccion`. Se instala igual que el de tickets, cambiando estas variables:
+
+- **Por stdio** (Claude Desktop): `MCP_CATALOGO=prospeccion` y `MCP_COD_VENDEDOR` con tu `COD_VENDEDOR` en lugar de `MCP_COD_USUARIO`.
+- **Por HTTP**: `MCP_CATALOGO=prospeccion` y, si los vendedores entran con su teléfono, `MCP_AUTH_TIPO=tlfvendedor`, `MCP_AUTH_APISECRET_REQUERIDO=false` y `MCP_AUTH_APIKEY_TITULO=Teléfono`. Conectalo desde Claude Code con `claude mcp add --transport http prospeccion-v2 http://<host>:<puerto>/mcp`.
+
+Aparecen 11 tools. La primera vez, pedile a Claude que lea las instrucciones (`obtener_instrucciones`). Los textos que ve Claude (descripciones de las tools y de sus parámetros, instrucciones) están en `funciones/prospeccion-functions.json` y `funciones/prospeccion-instructions.md`: se pueden ajustar sin recompilar, y el servidor toma el cambio solo. Por ejemplo: "¿Cómo viene mi cartera esta semana?", "Buscame el prospecto Pérez" o "Registrá que lo llamé y quedó en volver a llamar el lunes".
+
+| Síntoma | Causa | Solución |
+|---|---|---|
+| `Configuración inválida: MCP_COD_VENDEDOR ...` | Prospección por stdio sin vendedor. | Definí `MCP_COD_VENDEDOR`. |
+| 403 con un mensaje sobre `COD_VENDEDOR` | El inicio de sesión configurado no identifica a un vendedor. | Usá un tipo de login que resuelva el vendedor (por ejemplo `tlfvendedor`). |
+| Una escritura responde `OPERACION_RECHAZADA` | La base rechazó la gestión (el motivo viene en el mensaje). No quedó nada a medias. | Revisá los códigos con `listar_catalogo` y reintentá. |

@@ -1,0 +1,154 @@
+{
+  "$schema": "./functions.schema.json",
+  "servidor": {
+    "nombre": "mcp-tickets-json",
+    "claimRequerida": "COD_USUARIO",
+    "completarSesion": "completar-sesion-tickets"
+  },
+  "tools": [
+    {
+      "tipo": "compleja",
+      "nombre": "obtener_contexto_ticket",
+      "titulo": "Contexto completo de un ticket",
+      "handler": "obtener-contexto-ticket",
+      "descripcion": "Devuelve en una sola llamada todo el contexto de un ticket de JKMate: detalle, historial compacto (mensajes e hitos de sistema, del más viejo al más nuevo), tareas de desarrollo, agendas, presupuestos y lista de adjuntos (solo metadatos y URL). Usala para entender un ticket antes de responder o trabajar en él; no hace falta llamar a otras tools para lo mismo.",
+      "parametros": [
+        {
+          "nombre": "ticketId",
+          "descripcion": "Número de ticket"
+        },
+        {
+          "nombre": "soloVisibleCliente",
+          "descripcion": "true = oculta del historial las notas internas que el cliente no ve"
+        },
+        {
+          "nombre": "limiteHistorial",
+          "descripcion": "Cantidad máxima de movimientos; si hay más, se devuelven los más recientes"
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "listar_tickets",
+      "titulo": "Listar tickets",
+      "handler": "listar-tickets",
+      "descripcion": "Lista tickets de JKMate con filtros combinables (estados, prioridades, sistema, asignado, agendado, cliente, rango de creación y texto libre), paginado y con el total. Por defecto solo trae tickets abiertos, ordenados por última actualización. Cada elemento es liviano (sin mensajes ni pedido normalizado) e incluye la agenda más reciente y el estado del último presupuesto. Para el detalle de un ticket usá obtener_contexto_ticket; para conteos, resumir_tickets.",
+      "parametros": [
+        {
+          "nombre": "estados",
+          "descripcion": "OR entre valores. Si se indica, se ignora soloAbiertos"
+        },
+        {
+          "nombre": "soloAbiertos",
+          "descripcion": "Solo tickets en estados no finalizados (excluye FINALIZADO y CANCELADO)"
+        },
+        {
+          "nombre": "asignadoA",
+          "descripcion": "Usuario asignado (código de usuario) o \"yo\""
+        },
+        {
+          "nombre": "agendadoA",
+          "descripcion": "Usuario con alguna agenda en el ticket (código de usuario) o \"yo\""
+        },
+        {
+          "nombre": "creadoDesde",
+          "descripcion": "AAAA-MM-DD, inclusive"
+        },
+        {
+          "nombre": "creadoHasta",
+          "descripcion": "AAAA-MM-DD, inclusive"
+        },
+        {
+          "nombre": "texto",
+          "descripcion": "Busca en título y pedido normalizado, sin distinguir mayúsculas ni acentos"
+        },
+        {
+          "nombre": "buscarEnMensajes",
+          "descripcion": "Extiende 'texto' a los mensajes del historial (más lento)"
+        },
+        {
+          "nombre": "orden",
+          "descripcion": "'actualizacion' y 'creacion': la fecha más reciente primero. 'agenda': por fecha de proximaAgenda ascendente (la más antigua primero, incluidas las vencidas); los tickets sin agenda van al final"
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "listar_tareas",
+      "titulo": "Listar tareas de desarrollo",
+      "handler": "listar-tareas",
+      "descripcion": "Lista tareas de desarrollo (asignaciones de JK3) filtrando por desarrollador asignado, responsable, ticket, estados, prioridad y fecha de creación, paginado y con el total. Sin desarrollador, responsable ni ticket, devuelve las tareas del usuario de la sesión. Por defecto solo pendientes (excluye FINALIZADA y ARCHIVADO) y sin la descripción completa (pedila con incluirDescripcion).",
+      "parametros": [
+        {
+          "nombre": "desarrollador",
+          "descripcion": "Desarrollador ASIGNADO (código de desarrollador) o \"yo\""
+        },
+        {
+          "nombre": "responsable",
+          "descripcion": "Desarrollador RESPONSABLE (supervisor) o \"yo\""
+        },
+        {
+          "nombre": "ticketId",
+          "descripcion": "Número de ticket"
+        },
+        {
+          "nombre": "estados",
+          "descripcion": "OR entre valores. Si se indica, se ignora soloPendientes"
+        },
+        {
+          "nombre": "soloPendientes",
+          "descripcion": "Excluye FINALIZADA y ARCHIVADO"
+        },
+        {
+          "nombre": "creadaDesde",
+          "descripcion": "AAAA-MM-DD, inclusive"
+        },
+        {
+          "nombre": "creadaHasta",
+          "descripcion": "AAAA-MM-DD, inclusive"
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "resumir_tickets",
+      "titulo": "Resumir tickets",
+      "handler": "resumir-tickets",
+      "descripcion": "Cuenta tickets de JKMate agrupados por estado, prioridad, sistema, cliente y/o asignado, con los mismos filtros que listar_tickets (por defecto solo abiertos). Los conteos se calculan en la base. En cliente y asignado devuelve los 20 con más tickets y una fila con clave null que acumula el resto (y los sin asignar). Usala para panoramas (\"¿cuántos tengo por estado?\") en lugar de listar.",
+      "parametros": [
+        {
+          "nombre": "estados",
+          "descripcion": "OR entre valores. Si se indica, se ignora soloAbiertos"
+        },
+        {
+          "nombre": "soloAbiertos",
+          "descripcion": "Solo tickets en estados no finalizados (excluye FINALIZADO y CANCELADO)"
+        },
+        {
+          "nombre": "asignadoA",
+          "descripcion": "Usuario asignado (código de usuario) o \"yo\""
+        },
+        {
+          "nombre": "agendadoA",
+          "descripcion": "Usuario con alguna agenda en el ticket (código de usuario) o \"yo\""
+        },
+        {
+          "nombre": "creadoDesde",
+          "descripcion": "AAAA-MM-DD, inclusive"
+        },
+        {
+          "nombre": "creadoHasta",
+          "descripcion": "AAAA-MM-DD, inclusive"
+        },
+        {
+          "nombre": "texto",
+          "descripcion": "Busca en título y pedido normalizado, sin distinguir mayúsculas ni acentos"
+        },
+        {
+          "nombre": "buscarEnMensajes",
+          "descripcion": "Extiende 'texto' a los mensajes del historial (más lento)"
+        }
+      ]
+    }
+  ]
+}

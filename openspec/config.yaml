@@ -16,8 +16,10 @@ context: |
   Decisión tomada: NO construir un intérprete genérico de contratos.
 
   ## Estándar del equipo (obligatorio)
-  - TypeScript, transporte MCP stdio: el servidor corre local, lanzado por el cliente (decisión del
-    2026-10-17; reemplazó a Streamable HTTP + OAuth).
+  - TypeScript, transporte MCP stdio por defecto: el servidor corre local, lanzado por el cliente
+    (decisión del 2026-10-17). Desde el change `agregar-inicio-sesion-oauth` (2026-10-29) hay además
+    un modo opcional `MCP_TRANSPORTE=http`: Streamable HTTP sin estado + inicio de sesión OAuth 2.1
+    igual al del MCP de tickets v1 (`mcp-server/`), con tokens JWT compatibles entre los dos.
   - Nombres de tools en español, snake_case, forma verbo_sustantivo
     (obtener_contexto_ticket, listar_tickets).
   - Logging estructurado con Pino hacia Seq. Tests con Vitest.
@@ -54,8 +56,8 @@ context: |
   7. Los listados no incluyen textos largos; el detalle va en otra tool o detrás de un parámetro
      opcional.
   8. Los listados paginan e informan el total.
-  9. La identidad del usuario que llama sale de la configuración del proceso (`MCP_COD_USUARIO`),
-     nunca de un parámetro. Filtrar por
+  9. La identidad del usuario que llama sale de la sesión: en stdio, de la configuración del proceso
+     (`MCP_COD_USUARIO`); en http, de las claims del token. Nunca de un parámetro. Filtrar por
      OTRA persona (desarrollador, responsable) sí es un parámetro explícito válido.
   10. Annotations MCP en todas las tools (readOnlyHint en lecturas, destructiveHint donde
       corresponda).

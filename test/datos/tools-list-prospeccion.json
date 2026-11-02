@@ -1,0 +1,1706 @@
+[
+  {
+    "name": "user_info",
+    "title": "👤 Consultando la sesión",
+    "description": "Identidad de la sesión: el usuario y el vendedor con los que operan todas las herramientas.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "codUsuario": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "codVendedor": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transporte": {
+          "type": "string",
+          "enum": [
+            "stdio",
+            "http"
+          ]
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codUsuario",
+            "codVendedor",
+            "transporte"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "obtener_instrucciones",
+    "title": "📘 Leyendo instrucciones",
+    "description": "Reglas de uso del CRM de prospección. Llamala ANTES que cualquier otra herramienta de este servidor.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "instrucciones": {
+          "type": "string"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "instrucciones"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "resumen_prospeccion",
+    "title": "📊 Consultando el resumen",
+    "description": "Resumen de la cartera del vendedor de la sesión: una fila por intervalo (día, semana, mes) con asignados, nuevos, agendados y gestionados. Una sola llamada.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "fechaReferencia": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "description": "Fecha ancla (AAAA-MM-DD). Si se omite, hoy."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "intervalos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "intervalo": {
+                "type": "string"
+              },
+              "fechaDesde": {
+                "description": "AAAA-MM-DD",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fechaHasta": {
+                "description": "AAAA-MM-DD",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "asignados": {
+                "type": "integer",
+                "minimum": -9007199254740991
+              },
+              "nuevos": {
+                "type": "integer",
+                "minimum": -9007199254740991
+              },
+              "agendados": {
+                "type": "integer",
+                "minimum": -9007199254740991
+              },
+              "gestionados": {
+                "type": "integer",
+                "minimum": -9007199254740991
+              }
+            },
+            "required": [
+              "intervalo",
+              "fechaDesde",
+              "fechaHasta",
+              "asignados",
+              "nuevos",
+              "agendados",
+              "gestionados"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "intervalos"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "totales_resultado_prospeccion",
+    "title": "📈 Contando gestiones por resultado",
+    "description": "Cantidad de gestiones del vendedor de la sesión agrupadas por resultado, en un intervalo relativo a una fecha.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "intervalo": {
+          "type": "string",
+          "enum": [
+            "Día",
+            "Sem",
+            "Mes",
+            "Año"
+          ],
+          "description": "Exactamente Día, Sem, Mes o Año."
+        },
+        "fechaReferencia": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "description": "Fecha ancla (AAAA-MM-DD). Si se omite, hoy."
+        }
+      },
+      "required": [
+        "intervalo"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "intervalo": {
+          "type": "string",
+          "enum": [
+            "Día",
+            "Sem",
+            "Mes",
+            "Año"
+          ]
+        },
+        "resultados": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "codResultado": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "resultado": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cantidad": {
+                "type": "integer",
+                "minimum": -9007199254740991
+              }
+            },
+            "required": [
+              "codResultado",
+              "resultado",
+              "cantidad"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "intervalo",
+            "resultados"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "buscar_prospectos_vendedor",
+    "title": "🔎 Buscando prospectos",
+    "description": "Listado de prospectos/gestiones del vendedor de la sesión (una fila por gestión, la más reciente primero, hasta maxFilas), con filtros combinables. Si hayMas, avisá que hay más y sugerí un filtro (fecha, campaña, nombre).",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "codCampania": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Campaña: codigo de listar_catalogo catalogo='campanias'."
+        },
+        "filtroFecha": {
+          "type": "string",
+          "enum": [
+            "cita",
+            "gestion"
+          ],
+          "description": "Filtra por fecha de cita o de gestión. Va junto con fechaAgenda."
+        },
+        "fechaAgenda": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "description": "Fecha (AAAA-MM-DD) del filtro de fecha."
+        },
+        "cliente": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Parte del nombre del cliente."
+        },
+        "codBarrio": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Barrio: codigo de listar_catalogo catalogo='barrios'."
+        },
+        "codAccion": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Acción de la última gestión: codigo de listar_catalogo catalogo='acciones'."
+        },
+        "archivado": {
+          "default": false,
+          "description": "true = solo archivados; false = solo no archivados.",
+          "type": "boolean"
+        },
+        "maxFilas": {
+          "default": 50,
+          "description": "Máximo de filas. Si hayMas, sugerir un filtro.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "prospectos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "codProspectacionMovil": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "codProspecto": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "codCliente": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "cliente": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "telefonos": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "domicilio": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "codGrupoProspecto": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "codReclamo": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "fechaHoraGestion": {
+                "description": "ISO 8601 con offset",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "accion": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "codResultado": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "resultado": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ultimoMensaje": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fechaHoraCita": {
+                "description": "ISO 8601 con offset",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "canal": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "campania": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "barrio": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "archivado": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "codProspectacionMovil",
+              "codProspecto",
+              "codCliente",
+              "cliente",
+              "telefonos",
+              "domicilio",
+              "codGrupoProspecto",
+              "codReclamo",
+              "fechaHoraGestion",
+              "accion",
+              "codResultado",
+              "resultado",
+              "ultimoMensaje",
+              "fechaHoraCita",
+              "canal",
+              "campania",
+              "barrio",
+              "archivado"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "maxFilas": {
+          "type": "integer",
+          "minimum": -9007199254740991
+        },
+        "hayMas": {
+          "type": "boolean"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "prospectos",
+            "maxFilas",
+            "hayMas"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "agendas_prospectos_vendedor",
+    "title": "📅 Consultando la agenda",
+    "description": "Citas con prospectos del vendedor de la sesión entre dos fechas (las dos son obligatorias).",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "fechaDesde": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "description": "Inicio del rango (AAAA-MM-DD)."
+        },
+        "fechaHasta": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "description": "Fin del rango (AAAA-MM-DD)."
+        }
+      },
+      "required": [
+        "fechaDesde",
+        "fechaHasta"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "citas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fechaHoraCita": {
+                "description": "ISO 8601 con offset",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fechaHoraFin": {
+                "description": "ISO 8601 con offset",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "codCliente": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "codProspecto": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "cliente": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "telefonoMovil": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "titulo": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "fechaHoraCita",
+              "fechaHoraFin",
+              "codCliente",
+              "codProspecto",
+              "cliente",
+              "telefonoMovil",
+              "titulo"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "citas"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "historial_mensajes_prospecto",
+    "title": "🗂️ Leyendo el historial",
+    "description": "Historial de gestiones de un prospecto. Necesita el cliente Y el prospecto (de buscar_prospectos_vendedor).",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "codCliente": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "codCliente del prospecto (de buscar_prospectos_vendedor)."
+        },
+        "codProspecto": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "codProspecto (de buscar_prospectos_vendedor)."
+        }
+      },
+      "required": [
+        "codCliente",
+        "codProspecto"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "gestiones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fechaHora": {
+                "description": "ISO 8601 con offset",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fechaHoraAgenda": {
+                "description": "ISO 8601 con offset",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "categoria": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "resultado": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "estado": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "mensaje": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "entidad": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "usuario": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "nroTramite": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "fechaHora",
+              "fechaHoraAgenda",
+              "categoria",
+              "resultado",
+              "estado",
+              "mensaje",
+              "entidad",
+              "usuario",
+              "nroTramite"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "gestiones"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "registrar_gestion_prospecto",
+    "title": "📝 Registrando la gestión",
+    "description": "Registra una gestión (contacto, acción, resultado, próxima cita) sobre un prospecto YA EXISTENTE del vendedor de la sesión. Para un prospecto nuevo usar registrar_prospecto. Todos los códigos salen de listar_catalogo. Antes de llamarla, confirmá los datos con el usuario: escribe en la base.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "codCliente": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "codCliente del prospecto (de buscar_prospectos_vendedor)."
+        },
+        "codProspecto": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Prospecto existente que se gestiona (de buscar_prospectos_vendedor)."
+        },
+        "codGrupoProspecto": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Grupo: codigo de listar_catalogo catalogo='grupos'."
+        },
+        "codComercializadora": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Canal de venta: codigo de listar_catalogo catalogo='canales'. Sin canal no se ve bien en el listado."
+        },
+        "codCategoriaMensaje": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Acción: codigo de listar_catalogo catalogo='categorias'."
+        },
+        "codResultado": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Resultado: codigo de listar_catalogo catalogo='resultados' con codPadre = la acción elegida."
+        },
+        "fechaHoraAgenda": {
+          "type": "string",
+          "description": "Próxima cita (ISO 8601). Obligatoria si el resultado tiene exigeAgendamiento."
+        },
+        "mensaje": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Texto de la gestión."
+        },
+        "fechaHora": {
+          "type": "string",
+          "description": "Fecha y hora de la gestión (ISO 8601). Si se omite, ahora."
+        },
+        "codReclamo": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "codReclamo del prospecto, si lo tiene (de buscar_prospectos_vendedor)."
+        },
+        "codBarrio": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "listar_catalogo catalogo='barrios'."
+        },
+        "codLocalidad": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "listar_catalogo catalogo='localidades'."
+        },
+        "codProvincia": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "codProvincia de la localidad elegida."
+        },
+        "fechaCierrePosible": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "description": "Fecha estimada de cierre (AAAA-MM-DD)."
+        },
+        "tipoPlanDisponible": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "description": "Tipo de plan de interés."
+        },
+        "codPlanDisponible": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Plan de interés."
+        },
+        "forecast": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "description": "Proyección de venta."
+        },
+        "montoCotizacion": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Monto cotizado (se redondea a entero)."
+        },
+        "cantEmpleados": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Empleados (prospectos corporativos)."
+        }
+      },
+      "required": [
+        "codCliente",
+        "codProspecto",
+        "codGrupoProspecto",
+        "codComercializadora",
+        "codCategoriaMensaje",
+        "codResultado"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "codProspectacionMovil": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Registro de la gestión creada; null en una modificación."
+        },
+        "mensaje": {
+          "type": "string"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codProspectacionMovil",
+            "mensaje"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "registrar_prospecto",
+    "title": "🆕 Dando de alta el prospecto",
+    "description": "Da de alta un prospecto nuevo (y su cliente en la bolsa de prospección) con su primera gestión. Para uno existente usar registrar_gestion_prospecto. Exige al menos un contacto (telefono, telefonoMovil o email): sin ninguno, NO invocar. Todos los códigos salen de listar_catalogo. Antes de llamarla, confirmá los datos con el usuario: escribe en la base.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "apellido": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 35,
+          "description": "Apellido."
+        },
+        "nombre": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 65,
+          "description": "Nombre."
+        },
+        "telefono": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Teléfono fijo."
+        },
+        "telefonoMovil": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Celular."
+        },
+        "email": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Email."
+        },
+        "codGrupoProspecto": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Grupo: codigo de listar_catalogo catalogo='grupos'."
+        },
+        "codComercializadora": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Canal de venta: codigo de listar_catalogo catalogo='canales'. Sin canal no se ve bien en el listado."
+        },
+        "codCategoriaMensaje": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Acción: codigo de listar_catalogo catalogo='categorias'."
+        },
+        "codResultado": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Resultado: codigo de listar_catalogo catalogo='resultados' con codPadre = la acción elegida."
+        },
+        "fechaHoraAgenda": {
+          "type": "string",
+          "description": "Próxima cita (ISO 8601). Obligatoria si el resultado tiene exigeAgendamiento."
+        },
+        "mensaje": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Texto de la gestión."
+        },
+        "fechaHora": {
+          "type": "string",
+          "description": "Fecha y hora de la gestión (ISO 8601). Si se omite, ahora."
+        },
+        "tipoDocumento": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 6,
+          "description": "Tipo de documento."
+        },
+        "nroDocumento": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30,
+          "description": "Número de documento."
+        },
+        "domicilio": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Dirección en texto libre."
+        },
+        "fechaNacimiento": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "description": "Fecha de nacimiento (AAAA-MM-DD)."
+        },
+        "codBarrio": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "listar_catalogo catalogo='barrios'."
+        },
+        "codLocalidad": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "listar_catalogo catalogo='localidades'."
+        },
+        "codProvincia": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "codProvincia de la localidad elegida."
+        },
+        "fechaCierrePosible": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "description": "Fecha estimada de cierre (AAAA-MM-DD)."
+        },
+        "tipoPlanDisponible": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "description": "Tipo de plan de interés."
+        },
+        "codPlanDisponible": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Plan de interés."
+        },
+        "forecast": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "description": "Proyección de venta."
+        },
+        "montoCotizacion": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Monto cotizado (se redondea a entero)."
+        },
+        "cantEmpleados": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Empleados (prospectos corporativos)."
+        }
+      },
+      "required": [
+        "apellido",
+        "nombre",
+        "codGrupoProspecto",
+        "codComercializadora",
+        "codCategoriaMensaje",
+        "codResultado"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "codProspectacionMovil": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Registro de la gestión creada; null en una modificación."
+        },
+        "mensaje": {
+          "type": "string"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codProspectacionMovil",
+            "mensaje"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "modificar_prospecto",
+    "title": "✏️ Corrigiendo el prospecto",
+    "description": "Corrige los datos personales de un prospecto YA EXISTENTE del vendedor de la sesión (nombre, apellido, email, teléfono, celular, documento, domicilio). Solo actualiza el prospecto: no registra gestión. Pasar solo los datos que cambian; los omitidos no se tocan. Para registrar un contacto usar registrar_gestion_prospecto. Antes de llamarla, confirmá los datos con el usuario: escribe en la base.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "codCliente": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "codCliente del prospecto (de buscar_prospectos_vendedor)."
+        },
+        "codProspecto": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Prospecto que se modifica."
+        },
+        "nombre": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 65,
+          "description": "Nombre nuevo."
+        },
+        "apellido": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 35,
+          "description": "Apellido nuevo."
+        },
+        "telefono": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Teléfono fijo."
+        },
+        "telefonoMovil": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Celular."
+        },
+        "email": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Email."
+        },
+        "tipoDocumento": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 6,
+          "description": "Tipo de documento."
+        },
+        "nroDocumento": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30,
+          "description": "Número de documento."
+        },
+        "domicilio": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Dirección en texto libre."
+        }
+      },
+      "required": [
+        "codCliente",
+        "codProspecto"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "codProspectacionMovil": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Registro de la gestión creada; null en una modificación."
+        },
+        "mensaje": {
+          "type": "string"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codProspectacionMovil",
+            "mensaje"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "listar_catalogo",
+    "title": "📚 Consultando el catálogo",
+    "description": "Catálogos de referencia de prospección. Elegí el catálogo con catalogo; los que dicen 'requiere codPadre' necesitan el código del catálogo padre. Los marcados [buscar] aceptan un texto aproximado (tolera errores de tipeo). Nunca inventes un código: resolvelo siempre con esta tool.\n• grupos — codigo → registrar_*.codGrupoProspecto (grupos del vendedor de la sesión; si hay uno solo, usarlo)\n• canales — codigo → registrar_*.codComercializadora [buscar]\n• categorias — opcional: codPadre = codigo de 'resultados' — codigo → registrar_*.codCategoriaMensaje (la acción de la gestión; con codPadre = resultado anterior del prospecto acota a las acciones que siguen)\n• resultados — requiere codPadre = codigo de 'categorias' — codigo → registrar_*.codResultado; si exigeAgendamiento, pedir fechaHoraAgenda\n• acciones — codigo → buscar_prospectos_vendedor.codAccion (solo para filtrar el listado)\n• campanias — codigo → buscar_prospectos_vendedor.codCampania (la más reciente primero) [buscar]\n• localidades — codigo y codProvincia → registrar_*.codLocalidad y codProvincia [buscar]\n• barrios — codigo → registrar_*.codBarrio o buscar_prospectos_vendedor.codBarrio (no se filtra por localidad: buscar por nombre) [buscar]",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "catalogo": {
+          "type": "string",
+          "enum": [
+            "grupos",
+            "canales",
+            "categorias",
+            "resultados",
+            "acciones",
+            "campanias",
+            "localidades",
+            "barrios"
+          ],
+          "description": "Catálogo a listar."
+        },
+        "codPadre": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Código del catálogo padre (ver descripción)."
+        },
+        "buscar": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Texto aproximado, tal como lo dijo el usuario (solo catálogos [buscar])."
+        }
+      },
+      "required": [
+        "catalogo"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "catalogo": {
+          "type": "string",
+          "enum": [
+            "grupos",
+            "canales",
+            "categorias",
+            "resultados",
+            "acciones",
+            "campanias",
+            "localidades",
+            "barrios"
+          ]
+        },
+        "elementos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "codigo": {
+                "type": "integer",
+                "minimum": -9007199254740991
+              },
+              "nombre": {
+                "type": "string"
+              },
+              "estado": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "exigeAgendamiento": {
+                "type": "boolean"
+              },
+              "fechaInicio": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fechaFin": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "codProvincia": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "codLocalidad": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "codigoPostal": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "similitud": {
+                "type": "integer",
+                "minimum": -9007199254740991
+              }
+            },
+            "required": [
+              "codigo",
+              "nombre"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "avisos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "busqueda": {
+          "type": "object",
+          "properties": {
+            "texto": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "totalCatalogo": {
+              "type": "integer",
+              "minimum": -9007199254740991
+            },
+            "devueltos": {
+              "type": "integer",
+              "minimum": -9007199254740991
+            },
+            "mensaje": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "texto",
+            "totalCatalogo",
+            "devueltos",
+            "mensaje"
+          ],
+          "additionalProperties": false
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "codigo": {
+              "enum": [
+                "PARAMETRO_INVALIDO",
+                "TICKET_NO_ENCONTRADO",
+                "NO_AUTORIZADO",
+                "BASE_NO_DISPONIBLE",
+                "OPERACION_RECHAZADA",
+                "ERROR_INTERNO"
+              ]
+            },
+            "mensaje": {
+              "type": "string"
+            },
+            "detalle": {}
+          },
+          "required": [
+            "codigo",
+            "mensaje"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "catalogo",
+            "elementos",
+            "avisos"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  }
+]

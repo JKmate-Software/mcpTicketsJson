@@ -18,7 +18,7 @@ import { basename, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import Anthropic from '@anthropic-ai/sdk';
-import { cargarConfig } from '../src/config.js';
+import { cargarConfig, codUsuarioStdio } from '../src/config.js';
 import { abrirBase, obtenerReferencia, type VerdadReferencia } from './agente/base.js';
 import { cargarCasos, CASOS_OBLIGATORIOS, type Caso, type IdCaso } from './agente/casos.js';
 import { conectarV1, conectarV2, type Conexion } from './agente/conexion.js';
@@ -258,7 +258,7 @@ async function principal() {
       salida(`${version}: ${tamanos[version]!.cantidad} tools, ${tamanos[version]!.caracteres} caracteres, ${tamanos[version]!.tokens} tokens`);
     }
 
-    const referencia = await obtenerReferencia(base, casos, config.MCP_COD_USUARIO);
+    const referencia = await obtenerReferencia(base, casos, codUsuarioStdio(config));
     const schemas = new Map<Version, Map<string, object>>();
     const plantillas = new Map<Version, Awaited<ReturnType<typeof cargarPlantillas>>>();
     for (const version of args.versiones) {

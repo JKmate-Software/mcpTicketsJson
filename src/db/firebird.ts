@@ -1,7 +1,7 @@
 import Firebird from 'node-firebird';
 import type { Config } from '../config.js';
 import { ErrorTool } from '../errores.js';
-import type { Medidor } from '../tools/definicion.js';
+import type { Medidor } from '../nucleo/definicion.js';
 
 /** Fila de un SP: columnas en mayúsculas, como las devuelve Firebird. */
 export type Fila = Record<string, unknown>;
@@ -11,18 +11,58 @@ export type ValorParametro = string | number | null;
 
 export type EjecutarSp = (nombre: string, parametros: ValorParametro[]) => Promise<Fila[]>;
 
+/** SQL parametrizado (`?` posicionales) dentro de la transacción de una tool del archivo de funciones. */
+export type EjecutarSql = (sql: string, parametros: ValorParametro[]) => Promise<Fila[]>;
+
+export interface OpcionesContexto {
+  /**
+   * Claves de identidad a escribir en RDB$SET_CONTEXT('USER_SESSION', ...). Se escriben TODAS en cada
+   * invocación: con valor o con NULL (que borra la variable), así una conexión reutilizada del pool
+   * nunca conserva la identidad de otra sesión.
+   */
+  contexto: Record<string, string | null>;
+  escritura: boolean;
+  /** Conexión propia fuera del pool, que se cierra al terminar (procedures con contexto propio). */
+  exclusiva?: boolean;
+}
+
 export interface AccesoDatos {
   /**
    * Ejecuta `trabajo` dentro de una única transacción de solo lectura (snapshot consistente).
    * Cada llamada a `ejecutarSp` suma 1 en `medidor.llamadasBase`.
    */
   enTransaccion<T>(trabajo: (ejecutarSp: EjecutarSp) => Promise<T>, medidor?: Medidor): Promise<T>;
+  /**
+   * Igual que `enTransaccion`, pero de lectura-escritura (READ COMMITTED). Confirma si `trabajo`
+   * termina bien; si lanza (incluido un rechazo de negocio), deshace todo.
+   */
+  enTransaccionEscritura<T>(trabajo: (ejecutarSp: EjecutarSp) => Promise<T>, medidor?: Medidor): Promise<T>;
+  /**
+   * Transacción READ COMMITTED (de solo lectura salvo `escritura`) para las tools `procedure` y
+   * `webservice`: primero carga el contexto de sesión en la misma conexión y después corre `trabajo`.
+   * La sentencia del contexto no cuenta en `medidor`.
+   */
+  enTransaccionConContexto<T>(opciones: OpcionesContexto, trabajo: (ejecutarSql: EjecutarSql) => Promise<T>, medidor?: Medidor): Promise<T>;
   /** USUARIOS.COD_DESARROLLADOR del usuario, o null. */
   codDesarrolladorDeUsuario(codUsuario: number): Promise<number | null>;
   cerrar(): Promise<void>;
 }
 
+/** Consulta SQL parametrizada fuera de las tools (login OAuth, revocación). */
+export interface ConsultaSql {
+  consultar(sql: string, parametros: ValorParametro[]): Promise<Fila[]>;
+  cerrar(): Promise<void>;
+}
+
 const NOMBRE_SP = /^[A-Z][A-Z0-9_$]{0,30}$/;
+const NOMBRE_CONTEXTO = /^[A-Z][A-Z0-9_]{0,79}$/;
+
+/** Una sola sentencia que escribe todas las claves de contexto (los nombres van literales: son fijos y validados). */
+export function sqlContexto(claves: string[]): string {
+  for (const clave of claves) if (!NOMBRE_CONTEXTO.test(clave)) throw new Error(`Clave de contexto inválida: ${clave}`);
+  const columnas = claves.map((clave, i) => `RDB$SET_CONTEXT('USER_SESSION', '${clave}', ?) AS C${i}`);
+  return `SELECT ${columnas.join(', ')} FROM RDB$DATABASE`;
+}
 
 /**
  * node-firebird arma TIMESTAMP/DATE como hora de reloj en la zona del proceso, pero usando el
@@ -77,9 +117,12 @@ type ConfigFirebird = Pick<
   'FIREBIRD_HOST' | 'FIREBIRD_PORT' | 'FIREBIRD_DATABASE' | 'FIREBIRD_USER' | 'FIREBIRD_PASSWORD' | 'FIREBIRD_POOL_MAX'
 >;
 
-export function crearAccesoFirebird(config: ConfigFirebird, opcionesExtra: { connectTimeout?: number } = {}): AccesoDatos {
+export function crearAccesoFirebird(
+  config: ConfigFirebird,
+  opcionesExtra: { connectTimeout?: number } = {},
+): AccesoDatos & ConsultaSql {
   if (!config.FIREBIRD_DATABASE) throw new Error('Falta FIREBIRD_DATABASE');
-  const pool = Firebird.pool(config.FIREBIRD_POOL_MAX, {
+  const opciones: Firebird.Options = {
     host: config.FIREBIRD_HOST,
     port: config.FIREBIRD_PORT,
     database: config.FIREBIRD_DATABASE,
@@ -89,8 +132,8 @@ export function crearAccesoFirebird(config: ConfigFirebird, opcionesExtra: { con
     blobAsText: true,
     numericMode: 'lossy',
     connectTimeout: opcionesExtra.connectTimeout ?? 10_000,
-    idleTimeoutMillis: 60_000,
-  });
+  };
+  const pool = Firebird.pool(config.FIREBIRD_POOL_MAX, { ...opciones, idleTimeoutMillis: 60_000 });
   // Los errores del pool se propagan en cada operación; sin listener, node los trataría como no manejados.
   pool.on('error', () => undefined);
 
@@ -108,36 +151,116 @@ export function crearAccesoFirebird(config: ConfigFirebird, opcionesExtra: { con
     }
   }
 
-  return {
-    async enTransaccion(trabajo, medidor) {
-      return conConexion(async (db) => {
-        let tx: Firebird.Transaction;
+  /** Conexión propia, fuera del pool: el contexto de sesión muere con ella. */
+  async function conConexionExclusiva<T>(trabajo: (db: Firebird.Database) => Promise<T>): Promise<T> {
+    let db: Firebird.Database;
+    try {
+      db = await Firebird.attachAsync(opciones);
+    } catch (error) {
+      throw traducir(error);
+    }
+    try {
+      return await trabajo(db);
+    } finally {
+      db.detach(() => undefined);
+    }
+  }
+
+  /** Confirma (o deshace si `trabajo` lanza). En escritura, un commit fallido es un error real. */
+  async function cerrarTransaccion<T>(tx: Firebird.Transaction, escritura: boolean, trabajo: () => Promise<T>): Promise<T> {
+    let resultado: T;
+    try {
+      resultado = await trabajo();
+    } catch (error) {
+      await tx.rollbackAsync().catch(() => undefined);
+      throw error;
+    }
+    if (escritura) {
+      try {
+        await tx.commitAsync();
+      } catch (error) {
+        await tx.rollbackAsync().catch(() => undefined);
+        throw traducir(error);
+      }
+    } else {
+      await tx.commitAsync().catch(() => undefined);
+    }
+    return resultado;
+  }
+
+  /**
+   * Lectura: REPEATABLE READ de solo lectura (snapshot consistente). Escritura: READ COMMITTED de
+   * lectura-escritura, donde un commit fallido es un error real (no se puede informar éxito).
+   */
+  async function transaccion<T>(escritura: boolean, trabajo: (ejecutarSp: EjecutarSp) => Promise<T>, medidor?: Medidor): Promise<T> {
+    return conConexion(async (db) => {
+      let tx: Firebird.Transaction;
+      try {
+        tx = await db.transactionAsync(
+          escritura
+            ? { isolation: Firebird.ISOLATION_READ_COMMITTED, readOnly: false, wait: false }
+            : { isolation: Firebird.ISOLATION_REPEATABLE_READ, readOnly: true, wait: false },
+        );
+      } catch (error) {
+        throw traducir(error);
+      }
+      const ejecutarSp: EjecutarSp = async (nombre, parametros) => {
+        if (!NOMBRE_SP.test(nombre)) throw new Error(`Nombre de SP inválido: ${nombre}`);
+        if (medidor) medidor.llamadasBase += 1;
+        const marcadores = parametros.map(() => '?').join(', ');
+        const sql = `SELECT * FROM ${nombre}${parametros.length ? `(${marcadores})` : ''}`;
         try {
-          tx = await db.transactionAsync({ isolation: Firebird.ISOLATION_REPEATABLE_READ, readOnly: true, wait: false });
+          const filas = await tx.queryAsync<Fila>(sql, parametros);
+          return filas.map(normalizarFila);
         } catch (error) {
           throw traducir(error);
         }
-        const ejecutarSp: EjecutarSp = async (nombre, parametros) => {
-          if (!NOMBRE_SP.test(nombre)) throw new Error(`Nombre de SP inválido: ${nombre}`);
-          if (medidor) medidor.llamadasBase += 1;
-          const marcadores = parametros.map(() => '?').join(', ');
-          const sql = `SELECT * FROM ${nombre}${parametros.length ? `(${marcadores})` : ''}`;
-          try {
-            const filas = await tx.queryAsync<Fila>(sql, parametros);
-            return filas.map(normalizarFila);
-          } catch (error) {
-            throw traducir(error);
-          }
-        };
+      };
+      return cerrarTransaccion(tx, escritura, () => trabajo(ejecutarSp));
+    });
+  }
+
+  async function transaccionConContexto<T>(
+    { contexto, escritura, exclusiva }: OpcionesContexto,
+    trabajo: (ejecutarSql: EjecutarSql) => Promise<T>,
+    medidor?: Medidor,
+  ): Promise<T> {
+    const conectar = exclusiva ? conConexionExclusiva : conConexion;
+    return conectar(async (db) => {
+      let tx: Firebird.Transaction;
+      try {
+        tx = await db.transactionAsync({ isolation: Firebird.ISOLATION_READ_COMMITTED, readOnly: !escritura, wait: false });
+        const claves = Object.keys(contexto);
+        if (claves.length) await tx.queryAsync(sqlContexto(claves), claves.map((c) => contexto[c] ?? null));
+      } catch (error) {
+        throw traducir(error);
+      }
+      const ejecutarSql: EjecutarSql = async (sql, parametros) => {
+        if (medidor) medidor.llamadasBase += 1;
         try {
-          const resultado = await trabajo(ejecutarSp);
-          await tx.commitAsync().catch(() => undefined);
-          return resultado;
+          // EXECUTE PROCEDURE devuelve un objeto (la fila de salida) o nada; un SELECT, un array.
+          const resultado: unknown = await tx.queryAsync<Fila>(sql, parametros);
+          const filas = Array.isArray(resultado) ? (resultado as Fila[]) : resultado && typeof resultado === 'object' ? [resultado as Fila] : [];
+          return filas.map(normalizarFila);
         } catch (error) {
-          await tx.rollbackAsync().catch(() => undefined);
-          throw error;
+          throw traducir(error);
         }
-      });
+      };
+      return cerrarTransaccion(tx, escritura, () => trabajo(ejecutarSql));
+    });
+  }
+
+  return {
+    async enTransaccion(trabajo, medidor) {
+      return transaccion(false, trabajo, medidor);
+    },
+
+    async enTransaccionEscritura(trabajo, medidor) {
+      return transaccion(true, trabajo, medidor);
+    },
+
+    async enTransaccionConContexto(opcionesContexto, trabajo, medidor) {
+      return transaccionConContexto(opcionesContexto, trabajo, medidor);
     },
 
     async codDesarrolladorDeUsuario(codUsuario) {
@@ -148,6 +271,17 @@ export function crearAccesoFirebird(config: ConfigFirebird, opcionesExtra: { con
             [codUsuario],
           );
           return filas[0]?.COD_DESARROLLADOR ?? null;
+        } catch (error) {
+          throw traducir(error);
+        }
+      });
+    },
+
+    async consultar(sql, parametros) {
+      return conConexion(async (db) => {
+        try {
+          const filas = await db.queryAsync<Fila>(sql, parametros);
+          return filas.map(normalizarFila);
         } catch (error) {
           throw traducir(error);
         }

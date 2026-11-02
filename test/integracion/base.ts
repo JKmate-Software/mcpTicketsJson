@@ -1,4 +1,4 @@
-import { crearAccesoFirebird, type AccesoDatos } from '../../src/db/firebird.js';
+import { crearAccesoFirebird, type AccesoDatos, type ConsultaSql } from '../../src/db/firebird.js';
 
 /**
  * Integración contra la base de desarrollo: solo corre si hay FIREBIRD_* en el entorno.
@@ -6,7 +6,7 @@ import { crearAccesoFirebird, type AccesoDatos } from '../../src/db/firebird.js'
  */
 export const hayBase = Boolean(process.env.FIREBIRD_DATABASE);
 
-export function accesoDesdeEntorno(): AccesoDatos {
+export function accesoDesdeEntorno(): AccesoDatos & ConsultaSql {
   const env = process.env;
   return crearAccesoFirebird({
     FIREBIRD_HOST: env.FIREBIRD_HOST ?? '127.0.0.1',

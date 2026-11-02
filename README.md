@@ -9,7 +9,9 @@ MCP de tickets de JKMate, versión 2. Reemplaza de a poco a `tickets-jkmate-mcp`
 | `listar_tareas` | Tareas de desarrollo por desarrollador, responsable, ticket o estado. |
 | `resumir_tickets` | Conteos por estado, prioridad, sistema, cliente o asignado, calculados en la base. |
 
-La especificación y las decisiones de diseño están en [`openspec/changes/agregar-tools-lectura-tickets/`](openspec/changes/agregar-tools-lectura-tickets/).
+La especificación y las decisiones de diseño están en [`openspec/`](openspec/) (specs vigentes en `openspec/specs/`, changes en `openspec/changes/`).
+
+El mismo proyecto publica también el **MCP de prospección** (CRM de vendedores, migrado de la v1): ver [Catálogos](#catálogos). Cada proceso publica uno solo, elegido por `MCP_CATALOGO`. Cada MCP se define en un [archivo de funciones](#archivo-de-funciones) (`funciones/<catalogo>-functions.json`) con sus textos y sus tools, que pueden ser pasamanos a un procedure, métodos de webservice de la base o lógica en código.
 
 ## Requisitos
 
@@ -53,7 +55,14 @@ El servidor es local y habla MCP por **stdio**: Claude Desktop lo lanza como pro
 
 | Variable | Default | Descripción |
 |---|---|---|
-| `MCP_COD_USUARIO` | — | **Obligatoria.** `COD_USUARIO` de JKMate de quien usa el servidor. Es la identidad de todas las invocaciones. |
+| `MCP_CATALOGO` | `tickets` | Qué MCP publica el proceso: el nombre de un archivo `funciones/<nombre>-functions.json` (`tickets`, `prospeccion` o uno propio; ver [Archivo de funciones](#archivo-de-funciones)). |
+| `MCP_FUNCIONES_ARCHIVO` | — | Ruta del archivo de funciones; tiene prioridad sobre `MCP_CATALOGO`. |
+| `MCP_WEBSERVICE_CACHE_SEGUNDOS` | `60` | Segundos que se reusa la definición de un método de `METODOS_WEBSERVICES` (`0` = leerla en cada llamada, como la v1). |
+| `MCP_TRANSPORTE` | `stdio` | `stdio` (proceso local, lo lanza el cliente) o `http` (servicio con inicio de sesión OAuth; ver [Publicarlo por HTTP](#publicarlo-por-http)). |
+| `MCP_COD_USUARIO` | — | **Obligatoria en stdio con tickets.** `COD_USUARIO` de JKMate de quien usa el servidor. Es la identidad de todas las invocaciones. En http se ignora. |
+| `MCP_COD_VENDEDOR` | — | **Obligatoria en stdio con prospección.** `COD_VENDEDOR` de quien usa el servidor. En http se ignora. |
+| `MCP_COD_DESARROLLADOR`, `MCP_COD_PROVEEDOR`, `MCP_COD_CLIENTE`, `MCP_COD_EMPRESA`, `MCP_SECUENCIAL_EMPRESA` | — | Resto de la identidad en stdio. Es obligatoria la que el catálogo declara como `claimRequerida`. En http se ignoran. |
+| `MCP_BUSQUEDA_CACHE_MAX_FILAS` | `200000` | Tope de filas en memoria de la caché de catálogos con búsqueda aproximada (prospección). |
 | `FIREBIRD_DATABASE` | — | **Obligatoria.** Ruta o alias de la base de tickets. |
 | `FIREBIRD_HOST`, `FIREBIRD_PORT` | `127.0.0.1`, `3050` | Servidor Firebird. |
 | `FIREBIRD_USER`, `FIREBIRD_PASSWORD` | `SYSDBA`, — | Credenciales. |
@@ -62,9 +71,188 @@ El servidor es local y habla MCP por **stdio**: Claude Desktop lo lanza como pro
 | `LOG_LEVEL` | `info` | Nivel de Pino. Los logs van a stderr (stdout es el canal MCP). |
 | `SEQ_URL`, `SEQ_API_KEY` | — | Si hay `SEQ_URL`, los logs también van a Seq. |
 
-Ninguna tool recibe la identidad como parámetro. Los filtros por persona aceptan `"yo"`: en tickets es `MCP_COD_USUARIO`; en tareas, su `USUARIOS.COD_DESARROLLADOR`, que se resuelve en la base al arrancar.
+Ninguna tool recibe la identidad como parámetro. Los filtros por persona aceptan `"yo"`: en tickets es el usuario de la sesión; en tareas, su `COD_DESARROLLADOR`. En stdio la sesión es `MCP_COD_USUARIO` (el desarrollador se resuelve en la base al arrancar) y no hay autenticación: quien configura el proceso decide con qué usuario consulta. En http la sesión sale del token de cada request.
 
-Esto es para evaluación: no hay autenticación. Quien configura el proceso decide con qué usuario consulta.
+## Publicarlo por HTTP
+
+Con `MCP_TRANSPORTE=http` el servidor atiende MCP Streamable HTTP en `/mcp` (sin estado: solo `POST`) y exige un token OAuth. El inicio de sesión es el mismo que el del MCP de tickets v1 (`mcp-server/`): mismos endpoints, mismas variables y mismo formato de token. Si los dos comparten `MCP_JWT_SIGNING_KEY`, un token emitido por uno sirve en el otro.
+
+| Endpoint | Para qué |
+|---|---|
+| `/.well-known/oauth-protected-resource`, `/.well-known/oauth-authorization-server` | Descubrimiento (RFC 9728 / RFC 8414). El 401 de `/mcp` apunta acá. |
+| `POST /register` | Registro dinámico de cliente (devuelve siempre el mismo `client_id` público). |
+| `GET`/`POST /authorize` | Página de inicio de sesión (Authorization Code + PKCE S256). |
+| `POST /token` | Emite el token: `grant_type=authorization_code` o `client_credentials` (`client_id`/`client_secret` = los campos del login). |
+| `POST /token/renovar` | Con `Authorization: Bearer <token>`, emite un token nuevo con la misma identidad. |
+
+El login lo resuelve `PROC_GET_AUTH_CREDENCIAL(MCP_AUTH_TIPO, apikey, apisecret)`; el servidor no conoce la lógica de cada tipo. Con `alias/clave` además exige una fila activa en `MCP_OAUTH_CREDENCIALES`, y lo vuelve a comprobar en cada request. Un token revocado (su `jti` en `MCP_OAUTH_TOKENS_REVOCADOS`) deja de servir. Un token sin la identidad que exige el catálogo (`COD_USUARIO` en tickets, `COD_VENDEDOR` en prospección) recibe 403.
+
+| Variable | Default | Descripción |
+|---|---|---|
+| `MCP_HTTP_PUERTO` | `3000` | Puerto HTTP. |
+| `MCP_URL_PUBLICA` | — | URL base pública, si está detrás de un proxy (ej. `https://mcp.ejemplo.com/tickets-v2`). Sin valor se arma con el host del request. |
+| `MCP_JWT_SIGNING_KEY` | — | **Obligatoria en http.** Secreto HS256 de los tokens. Nunca en el repo. |
+| `MCP_JWT_EXPIRACION_SOBRE_DIAS` | `15` | Vigencia del token. |
+| `MCP_AUTH_TIPO` | `alias/clave` | Tipo de inicio de sesión (1.er parámetro de `PROC_GET_AUTH_CREDENCIAL`): `alias/clave`, `desarrollador/clave`, `tlfvendedor`… |
+| `MCP_AUTH_TITULO_AUTORIZACION` | `Autorizar acceso al MCP` | Título de la página de inicio de sesión. |
+| `MCP_AUTH_APIKEY_REQUERIDO`, `MCP_AUTH_APIKEY_TITULO` | `true`, `Usuario` | Si se muestra el primer campo y con qué etiqueta. |
+| `MCP_AUTH_APISECRET_REQUERIDO`, `MCP_AUTH_APISECRET_TITULO` | `true`, `Clave` | Si se muestra el campo de clave y con qué etiqueta. Booleanos: `true`/`false`/`1`/`0`. |
+| `MCP_OAUTH_DB_HOST`, `_PORT`, `_PATH`, `_USER`, `_PASSWORD` | `FIREBIRD_*` | Base de OAuth, si es otra distinta de la de tickets. |
+
+Para agregarlo en Claude Code: `claude mcp add --transport http tickets-v2 http://<host>:<puerto>/mcp` (se abre la página de inicio de sesión en el navegador). Los pasos completos están en [docs/instalacion.md](docs/instalacion.md#publicarlo-por-http).
+
+## Catálogos
+
+| `MCP_CATALOGO` | `serverInfo.name` | Identidad requerida | Tools |
+|---|---|---|---|
+| `tickets` (default) | `mcp-tickets-json` | `COD_USUARIO` | Las 4 de lectura de arriba. |
+| `prospeccion` | `mcp-prospeccion-json` | `COD_VENDEDOR` | 11: `user_info`, `obtener_instrucciones`, `resumen_prospeccion`, `totales_resultado_prospeccion`, `buscar_prospectos_vendedor`, `agendas_prospectos_vendedor`, `historial_mensajes_prospecto`, `registrar_gestion_prospecto`, `registrar_prospecto`, `modificar_prospecto` y `listar_catalogo`. |
+
+### Prospección
+
+Migrado de `prospeccion-functions.json` del MCP v1, con el contrato de este proyecto: JSON tipado, campos en camelCase, booleanos reales, fechas ISO y `outputSchema` en todas las tools. Los nombres de las tools son los mismos que en la v1. Todas operan sobre el vendedor de la sesión, que nunca es un parámetro. Las instrucciones de uso (`funciones/prospeccion-instructions.md`) se sirven con `obtener_instrucciones`, no en el handshake.
+
+- **Escrituras** (`registrar_*`, `modificar_prospecto`): `readOnlyHint: false`. Corren en una transacción propia: si el procedure las rechaza (`SALIDA = -1`), la tool responde `OPERACION_RECHAZADA` con el motivo y se deshace todo.
+- **`listar_catalogo`**: un solo punto para los 8 catálogos de referencia (`grupos`, `canales`, `categorias`, `resultados`, `acciones`, `campanias`, `localidades`, `barrios`). Cada elemento trae `codigo` y `nombre`. `resultados` exige `codPadre` (la categoría) y `categorias` lo acepta opcional. `canales`, `campanias`, `localidades` y `barrios` aceptan `buscar` con búsqueda aproximada (mismo algoritmo y mismos puntajes que la v1, con caché de 60 minutos). Es el [`listar_catalogo` genérico](#listar_catalogo-un-catálogo-nuevo-sin-código): los 8 catálogos son variantes `procedure` declaradas en `funciones/prospeccion-functions.json`.
+- **Login típico**: `MCP_AUTH_TIPO=tlfvendedor` con `MCP_AUTH_APISECRET_REQUERIDO=false` (el vendedor entra con su teléfono).
+
+Equivalencias de parámetros v1 → v2:
+
+| v1 | v2 |
+|---|---|
+| `COD_VENDEDOR_IN`, `FILTRO_COD_VENDEDOR_IN`, `COD_USUARIO_IN`, `FILTRO_USUARIO_IN`, `COD_VENDEDOR`, `COD_USUARIO` | (de la sesión) |
+| `FECHA_REFERENCIA_IN`, `INTERVALO_IN` | `fechaReferencia`, `intervalo` |
+| `COD_CAMPANIA_IN`, `FECHA_AGENDA_IN`, `FILTRO_FECHA_IN` (0/1/2) | `codCampania`, `fechaAgenda`, `filtroFecha` (omitido / `cita` / `gestion`) |
+| `CLIENTE_IN`, `COD_BARRIO_IN`, `COD_ACCION_IN`, `ARCHIVADO_IN`, `MAX_FILAS_IN` | `cliente`, `codBarrio`, `codAccion`, `archivado`, `maxFilas` |
+| `FECHA_AGENDA_DESDE`, `FECHA_AGENDA_HASTA` | `fechaDesde`, `fechaHasta` |
+| `COD_CLIENTE_ING`, `COD_PROSPECTO_ING`, `COD_CLIENTE_FIREBIRD` | `codCliente`, `codProspecto`, `codCliente` |
+| `COD_GRUPO_PROSPECTO`, `COD_COMERCIALIZADORA`, `COD_CATEGORIA_MENSAJE`, `COD_RESULTADO_RECLAMO` | `codGrupoProspecto`, `codComercializadora`, `codCategoriaMensaje`, `codResultado` |
+| `FECHA_HORA_AGENDA`, `FECHA_HORA`, `MENSAJE`, `COD_RECLAMO` | `fechaHoraAgenda`, `fechaHora`, `mensaje`, `codReclamo` |
+| `APELLIDO_SOLO`, `NOMBRE_SOLO`, `TELEFONO`, `TELEFONO_MOVIL`, `EMAIL` | `apellido`, `nombre`, `telefono`, `telefonoMovil`, `email` |
+| `TIPO_DOCUMENTO`, `NRO_DOCUMENTO`, `FECHA_NACIMIENTO`, `DOMICILIO` | `tipoDocumento`, `nroDocumento`, `fechaNacimiento`, `domicilio` |
+| `COD_BARRIO`, `COD_LOCALIDAD`, `COD_PROVINCIA`, `FECHA_CIERRE_POSIBLE`, `TIPO_PLAN_DISPONIBLE`, `COD_PLAN_DISPONIBLE`, `FORECAST`, `MONTO_COTIZACION`, `CANT_EMPLEADOS` | `codBarrio`, `codLocalidad`, `codProvincia`, `fechaCierrePosible`, `tipoPlanDisponible`, `codPlanDisponible`, `forecast`, `montoCotizacion`, `cantEmpleados` |
+| `listar_catalogo`: `CATALOGO`, `COD_PADRE`, `BUSCAR`; columnas `COD_*`/`NOMBRE`, `SIMILITUD`, `EXIGE_AGENDAMIENTO` | `catalogo`, `codPadre`, `buscar`; `codigo`/`nombre`, `similitud`, `exigeAgendamiento` |
+
+## Archivo de funciones
+
+Cada MCP que publica este proyecto se define en un archivo `funciones/<catalogo>-functions.json`, como los `*-functions.json` del MCP v1: la info del servidor y la lista de tools con sus textos. **Ningún texto que ve el agente está en el código fuente:** el nombre del servidor, las instrucciones, el título y la descripción de cada tool y de cada parámetro se editan en el JSON y se toman sin recompilar.
+
+```json
+{
+  "$schema": "./functions.schema.json",
+  "servidor": { "nombre": "mcp-prospeccion-json", "claimRequerida": "COD_VENDEDOR", "instrucciones": "prospeccion-instructions.md" },
+  "tools": [ { "tipo": "procedure", "nombre": "listar_barrios", "procedure": "PROC_GET_BARRIOS", "descripcion": "..." } ]
+}
+```
+
+- `$schema` apunta a `funciones/functions.schema.json`: VS Code autocompleta y valida mientras editás. Si cambiás `src/funciones/esquema.ts`, regeneralo con `npm run schema:funciones`.
+- **Recarga en caliente:** el servidor vigila el archivo y su `.md` de instrucciones. Al guardar, el siguiente `tools/list` ya muestra el cambio. Si la versión nueva es inválida, se loguea el error y se sigue con la anterior.
+- **Antes de publicar un cambio,** corré `npm run validar-funciones`: contra la base del `.env`, verifica que existan los procedures, los métodos y sus parámetros, sin ejecutar ninguna tool.
+
+### `servidor`
+
+| Campo | Para qué |
+|---|---|
+| `nombre` | `serverInfo.name` del handshake. |
+| `claimRequerida` | Clave de identidad que necesitan las tools: `COD_USUARIO`, `COD_VENDEDOR`, `COD_DESARROLLADOR`, `COD_PROVEEDOR`, `COD_CLIENTE`, `COD_EMPRESA` o `SECUENCIAL_EMPRESA`. En http, un token sin ella recibe 403; en stdio es obligatoria su variable `MCP_COD_*`. |
+| `version` | `serverInfo.version` (opcional). |
+| `instrucciones` | `.md` al lado del archivo; lo devuelve la tool `obtener_instrucciones`. |
+| `instruccionesEnHandshake` | `true` = enviarlas también como `instructions` del handshake (por defecto no, como en la v1). |
+| `completarSesion` | Archivo `src/comunes/<nombre>.ts` que completa la sesión stdio desde la base (`completar-sesion-tickets` resuelve el desarrollador). |
+
+### Tipos de tool
+
+| `tipo` | Qué declara | Cómo se ejecuta |
+|---|---|---|
+| `procedure` | `procedure` y `parametros` | Pasamano: lee de la base el orden y los tipos de los parámetros (`RDB$PROCEDURE_PARAMETERS`) y arma `SELECT * FROM P(?, ...)`, o `EXECUTE PROCEDURE` si es ejecutable. Sin parámetros, sin `()`. |
+| `webservice` | `metodo` y `parametros` | Usa la definición guardada en `METODOS_WEBSERVICES` (`PROC_GET_METODO_WEBSERV_X_NOMB` y `PROC_GET_PARAMS_METODOS_WEBSERV`, como JKMate3 y la v1) para componer la llamada: verifica los parámetros contra el método, convierte cada valor según su tipo y ejecuta el SSQL directo en Firebird (no hay HTTP). La definición se reusa `MCP_WEBSERVICE_CACHE_SEGUNDOS`. |
+| `compleja` | `handler` y la descripción de sus `parametros` | Lógica escrita en código en `src/catalogos/<handler>.ts`, que se carga sola por el nombre; el archivo aporta los textos. Ver [Dónde va cada cosa](#dónde-va-cada-cosa). |
+| `agrupadora` | `descripcion` y la descripción de `catalogo`, `codPadre` y `buscar` | Una sola tool (como `listar_catalogo`) para varios listados simples, declarados como variantes `procedure` o `webservice` con `"grupo"`. El motor es genérico y no lleva código propio. |
+
+Las tools `procedure` y `webservice` responden `{ resultado: [filas] }` con las columnas en camelCase (`COD_BARRIO` → `codBarrio`), fechas ISO y textos sin relleno.
+
+### Parámetros y opciones de `procedure` y `webservice`
+
+| Opción | En el `inputSchema` | Qué hace |
+|---|---|---|
+| `parametros[].nombre` / `tipo` | — | Nombre real en el procedure o el método; tipo `entero`, `decimal`, `texto`, `booleano`, `fecha`, `fechaHora` o `json` (también `Entero`, `Texto`... de la v1). |
+| `alias` | visible con el alias | El agente lo ve y lo manda con otro nombre; a la base va con el real. |
+| `descripcion`, `requerido`, `default` | visible | Como en la v1. |
+| `valorFijo` | oculto | Siempre ese valor. |
+| `campoUsuario` | oculto | Siempre el `COD_USUARIO` de la sesión. |
+| `campoVendedor`, `campoDesarrollador`, `campoProveedor`, `campoCliente`, `campoEmpresa`, `campoSecuencialEmpresa` | oculto si el parámetro es `requerido` (forzado); visible si no (autocompletado) | Valor de la sesión; en modo autocompletado, el del agente si lo mandó. Sin el dato en la sesión: `NO_AUTORIZADO`. |
+| `sanitizar: false` | — | No quitarle HTML/JavaScript a ese parámetro. |
+| `salida` | — | Columnas a devolver, en orden: `"NOMBRE"` o `{ "columna": "COD_BARRIO", "nombre": "id", "tipo": "entero" }`. |
+| `maxFilas` | — | Tope de filas; agrega `hayMas`. |
+| `busqueda` | agrega `buscar` | Búsqueda aproximada con caché, igual que la v1 (`campos`, `columnas`, `maxResultados`, `umbral`, `maxSinBusqueda`, `cacheMinutos`, `cacheAlcance`). |
+| `escritura`, `destructiva` | — | Transacción de escritura y annotations. Sin `escritura`, solo lectura. |
+| `rechazo` | — | `{ "columna": "SALIDA", "valoresExito": [0], "columnaMensaje": "MENSAJE" }`: otro valor responde `OPERACION_RECHAZADA` y deshace todo. Una `EXCEPTION` del procedure también. |
+| `conexionExclusiva` | — | Conexión propia fuera del pool (procedures que escriben claves propias en `USER_SESSION`). |
+
+**Contexto de sesión:** antes de ejecutar, todas las claves de identidad de la sesión se escriben con `RDB$SET_CONTEXT('USER_SESSION', ...)` en la conexión de la tool (NULL las vacías), como en la v1. Se reescriben en cada invocación, así una conexión reutilizada del pool nunca conserva la identidad de otro usuario.
+
+**Sanitización:** a toda tool, de cualquier tipo, se le quita el HTML y el JavaScript ejecutable de los textos que recibe, también dentro de objetos y de textos con un JSON. Un texto sin marcado (`Pérez & Hijos`, `monto < 500`) llega igual. Los métodos webservice de categoría 100 y 200 quedan exentos, como en JKMate3.
+
+### `listar_catalogo`: un catálogo nuevo sin código
+
+`listar_catalogo` es una tool `"tipo": "agrupadora"`: su motor es genérico y está escrito una sola vez. Cada listado simple de opciones se declara como una variante `procedure` o `webservice` con `"grupo": "listar_catalogo"`: no se publica suelta, y la tool única la elige con `catalogo`, le pasa `codPadre` y `buscar`, y devuelve siempre `{ catalogo, elementos, avisos, busqueda? }`. La descripción se genera con una línea por variante.
+
+```json
+{ "tipo": "agrupadora", "nombre": "listar_catalogo", "descripcion": "Catálogos de referencia. ...",
+  "parametros": [ { "nombre": "catalogo", "descripcion": "Catálogo a listar." } ] },
+{ "tipo": "procedure", "nombre": "resultados", "grupo": "listar_catalogo", "procedure": "PROC_GET_RESULTADOS_RECL_X_CAT",
+  "descripcion": "Resultados de una acción.", "uso": "codigo → registrar_*.codResultado",
+  "parametros": [ { "nombre": "COD_CATEGORIA_MENSAJE", "tipo": "entero", "requerido": true } ],
+  "padre": { "parametro": "COD_CATEGORIA_MENSAJE", "catalogo": "categorias" },
+  "salida": [ { "columna": "COD_RESULTADO_RECLAMO", "nombre": "codigo", "tipo": "entero" },
+              { "columna": "DESCRIPCION", "nombre": "nombre", "tipo": "texto" },
+              { "columna": "EXIGE_AGENDAMIENTO", "nombre": "exigeAgendamiento", "tipo": "booleano" } ] }
+```
+
+- Toda variante define en `salida` los campos `codigo` y `nombre`; el resto es libre.
+- `padre`: qué parámetro recibe `codPadre` y de qué catálogo sale (`requerido: false` = opcional).
+- `orden`: `[{ "campo": "fechaFin", "desc": true }]`.
+- Una variante no puede tener parámetros obligatorios que no sean el padre (usar `valorFijo` o un campo de sesión) ni `escritura`.
+
+### Montar un MCP nuevo
+
+1. Creá `funciones/<nombre>-functions.json` con `servidor` y las tools (`procedure`, `webservice`, una `agrupadora` como `listar_catalogo`, y complejas comunes como `user-info`).
+2. `MCP_CATALOGO=<nombre> npm run validar-funciones`.
+3. Lanzalo con `MCP_CATALOGO=<nombre>` (o `MCP_FUNCIONES_ARCHIVO` con la ruta del archivo).
+
+### Dónde va cada cosa
+
+| Qué | Dónde |
+|---|---|
+| Tools `procedure`, `webservice` y `agrupadora` | Solo en el archivo de funciones: no llevan código. |
+| Una tool compleja | `src/catalogos/<handler>.ts`, un archivo por tool, con su test al lado (`<handler>.test.ts`). El nombre del archivo es el `handler` del JSON: kebab-case, igual que la tool (`listar_tickets` → `listar-tickets.ts`). |
+| Lo que comparten varias tools complejas (procedures, esquemas, campos, mapeos, `completarSesion`) | `src/comunes/`, con el MCP como sufijo cuando es de uno solo (`sp-tickets.ts`, `campos-prospeccion.ts`). |
+| El motor (carga del archivo, procedure, webservice, agrupadora, sanitización) | `src/funciones/` y `src/nucleo/`. |
+
+**Para agregar una tool compleja:**
+
+1. Creá `src/catalogos/<handler>.ts` con la lógica: validador zod de la entrada (sin descripciones), `outputSchema`, annotations y `ejecutar`. El archivo exporta `export const handler: HandlerCompleja = { crear: ({ deps }) => ... }`.
+2. Si necesita llamadas a procedures o campos que comparte con otras tools, van en `src/comunes/`.
+3. Declarala en el archivo de funciones con `"tipo": "compleja"`, `"handler": "<handler>"` y sus textos.
+4. Su test al lado, con la base simulada de `test/apoyo.ts` (`toolDe('<catalogo>', '<tool>', deps)`).
+
+No hay registro que mantener: el servidor importa el archivo por el nombre del `handler`. `npm test` falla si un JSON nombra un handler que no existe, si un archivo de `src/catalogos/` no exporta `handler` o si ningún JSON lo usa. Cambiar el código de una tool requiere `npm run build` y reiniciar; sus textos se siguen editando en caliente.
+
+### Equivalencias con `functions.json` de la v1
+
+| v1 | acá |
+|---|---|
+| entrada con `metodo` | `"tipo": "webservice"` + `metodo` |
+| — | `"tipo": "procedure"` + `procedure` (sin registrar un método) |
+| `nombre`, `titulo`, `descripcion` | iguales |
+| `parametros[]`: `nombre`, `alias`, `tipo`, `descripcion`, `requerido`, `default`, `valorFijo` | iguales (más el tipo `json` y `sanitizar`) |
+| `CAMPO_USUARIO` | `campoUsuario` |
+| `campoDesarrollador`, `campoVendedor`, `campoProveedor`, `campoCliente`, `campoEmpresa`, `campoSecuencialEmpresa` | iguales |
+| `salida: ["COD_BARRIO"]` | igual, o con objetos para renombrar y tipar |
+| `busqueda` | igual; el parámetro virtual es `buscar` (minúscula) |
+| `"tipo": "grupo"` + variantes con `grupo`, `uso`, `padre` | `"tipo": "agrupadora"` + variantes con `grupo`, `uso`, `padre`; la entrada es `catalogo`, `codPadre`, `buscar` |
+| `{ "resultado": [...] }` con columnas tal cual | `{ "resultado": [...] }` con columnas en camelCase |
+| `reporte` (PDF) | todavía no |
 
 ## Desde la terminal
 
@@ -86,7 +274,7 @@ npm run lint
 npm run typecheck
 ```
 
-Los tests de integración que usan los SP `_AG` se saltean solos mientras esos SP no existan en la base.
+Los tests de integración que usan los SP `_AG` se saltean solos mientras esos SP no existan en la base. El de inicio de sesión (`test/integracion/oauth.test.ts`) corre solo si además están `OAUTH_PRUEBA_APIKEY`, `OAUTH_PRUEBA_APISECRET` (vacía para un login sin clave) y, opcional, `OAUTH_PRUEBA_TIPO`. Usá una base de pruebas: nunca la de producción.
 
 ## Medición v1 contra v2
 
@@ -205,14 +393,20 @@ Acepta los mismos filtros que `listar_tickets` y `agruparPor` (`estado`, `priori
 
 ```
 src/
-  index.ts              arranque: config, logger, base, sesión y transporte stdio
-  servidor-mcp.ts       Server de bajo nivel del SDK: tools/list y tools/call
-  auth/sesion.ts        identidad del proceso (MCP_COD_USUARIO)
-  db/firebird.ts        pool, transacción de solo lectura y errores de conexión
-  db/sp.ts              wrappers tipados de los SP públicos _AG
+  index.ts              arranque: config, logger, base, catálogo activo y transporte (stdio o http)
+  http.ts               express: rutas OAuth + /mcp Streamable HTTP sin estado
+  config.ts             variables de entorno (validación por transporte y catálogo)
+  nucleo/               genérico: DefinicionTool, wrapper común de ejecución (sanitización), Server del SDK
+  funciones/            motor del archivo de funciones: esquema, carga de handlers por nombre, recarga,
+                        tipos procedure y webservice, agrupadora y validar-funciones
+  catalogos/            una tool compleja por archivo (<handler>.ts + su test), de cualquier MCP
+  comunes/              lo compartido entre tools complejas: procedures, esquemas, campos, completarSesion
+  auth/                 sesión, JWT, credenciales (PROC_GET_AUTH_CREDENCIAL), login, Bearer
+  busqueda/             búsqueda aproximada (port de la v1) y caché de catálogos
+  db/firebird.ts        pool, transacciones (lectura y escritura) y errores de conexión
   mapeo/                fechas con offset, booleanos, personas, HTML a texto
-  tools/                una definición por tool, más esquemas y filtros compartidos
   errores.ts            ErrorTool y códigos estables
   logger.ts             Pino a stderr (+ Seq)
-test/                   apoyo, datos simulados, contrato e integración
+test/                   apoyo, datos simulados, contrato, http e integración
+funciones/              un archivo <catalogo>-functions.json por MCP, sus instrucciones y functions.schema.json
 ```

@@ -1,0 +1,880 @@
+{
+  "title": "Archivo de funciones de un MCP",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "servidor": {
+      "type": "object",
+      "properties": {
+        "nombre": {
+          "type": "string",
+          "minLength": 1,
+          "description": "serverInfo.name del handshake."
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claimRequerida": {
+          "type": "string",
+          "enum": [
+            "COD_USUARIO",
+            "COD_VENDEDOR",
+            "COD_DESARROLLADOR",
+            "COD_PROVEEDOR",
+            "COD_CLIENTE",
+            "COD_EMPRESA",
+            "SECUENCIAL_EMPRESA"
+          ],
+          "description": "Clave de identidad que necesitan las tools (token http o MCP_COD_* en stdio)."
+        },
+        "instrucciones": {
+          "description": "Archivo .md con las instrucciones, relativo a este archivo.",
+          "type": "string",
+          "minLength": 1
+        },
+        "instruccionesEnHandshake": {
+          "description": "true = enviar las instrucciones también en el handshake.",
+          "type": "boolean"
+        },
+        "completarSesion": {
+          "description": "Archivo src/comunes/<nombre>.ts que completa la sesión stdio desde la base.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        }
+      },
+      "required": [
+        "nombre",
+        "claimRequerida"
+      ],
+      "additionalProperties": false
+    },
+    "tools": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "const": "procedure"
+              },
+              "procedure": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "nombre": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(_[a-z0-9]+)*$",
+                "description": "Nombre de la tool (único en el archivo)."
+              },
+              "titulo": {
+                "description": "Nombre legible (ícono + acción + objeto). Sin titulo se genera desde el nombre.",
+                "type": "string",
+                "minLength": 1
+              },
+              "descripcion": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Lo que ve el agente para decidir cuándo usar la tool."
+              },
+              "parametros": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "nombre": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_$]*$",
+                      "description": "Nombre real del parámetro en el procedure o el método (no cambia con alias)."
+                    },
+                    "alias": {
+                      "description": "Nombre con el que lo ve y lo manda el agente.",
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                    },
+                    "tipo": {
+                      "description": "Tipo de dato: entero, decimal, texto, booleano, fecha (AAAA-MM-DD), fechaHora (ISO 8601) o json (objeto o array, llega como texto).",
+                      "type": "string",
+                      "enum": [
+                        "entero",
+                        "decimal",
+                        "texto",
+                        "booleano",
+                        "fecha",
+                        "fechaHora",
+                        "json"
+                      ]
+                    },
+                    "descripcion": {
+                      "description": "Lo que ve el agente en el inputSchema.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "requerido": {
+                      "description": "Obligatorio para el agente (default false). En un campo de sesión, true = modo forzado (oculto).",
+                      "type": "boolean"
+                    },
+                    "default": {
+                      "description": "Valor si el agente no lo manda (visible y pisable).",
+                      "$ref": "#/$defs/__schema0"
+                    },
+                    "valorFijo": {
+                      "description": "Valor constante: el parámetro no se publica y siempre va con este valor.",
+                      "$ref": "#/$defs/__schema1"
+                    },
+                    "sanitizar": {
+                      "description": "false = no quitar HTML/JavaScript de este parámetro (default true).",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "nombre",
+                    "tipo"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "campoUsuario": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoVendedor": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoDesarrollador": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoProveedor": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoCliente": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoEmpresa": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoSecuencialEmpresa": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "salida": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "columna": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z0-9_$]*$",
+                          "description": "Columna que devuelve la consulta."
+                        },
+                        "nombre": {
+                          "description": "Campo en la respuesta (default: la columna en camelCase).",
+                          "type": "string",
+                          "pattern": "^[a-z][A-Za-z0-9]*$"
+                        },
+                        "tipo": {
+                          "description": "Conversión del valor (booleano convierte 0/1 en true/false).",
+                          "type": "string",
+                          "enum": [
+                            "entero",
+                            "decimal",
+                            "texto",
+                            "booleano",
+                            "fecha",
+                            "fechaHora"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "columna"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "maxFilas": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "busqueda": {
+                "type": "object",
+                "properties": {
+                  "campos": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "description": "Columnas (o campos de salida, en listar_catalogo) contra las que se compara el texto."
+                  },
+                  "columnas": {
+                    "description": "Columnas que vuelven al agente (prioridad sobre salida).",
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+                    }
+                  },
+                  "maxResultados": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "umbral": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "maxSinBusqueda": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "cacheMinutos": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "cacheAlcance": {
+                    "description": "global SOLO si el procedure no lee RDB$GET_CONTEXT.",
+                    "type": "string",
+                    "enum": [
+                      "usuario",
+                      "global"
+                    ]
+                  }
+                },
+                "required": [
+                  "campos"
+                ],
+                "additionalProperties": false
+              },
+              "escritura": {
+                "type": "boolean"
+              },
+              "destructiva": {
+                "type": "boolean"
+              },
+              "rechazo": {
+                "type": "object",
+                "properties": {
+                  "columna": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+                  },
+                  "valoresExito": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": [
+                        "number",
+                        "string"
+                      ]
+                    }
+                  },
+                  "columnaMensaje": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+                  }
+                },
+                "required": [
+                  "columna",
+                  "valoresExito"
+                ],
+                "additionalProperties": false
+              },
+              "conexionExclusiva": {
+                "description": "Conexión propia fuera del pool (procedures que escriben USER_SESSION).",
+                "type": "boolean"
+              },
+              "grupo": {
+                "description": "Tool agrupadora (como listar_catalogo) de la que es variante: no se publica suelta.",
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(_[a-z0-9]+)*$"
+              },
+              "uso": {
+                "description": "En una variante: qué código va a qué parámetro de qué tool (línea de la descripción).",
+                "type": "string",
+                "minLength": 1
+              },
+              "padre": {
+                "type": "object",
+                "properties": {
+                  "parametro": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9_$]*$",
+                    "description": "Parámetro de la variante que recibe codPadre."
+                  },
+                  "catalogo": {
+                    "description": "Variante de la que sale el código (para la descripción).",
+                    "type": "string"
+                  },
+                  "requerido": {
+                    "description": "Default true.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "parametro"
+                ],
+                "additionalProperties": false
+              },
+              "orden": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "campo": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "desc": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "campo"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "tipo",
+              "procedure",
+              "nombre",
+              "descripcion"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "const": "webservice"
+              },
+              "metodo": {
+                "type": "string",
+                "minLength": 1
+              },
+              "nombre": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(_[a-z0-9]+)*$",
+                "description": "Nombre de la tool (único en el archivo)."
+              },
+              "titulo": {
+                "description": "Nombre legible (ícono + acción + objeto). Sin titulo se genera desde el nombre.",
+                "type": "string",
+                "minLength": 1
+              },
+              "descripcion": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Lo que ve el agente para decidir cuándo usar la tool."
+              },
+              "parametros": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "nombre": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_$]*$",
+                      "description": "Nombre real del parámetro en el procedure o el método (no cambia con alias)."
+                    },
+                    "alias": {
+                      "description": "Nombre con el que lo ve y lo manda el agente.",
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                    },
+                    "tipo": {
+                      "description": "Tipo de dato: entero, decimal, texto, booleano, fecha (AAAA-MM-DD), fechaHora (ISO 8601) o json (objeto o array, llega como texto).",
+                      "type": "string",
+                      "enum": [
+                        "entero",
+                        "decimal",
+                        "texto",
+                        "booleano",
+                        "fecha",
+                        "fechaHora",
+                        "json"
+                      ]
+                    },
+                    "descripcion": {
+                      "description": "Lo que ve el agente en el inputSchema.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "requerido": {
+                      "description": "Obligatorio para el agente (default false). En un campo de sesión, true = modo forzado (oculto).",
+                      "type": "boolean"
+                    },
+                    "default": {
+                      "description": "Valor si el agente no lo manda (visible y pisable).",
+                      "$ref": "#/$defs/__schema0"
+                    },
+                    "valorFijo": {
+                      "description": "Valor constante: el parámetro no se publica y siempre va con este valor.",
+                      "$ref": "#/$defs/__schema1"
+                    },
+                    "sanitizar": {
+                      "description": "false = no quitar HTML/JavaScript de este parámetro (default true).",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "nombre",
+                    "tipo"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "campoUsuario": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoVendedor": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoDesarrollador": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoProveedor": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoCliente": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoEmpresa": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "campoSecuencialEmpresa": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+              },
+              "salida": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "columna": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z0-9_$]*$",
+                          "description": "Columna que devuelve la consulta."
+                        },
+                        "nombre": {
+                          "description": "Campo en la respuesta (default: la columna en camelCase).",
+                          "type": "string",
+                          "pattern": "^[a-z][A-Za-z0-9]*$"
+                        },
+                        "tipo": {
+                          "description": "Conversión del valor (booleano convierte 0/1 en true/false).",
+                          "type": "string",
+                          "enum": [
+                            "entero",
+                            "decimal",
+                            "texto",
+                            "booleano",
+                            "fecha",
+                            "fechaHora"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "columna"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "maxFilas": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "busqueda": {
+                "type": "object",
+                "properties": {
+                  "campos": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "description": "Columnas (o campos de salida, en listar_catalogo) contra las que se compara el texto."
+                  },
+                  "columnas": {
+                    "description": "Columnas que vuelven al agente (prioridad sobre salida).",
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+                    }
+                  },
+                  "maxResultados": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "umbral": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "maxSinBusqueda": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "cacheMinutos": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "cacheAlcance": {
+                    "description": "global SOLO si el procedure no lee RDB$GET_CONTEXT.",
+                    "type": "string",
+                    "enum": [
+                      "usuario",
+                      "global"
+                    ]
+                  }
+                },
+                "required": [
+                  "campos"
+                ],
+                "additionalProperties": false
+              },
+              "escritura": {
+                "type": "boolean"
+              },
+              "destructiva": {
+                "type": "boolean"
+              },
+              "rechazo": {
+                "type": "object",
+                "properties": {
+                  "columna": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+                  },
+                  "valoresExito": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": [
+                        "number",
+                        "string"
+                      ]
+                    }
+                  },
+                  "columnaMensaje": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9_$]*$"
+                  }
+                },
+                "required": [
+                  "columna",
+                  "valoresExito"
+                ],
+                "additionalProperties": false
+              },
+              "conexionExclusiva": {
+                "description": "Conexión propia fuera del pool (procedures que escriben USER_SESSION).",
+                "type": "boolean"
+              },
+              "grupo": {
+                "description": "Tool agrupadora (como listar_catalogo) de la que es variante: no se publica suelta.",
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(_[a-z0-9]+)*$"
+              },
+              "uso": {
+                "description": "En una variante: qué código va a qué parámetro de qué tool (línea de la descripción).",
+                "type": "string",
+                "minLength": 1
+              },
+              "padre": {
+                "type": "object",
+                "properties": {
+                  "parametro": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9_$]*$",
+                    "description": "Parámetro de la variante que recibe codPadre."
+                  },
+                  "catalogo": {
+                    "description": "Variante de la que sale el código (para la descripción).",
+                    "type": "string"
+                  },
+                  "requerido": {
+                    "description": "Default true.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "parametro"
+                ],
+                "additionalProperties": false
+              },
+              "orden": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "campo": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "desc": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "campo"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "tipo",
+              "metodo",
+              "nombre",
+              "descripcion"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "const": "compleja"
+              },
+              "nombre": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(_[a-z0-9]+)*$",
+                "description": "Nombre de la tool (único en el archivo)."
+              },
+              "titulo": {
+                "description": "Nombre legible (ícono + acción + objeto). Sin titulo se genera desde el nombre.",
+                "type": "string",
+                "minLength": 1
+              },
+              "descripcion": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Lo que ve el agente para decidir cuándo usar la tool."
+              },
+              "handler": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+                "description": "Archivo src/catalogos/<handler>.ts con la lógica de la tool."
+              },
+              "parametros": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "nombre": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Propiedad del inputSchema del handler; las anidadas, con punto (filtros.estado)."
+                    },
+                    "descripcion": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Lo que ve el agente en el inputSchema."
+                    },
+                    "sanitizar": {
+                      "description": "false = no quitar HTML/JavaScript de este parámetro (default true).",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "nombre",
+                    "descripcion"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "tipo",
+              "nombre",
+              "descripcion",
+              "handler"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "const": "agrupadora"
+              },
+              "nombre": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(_[a-z0-9]+)*$",
+                "description": "Nombre de la tool (único en el archivo)."
+              },
+              "titulo": {
+                "description": "Nombre legible (ícono + acción + objeto). Sin titulo se genera desde el nombre.",
+                "type": "string",
+                "minLength": 1
+              },
+              "descripcion": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Lo que ve el agente para decidir cuándo usar la tool."
+              },
+              "parametros": {
+                "description": "Descripciones de catalogo, codPadre y buscar.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "nombre": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Propiedad del inputSchema del handler; las anidadas, con punto (filtros.estado)."
+                    },
+                    "descripcion": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Lo que ve el agente en el inputSchema."
+                    },
+                    "sanitizar": {
+                      "description": "false = no quitar HTML/JavaScript de este parámetro (default true).",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "nombre",
+                    "descripcion"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "tipo",
+              "nombre",
+              "descripcion"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "servidor",
+    "tools"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema0"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema0"
+          }
+        }
+      ]
+    },
+    "__schema1": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema1"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema1"
+          }
+        }
+      ]
+    }
+  }
+}

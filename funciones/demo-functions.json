@@ -1,0 +1,201 @@
+{
+  "$schema": "./functions.schema.json",
+  "servidor": {
+    "nombre": "mcp-demo-funciones",
+    "claimRequerida": "COD_VENDEDOR"
+  },
+  "tools": [
+    {
+      "tipo": "compleja",
+      "nombre": "user_info",
+      "titulo": "👤 Consultando la sesión",
+      "handler": "user-info",
+      "descripcion": "Identidad de la sesión: los códigos con los que operan todas las herramientas."
+    },
+    {
+      "tipo": "agrupadora",
+      "nombre": "listar_catalogo",
+      "titulo": "📚 Consultando el catálogo",
+      "descripcion": "Catálogos de referencia de la demo. Elegí el catálogo con catalogo; los que dicen 'requiere codPadre' necesitan el código del catálogo padre. Los marcados [buscar] aceptan un texto aproximado. Nunca inventes un código: resolvelo siempre con esta tool.",
+      "parametros": [
+        {
+          "nombre": "catalogo",
+          "descripcion": "Catálogo a listar."
+        },
+        {
+          "nombre": "codPadre",
+          "descripcion": "Código del catálogo padre (ver descripción)."
+        },
+        {
+          "nombre": "buscar",
+          "descripcion": "Texto aproximado, tal como lo dijo el usuario (solo catálogos [buscar])."
+        }
+      ]
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "barrios",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_BARRIOS",
+      "descripcion": "Barrios.",
+      "uso": "codigo → codBarrio (procedure sin parámetros, con búsqueda)",
+      "salida": [
+        {
+          "columna": "COD_BARRIO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "COD_LOCALIDAD",
+          "nombre": "codLocalidad",
+          "tipo": "entero"
+        }
+      ],
+      "orden": [
+        {
+          "campo": "nombre"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "nombre"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "localidades",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_LOCALIDADES",
+      "descripcion": "Localidades.",
+      "uso": "codigo y codProvincia → codLocalidad y codProvincia",
+      "salida": [
+        {
+          "columna": "COD_LOCALIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "COD_PROVINCIA",
+          "nombre": "codProvincia",
+          "tipo": "entero"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "nombre"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "categorias",
+      "grupo": "listar_catalogo",
+      "metodo": "getCategoriasMensEncProsp",
+      "descripcion": "Acciones de una gestión.",
+      "uso": "codigo → codCategoriaMensaje (método de webservice; con codPadre = resultado anterior acota las acciones)",
+      "parametros": [
+        {
+          "nombre": "SEGUIMIENTO",
+          "tipo": "entero",
+          "valorFijo": 0
+        },
+        {
+          "nombre": "COD_RESULT_RECL_ORIGEN",
+          "tipo": "entero"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_RESULT_RECL_ORIGEN",
+        "catalogo": "resultados",
+        "requerido": false
+      },
+      "salida": [
+        {
+          "columna": "COD_CATEGORIA_MENSAJE",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CATEGORIA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "resultados",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_mostrar_resultado",
+      "descripcion": "Resultados posibles de una acción.",
+      "uso": "codigo → codResultado; si exigeAgendamiento, pedir la próxima cita (método de webservice con padre)",
+      "parametros": [
+        {
+          "nombre": "COD_CATEGORIA_MENSAJE",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "padre": {
+        "parametro": "COD_CATEGORIA_MENSAJE",
+        "catalogo": "categorias"
+      },
+      "salida": [
+        {
+          "columna": "COD_RESULTADO_RECLAMO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "DESCRIPCION",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "EXIGE_AGENDAMIENTO",
+          "nombre": "exigeAgendamiento",
+          "tipo": "booleano"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "historial_mensajes",
+      "titulo": "🗂️ Leyendo el historial",
+      "metodo": "ws_crm_mostrar_msj_x_cliente",
+      "descripcion": "Mensajes de un prospecto, del método de webservice ws_crm_mostrar_msj_x_cliente.",
+      "maxFilas": 50,
+      "parametros": [
+        {
+          "nombre": "COD_CLIENTE_ING",
+          "alias": "codCliente",
+          "tipo": "entero",
+          "requerido": true,
+          "descripcion": "codCliente del prospecto."
+        },
+        {
+          "nombre": "COD_PROSPECTO_ING",
+          "alias": "codProspecto",
+          "tipo": "entero",
+          "requerido": true,
+          "descripcion": "codProspecto."
+        }
+      ]
+    }
+  ]
+}

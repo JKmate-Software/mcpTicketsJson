@@ -1,10 +1,9 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import type { AccesoDatos } from '../../src/db/firebird.js';
-import { crearTools } from '../../src/tools/index.js';
-import type { ListadoTareas } from '../../src/tools/listar-tareas.js';
-import type { ListadoTickets } from '../../src/tools/listar-tickets.js';
-import type { ResumenTickets } from '../../src/tools/resumir-tickets.js';
-import { conectarCliente } from '../apoyo.js';
+import type { ListadoTareas } from '../../src/catalogos/listar-tareas.js';
+import type { ListadoTickets } from '../../src/catalogos/listar-tickets.js';
+import type { ResumenTickets } from '../../src/catalogos/resumir-tickets.js';
+import { conectarCliente, toolsDe } from '../apoyo.js';
 import { accesoDesdeEntorno, hayProcedimientosAg } from './base.js';
 
 const hayAg = await hayProcedimientosAg();
@@ -15,7 +14,7 @@ describe.skipIf(!hayAg)('listados contra la base de desarrollo', { timeout: 120_
 
   async function llamar<T>(tool: string, args: Record<string, unknown>) {
     acceso ??= accesoDesdeEntorno();
-    const { cliente, eventos } = await conectarCliente(crearTools({ acceso, zonaHoraria: 'America/Argentina/Buenos_Aires' }));
+    const { cliente, eventos } = await conectarCliente(await toolsDe('tickets', { acceso, zonaHoraria: 'America/Argentina/Buenos_Aires' }));
     await cliente.listTools();
     const resultado = await cliente.callTool({ name: tool, arguments: args });
     const detalle = eventos.find((e) => e.msg === 'Error inesperado en una tool') as { err?: { message?: string } } | undefined;

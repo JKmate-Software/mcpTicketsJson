@@ -8,7 +8,7 @@
 import Firebird from 'node-firebird';
 import type { Config } from '../../src/config.js';
 import { crearAccesoFirebird, type AccesoDatos } from '../../src/db/firebird.js';
-import { listarTareas, listarTickets, obtenerTicket } from '../../src/db/sp.js';
+import { listarTareas, listarTickets, obtenerTicket } from '../../src/comunes/sp-tickets.js';
 import type { Caso } from './casos.js';
 
 /** Más de esta cantidad, el verificador acepta el total en lugar de todos los ids (D8). */

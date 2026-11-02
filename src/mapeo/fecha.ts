@@ -79,3 +79,26 @@ export function aFechaONull(reloj: Date | null | undefined): string | null {
 export function relojDesdeFechaParametro(fecha: string): Date {
   return relojDesdeTexto(fecha);
 }
+
+const PATRON_ISO_PARAMETRO = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,9})?)?)?(Z|[+-]\d{2}:?\d{2})?$/;
+
+/** true si el texto es una fecha u hora ISO 8601 aceptada como parámetro (con o sin offset). */
+export function esFechaIsoParametro(texto: string): boolean {
+  const m = PATRON_ISO_PARAMETRO.exec(texto.trim());
+  return m !== null && !Number.isNaN(relojDesdeTexto(`${m[1]}-${m[2]}-${m[3]}`).getTime());
+}
+
+/**
+ * Fecha u hora ISO 8601 de un parámetro de tool → texto 'AAAA-MM-DD HH:mm:ss' en la hora de reloj
+ * de `zona`, para un parámetro TIMESTAMP/DATE de un SP. Sin offset se toma como hora de la base;
+ * con offset (o Z) se convierte a esa zona.
+ */
+export function aTimestampBase(texto: string, zona: string): string {
+  const m = PATRON_ISO_PARAMETRO.exec(texto.trim());
+  if (!m) throw new Error(`Fecha con formato inválido: ${texto}`);
+  const [, a, mes, d, h = '00', min = '00', s = '00', offset] = m;
+  if (!offset) return `${a}-${mes}-${d} ${h}:${min}:${s}`;
+  const instante = Date.parse(texto.trim().replace(' ', 'T'));
+  const reloj = new Date(instante + offsetEnInstante(zona, instante) * 60_000);
+  return `${aFecha(reloj)} ${dos(reloj.getUTCHours())}:${dos(reloj.getUTCMinutes())}:${dos(reloj.getUTCSeconds())}`;
+}

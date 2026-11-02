@@ -1,0 +1,3897 @@
+{
+"origen": "Generado con SimilitudTexto.cs del MCP de tickets v1 (mcp-server/src/McpTicketsServer/WebserviceFunctions/Busqueda), compilado sin cambios. Fija el puntaje esperado de cada par para que el port TS puntúe igual.",
+"casos": [
+{
+"buscado": "barrio san martin",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 100,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "VILLA BELGRANO",
+"puntaje": 27,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "SAN MARTIN",
+"puntaje": 83,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "CENTRO",
+"puntaje": 22,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "ALBERDI",
+"puntaje": 19,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "GENERAL PAZ",
+"puntaje": 19,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 14,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "YERBAL",
+"puntaje": 17,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "VILLA ALLENDE",
+"puntaje": 25,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "LOS CEIBOS",
+"puntaje": 18,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "BARRIO JARDÍN",
+"puntaje": 67,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "SAN VICENTE",
+"puntaje": 51,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "COFICO",
+"puntaje": 11,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "ALTO ALBERDI",
+"puntaje": 38,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "VILLA CABRERA",
+"puntaje": 31,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 34,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 36,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 22,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "B° 1° DE MAYO",
+"puntaje": 40,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 31,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "MANZANA M",
+"puntaje": 33,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "MAZANA C",
+"puntaje": 33,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "MARTIN SIX",
+"puntaje": 61,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "Ñandú Guazú",
+"puntaje": 26,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "barrio san martin",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 42,
+"normalizado": "BARRIO SAN MARTIN",
+"fonetico": "BARIO SAN MARTIN"
+},
+{
+"buscado": "vila velgrano",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 26,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "VILLA BELGRANO",
+"puntaje": 92,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "SAN MARTIN",
+"puntaje": 15,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "CENTRO",
+"puntaje": 23,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "ALBERDI",
+"puntaje": 31,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "GENERAL PAZ",
+"puntaje": 26,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 16,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "YERBAL",
+"puntaje": 23,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "VILLA ALLENDE",
+"puntaje": 59,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "LOS CEIBOS",
+"puntaje": 15,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "BARRIO JARDÍN",
+"puntaje": 29,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "SAN VICENTE",
+"puntaje": 27,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "COFICO",
+"puntaje": 15,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "ALTO ALBERDI",
+"puntaje": 20,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "VILLA CABRERA",
+"puntaje": 59,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 19,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 29,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 24,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "B° 1° DE MAYO",
+"puntaje": 31,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 13,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "MANZANA M",
+"puntaje": 20,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "MAZANA C",
+"puntaje": 21,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "MARTIN SIX",
+"puntaje": 11,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "Ñandú Guazú",
+"puntaje": 23,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "vila velgrano",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 19,
+"normalizado": "VILA VELGRANO",
+"fonetico": "BILA BELGRANO"
+},
+{
+"buscado": "martin",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 94,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "VILLA BELGRANO",
+"puntaje": 17,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "SAN MARTIN",
+"puntaje": 97,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "CENTRO",
+"puntaje": 17,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "ALBERDI",
+"puntaje": 14,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "GENERAL PAZ",
+"puntaje": 14,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 15,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "YERBAL",
+"puntaje": 17,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "VILLA ALLENDE",
+"puntaje": 30,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "LOS CEIBOS",
+"puntaje": 10,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "BARRIO JARDÍN",
+"puntaje": 64,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "SAN VICENTE",
+"puntaje": 30,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "COFICO",
+"puntaje": 0,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "ALTO ALBERDI",
+"puntaje": 30,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "VILLA CABRERA",
+"puntaje": 26,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 47,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 14,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 22,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "B° 1° DE MAYO",
+"puntaje": 44,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 30,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "MANZANA M",
+"puntaje": 40,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "MAZANA C",
+"puntaje": 30,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "MARTIN SIX",
+"puntaje": 97,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "Ñandú Guazú",
+"puntaje": 14,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "martin",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 41,
+"normalizado": "MARTIN",
+"fonetico": "MARTIN"
+},
+{
+"buscado": "belgrano villa",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 36,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "VILLA BELGRANO",
+"puntaje": 99,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "SAN MARTIN",
+"puntaje": 21,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "CENTRO",
+"puntaje": 25,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "ALBERDI",
+"puntaje": 17,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "GENERAL PAZ",
+"puntaje": 33,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 16,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "YERBAL",
+"puntaje": 25,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "VILLA ALLENDE",
+"puntaje": 62,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "LOS CEIBOS",
+"puntaje": 17,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "BARRIO JARDÍN",
+"puntaje": 39,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "SAN VICENTE",
+"puntaje": 27,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "COFICO",
+"puntaje": 15,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "ALTO ALBERDI",
+"puntaje": 22,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "VILLA CABRERA",
+"puntaje": 62,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 12,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 29,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 19,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "B° 1° DE MAYO",
+"puntaje": 26,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 13,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "MANZANA M",
+"puntaje": 25,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "MAZANA C",
+"puntaje": 25,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "MARTIN SIX",
+"puntaje": 25,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "Ñandú Guazú",
+"puntaje": 22,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "belgrano villa",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 26,
+"normalizado": "BELGRANO VILLA",
+"fonetico": "BELGRANO BIA"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 42,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "VILLA BELGRANO",
+"puntaje": 29,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "SAN MARTIN",
+"puntaje": 32,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "CENTRO",
+"puntaje": 40,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "ALBERDI",
+"puntaje": 14,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "GENERAL PAZ",
+"puntaje": 34,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 31,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "YERBAL",
+"puntaje": 30,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "VILLA ALLENDE",
+"puntaje": 18,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "LOS CEIBOS",
+"puntaje": 40,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "BARRIO JARDÍN",
+"puntaje": 28,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "SAN VICENTE",
+"puntaje": 34,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "COFICO",
+"puntaje": 17,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "ALTO ALBERDI",
+"puntaje": 22,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "VILLA CABRERA",
+"puntaje": 24,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 29,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 99,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 25,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "B° 1° DE MAYO",
+"puntaje": 33,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 20,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "MANZANA M",
+"puntaje": 21,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "MAZANA C",
+"puntaje": 25,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "MARTIN SIX",
+"puntaje": 22,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "Ñandú Guazú",
+"puntaje": 18,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "serro de las rosas",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 29,
+"normalizado": "SERRO DE LAS ROSAS",
+"fonetico": "SERO ROSAS"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 24,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "VILLA BELGRANO",
+"puntaje": 19,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "SAN MARTIN",
+"puntaje": 20,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "CENTRO",
+"puntaje": 19,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "ALBERDI",
+"puntaje": 19,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "GENERAL PAZ",
+"puntaje": 7,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 12,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "YERBAL",
+"puntaje": 13,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "VILLA ALLENDE",
+"puntaje": 25,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "LOS CEIBOS",
+"puntaje": 25,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "BARRIO JARDÍN",
+"puntaje": 31,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "SAN VICENTE",
+"puntaje": 13,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "COFICO",
+"puntaje": 28,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "ALTO ALBERDI",
+"puntaje": 28,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "VILLA CABRERA",
+"puntaje": 13,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 19,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 25,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 99,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "B° 1° DE MAYO",
+"puntaje": 24,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 13,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "MANZANA M",
+"puntaje": 6,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "MAZANA C",
+"puntaje": 6,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "MARTIN SIX",
+"puntaje": 20,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "Ñandú Guazú",
+"puntaje": 12,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "ipolito irigoyen",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 21,
+"normalizado": "IPOLITO IRIGOYEN",
+"fonetico": "IPOLITO IRIGOIEN"
+},
+{
+"buscado": "alverdi",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 23,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "VILLA BELGRANO",
+"puntaje": 33,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "SAN MARTIN",
+"puntaje": 30,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "CENTRO",
+"puntaje": 14,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "ALBERDI",
+"puntaje": 99,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "GENERAL PAZ",
+"puntaje": 26,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 23,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "YERBAL",
+"puntaje": 14,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "VILLA ALLENDE",
+"puntaje": 54,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "LOS CEIBOS",
+"puntaje": 10,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "BARRIO JARDÍN",
+"puntaje": 33,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "SAN VICENTE",
+"puntaje": 27,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "COFICO",
+"puntaje": 0,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "ALTO ALBERDI",
+"puntaje": 97,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "VILLA CABRERA",
+"puntaje": 27,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 18,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 26,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 19,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "B° 1° DE MAYO",
+"puntaje": 12,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 13,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "MANZANA M",
+"puntaje": 11,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "MAZANA C",
+"puntaje": 12,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "MARTIN SIX",
+"puntaje": 20,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "Ñandú Guazú",
+"puntaje": 11,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "alverdi",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 20,
+"normalizado": "ALVERDI",
+"fonetico": "ALBERDI"
+},
+{
+"buscado": "nueva cordova",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 12,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "VILLA BELGRANO",
+"puntaje": 17,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "SAN MARTIN",
+"puntaje": 15,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "CENTRO",
+"puntaje": 23,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "ALBERDI",
+"puntaje": 23,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "GENERAL PAZ",
+"puntaje": 14,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 99,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "YERBAL",
+"puntaje": 31,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "VILLA ALLENDE",
+"puntaje": 17,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "LOS CEIBOS",
+"puntaje": 23,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "BARRIO JARDÍN",
+"puntaje": 23,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "SAN VICENTE",
+"puntaje": 8,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "COFICO",
+"puntaje": 15,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "ALTO ALBERDI",
+"puntaje": 15,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "VILLA CABRERA",
+"puntaje": 31,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 29,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 31,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 18,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "B° 1° DE MAYO",
+"puntaje": 15,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 13,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "MANZANA M",
+"puntaje": 21,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "MAZANA C",
+"puntaje": 15,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "MARTIN SIX",
+"puntaje": 8,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "Ñandú Guazú",
+"puntaje": 17,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "nueva cordova",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 18,
+"normalizado": "NUEVA CORDOVA",
+"fonetico": "NUEBA KORDOBA"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 32,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "VILLA BELGRANO",
+"puntaje": 18,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "SAN MARTIN",
+"puntaje": 35,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "CENTRO",
+"puntaje": 18,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "ALBERDI",
+"puntaje": 18,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "GENERAL PAZ",
+"puntaje": 22,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 28,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "YERBAL",
+"puntaje": 13,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "VILLA ALLENDE",
+"puntaje": 24,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "LOS CEIBOS",
+"puntaje": 18,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "BARRIO JARDÍN",
+"puntaje": 29,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "SAN VICENTE",
+"puntaje": 35,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "COFICO",
+"puntaje": 18,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "ALTO ALBERDI",
+"puntaje": 24,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "VILLA CABRERA",
+"puntaje": 29,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 99,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 29,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 16,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "B° 1° DE MAYO",
+"puntaje": 19,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 46,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "MANZANA M",
+"puntaje": 24,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "MAZANA C",
+"puntaje": 22,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "MARTIN SIX",
+"puntaje": 35,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "Ñandú Guazú",
+"puntaje": 19,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "marques sobremonte",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 19,
+"normalizado": "MARQUES SOBREMONTE",
+"fonetico": "MARKES SOBREMONTE"
+},
+{
+"buscado": "1 de mayo",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 27,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "VILLA BELGRANO",
+"puntaje": 29,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "SAN MARTIN",
+"puntaje": 40,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "CENTRO",
+"puntaje": 22,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "ALBERDI",
+"puntaje": 11,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "GENERAL PAZ",
+"puntaje": 18,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 15,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "YERBAL",
+"puntaje": 22,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "VILLA ALLENDE",
+"puntaje": 20,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "LOS CEIBOS",
+"puntaje": 17,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "BARRIO JARDÍN",
+"puntaje": 30,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "SAN VICENTE",
+"puntaje": 9,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "COFICO",
+"puntaje": 17,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "ALTO ALBERDI",
+"puntaje": 8,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "VILLA CABRERA",
+"puntaje": 18,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 24,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 33,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 19,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "B° 1° DE MAYO",
+"puntaje": 97,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 25,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "MANZANA M",
+"puntaje": 14,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "MAZANA C",
+"puntaje": 17,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "MARTIN SIX",
+"puntaje": 25,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "Ñandú Guazú",
+"puntaje": 27,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "1 de mayo",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 49,
+"normalizado": "1 DE MAYO",
+"fonetico": "1 MAIO"
+},
+{
+"buscado": "zzqx",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 12,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "VILLA BELGRANO",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "SAN MARTIN",
+"puntaje": 15,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "CENTRO",
+"puntaje": 17,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "ALBERDI",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "GENERAL PAZ",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "YERBAL",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "VILLA ALLENDE",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "LOS CEIBOS",
+"puntaje": 17,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "BARRIO JARDÍN",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "SAN VICENTE",
+"puntaje": 15,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "COFICO",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "ALTO ALBERDI",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "VILLA CABRERA",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 11,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 22,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "B° 1° DE MAYO",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 14,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "MANZANA M",
+"puntaje": 11,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "MAZANA C",
+"puntaje": 14,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "MARTIN SIX",
+"puntaje": 49,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "Ñandú Guazú",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "zzqx",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 0,
+"normalizado": "ZZQX",
+"fonetico": "SQX"
+},
+{
+"buscado": "hospital",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 23,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "VILLA BELGRANO",
+"puntaje": 26,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "SAN MARTIN",
+"puntaje": 26,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "CENTRO",
+"puntaje": 29,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "ALBERDI",
+"puntaje": 0,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "GENERAL PAZ",
+"puntaje": 26,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 22,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "YERBAL",
+"puntaje": 29,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "VILLA ALLENDE",
+"puntaje": 26,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "LOS CEIBOS",
+"puntaje": 30,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "BARRIO JARDÍN",
+"puntaje": 17,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "SAN VICENTE",
+"puntaje": 26,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "COFICO",
+"puntaje": 25,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "ALTO ALBERDI",
+"puntaje": 17,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "VILLA CABRERA",
+"puntaje": 26,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 7,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 34,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 22,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "B° 1° DE MAYO",
+"puntaje": 12,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 11,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "MANZANA M",
+"puntaje": 11,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "MAZANA C",
+"puntaje": 12,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "MARTIN SIX",
+"puntaje": 26,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "Ñandú Guazú",
+"puntaje": 9,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "hospital",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 6,
+"normalizado": "HOSPITAL",
+"fonetico": "OSPITAL"
+},
+{
+"buscado": "mazana m",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 31,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "VILLA BELGRANO",
+"puntaje": 17,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "SAN MARTIN",
+"puntaje": 33,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "CENTRO",
+"puntaje": 25,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "ALBERDI",
+"puntaje": 12,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "GENERAL PAZ",
+"puntaje": 18,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 8,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "YERBAL",
+"puntaje": 12,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "VILLA ALLENDE",
+"puntaje": 20,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "LOS CEIBOS",
+"puntaje": 12,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "BARRIO JARDÍN",
+"puntaje": 17,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "SAN VICENTE",
+"puntaje": 25,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "COFICO",
+"puntaje": 0,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "ALTO ALBERDI",
+"puntaje": 8,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "VILLA CABRERA",
+"puntaje": 18,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 25,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 17,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 6,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "B° 1° DE MAYO",
+"puntaje": 19,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 20,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "MANZANA M",
+"puntaje": 93,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "MAZANA C",
+"puntaje": 88,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "MARTIN SIX",
+"puntaje": 30,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "Ñandú Guazú",
+"puntaje": 18,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "mazana m",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 18,
+"normalizado": "MAZANA M",
+"fonetico": "MASANA M"
+},
+{
+"buscado": "bila aiende",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 25,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "VILLA BELGRANO",
+"puntaje": 46,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "SAN MARTIN",
+"puntaje": 9,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "CENTRO",
+"puntaje": 9,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "ALBERDI",
+"puntaje": 29,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "GENERAL PAZ",
+"puntaje": 14,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 18,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "YERBAL",
+"puntaje": 18,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "VILLA ALLENDE",
+"puntaje": 91,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "LOS CEIBOS",
+"puntaje": 18,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "BARRIO JARDÍN",
+"puntaje": 17,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "SAN VICENTE",
+"puntaje": 43,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "COFICO",
+"puntaje": 9,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "ALTO ALBERDI",
+"puntaje": 33,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "VILLA CABRERA",
+"puntaje": 46,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 24,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 18,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 29,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "B° 1° DE MAYO",
+"puntaje": 27,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 14,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "MANZANA M",
+"puntaje": 14,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "MAZANA C",
+"puntaje": 18,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "MARTIN SIX",
+"puntaje": 13,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "Ñandú Guazú",
+"puntaje": 17,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "bila aiende",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 24,
+"normalizado": "BILA AIENDE",
+"fonetico": "BILA AIENDE"
+},
+{
+"buscado": "cofiko",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 27,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "VILLA BELGRANO",
+"puntaje": 14,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "SAN MARTIN",
+"puntaje": 0,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "CENTRO",
+"puntaje": 33,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "ALBERDI",
+"puntaje": 0,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "GENERAL PAZ",
+"puntaje": 0,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 26,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "YERBAL",
+"puntaje": 0,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "VILLA ALLENDE",
+"puntaje": 14,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "LOS CEIBOS",
+"puntaje": 33,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "BARRIO JARDÍN",
+"puntaje": 30,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "SAN VICENTE",
+"puntaje": 9,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "COFICO",
+"puntaje": 99,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "ALTO ALBERDI",
+"puntaje": 14,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "VILLA CABRERA",
+"puntaje": 14,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 18,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 30,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 40,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "B° 1° DE MAYO",
+"puntaje": 27,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 30,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "MANZANA M",
+"puntaje": 0,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "MAZANA C",
+"puntaje": 14,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "MARTIN SIX",
+"puntaje": 14,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "Ñandú Guazú",
+"puntaje": 0,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "cofiko",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 24,
+"normalizado": "COFIKO",
+"fonetico": "KOFIKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 16,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "VILLA BELGRANO",
+"puntaje": 21,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "SAN MARTIN",
+"puntaje": 10,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "CENTRO",
+"puntaje": 22,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "ALBERDI",
+"puntaje": 11,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "GENERAL PAZ",
+"puntaje": 9,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 19,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "YERBAL",
+"puntaje": 11,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "VILLA ALLENDE",
+"puntaje": 20,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "LOS CEIBOS",
+"puntaje": 22,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "BARRIO JARDÍN",
+"puntaje": 19,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "SAN VICENTE",
+"puntaje": 9,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "COFICO",
+"puntaje": 33,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "ALTO ALBERDI",
+"puntaje": 19,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "VILLA CABRERA",
+"puntaje": 36,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 19,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 19,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 19,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "B° 1° DE MAYO",
+"puntaje": 16,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 97,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "MANZANA M",
+"puntaje": 11,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "MAZANA C",
+"puntaje": 22,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "MARTIN SIX",
+"puntaje": 8,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "Ñandú Guazú",
+"puntaje": 19,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "chakabuko",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 13,
+"normalizado": "CHAKABUKO",
+"fonetico": "CHAKABUKO"
+},
+{
+"buscado": "general",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 12,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "VILLA BELGRANO",
+"puntaje": 34,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "SAN MARTIN",
+"puntaje": 20,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "CENTRO",
+"puntaje": 43,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "ALBERDI",
+"puntaje": 29,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "GENERAL PAZ",
+"puntaje": 97,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 26,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "YERBAL",
+"puntaje": 43,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "VILLA ALLENDE",
+"puntaje": 15,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "LOS CEIBOS",
+"puntaje": 14,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "BARRIO JARDÍN",
+"puntaje": 11,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "SAN VICENTE",
+"puntaje": 18,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "COFICO",
+"puntaje": 0,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "ALTO ALBERDI",
+"puntaje": 26,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "VILLA CABRERA",
+"puntaje": 26,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 14,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 30,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 6,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "B° 1° DE MAYO",
+"puntaje": 18,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 13,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "MANZANA M",
+"puntaje": 22,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "MAZANA C",
+"puntaje": 12,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "MARTIN SIX",
+"puntaje": 10,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "Ñandú Guazú",
+"puntaje": 18,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "general",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 14,
+"normalizado": "GENERAL",
+"fonetico": "JENERAL"
+},
+{
+"buscado": "san",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 94,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "VILLA BELGRANO",
+"puntaje": 22,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "SAN MARTIN",
+"puntaje": 97,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "CENTRO",
+"puntaje": 33,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "ALBERDI",
+"puntaje": 0,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "GENERAL PAZ",
+"puntaje": 15,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 8,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "YERBAL",
+"puntaje": 17,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "VILLA ALLENDE",
+"puntaje": 20,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "LOS CEIBOS",
+"puntaje": 17,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "BARRIO JARDÍN",
+"puntaje": 30,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "SAN VICENTE",
+"puntaje": 97,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "COFICO",
+"puntaje": 0,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "ALTO ALBERDI",
+"puntaje": 8,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "VILLA CABRERA",
+"puntaje": 11,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 17,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 37,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 10,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "B° 1° DE MAYO",
+"puntaje": 12,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 17,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "MANZANA M",
+"puntaje": 40,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "MAZANA C",
+"puntaje": 47,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "MARTIN SIX",
+"puntaje": 30,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "Ñandú Guazú",
+"puntaje": 37,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "san",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 16,
+"normalizado": "SAN",
+"fonetico": "SAN"
+},
+{
+"buscado": "de la",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 12,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "VILLA BELGRANO",
+"puntaje": 26,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "SAN MARTIN",
+"puntaje": 20,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "CENTRO",
+"puntaje": 17,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "ALBERDI",
+"puntaje": 14,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "GENERAL PAZ",
+"puntaje": 27,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 23,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "YERBAL",
+"puntaje": 33,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "VILLA ALLENDE",
+"puntaje": 37,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "LOS CEIBOS",
+"puntaje": 17,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "BARRIO JARDÍN",
+"puntaje": 18,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "SAN VICENTE",
+"puntaje": 16,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "COFICO",
+"puntaje": 0,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "ALTO ALBERDI",
+"puntaje": 17,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "VILLA CABRERA",
+"puntaje": 27,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 17,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 30,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 13,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "B° 1° DE MAYO",
+"puntaje": 36,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 20,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "MANZANA M",
+"puntaje": 11,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "MAZANA C",
+"puntaje": 12,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "MARTIN SIX",
+"puntaje": 10,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "Ñandú Guazú",
+"puntaje": 27,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "de la",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 19,
+"normalizado": "DE LA",
+"fonetico": "DE LA"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 38,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "VILLA BELGRANO",
+"puntaje": 33,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "SAN MARTIN",
+"puntaje": 40,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "CENTRO",
+"puntaje": 18,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "ALBERDI",
+"puntaje": 12,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "GENERAL PAZ",
+"puntaje": 9,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 15,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "YERBAL",
+"puntaje": 18,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "VILLA ALLENDE",
+"puntaje": 30,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "LOS CEIBOS",
+"puntaje": 18,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "BARRIO JARDÍN",
+"puntaje": 33,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "SAN VICENTE",
+"puntaje": 9,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "COFICO",
+"puntaje": 12,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "ALTO ALBERDI",
+"puntaje": 8,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "VILLA CABRERA",
+"puntaje": 27,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 24,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 33,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 19,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "B° 1° DE MAYO",
+"puntaje": 100,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 25,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "MANZANA M",
+"puntaje": 11,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "MAZANA C",
+"puntaje": 12,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "MARTIN SIX",
+"puntaje": 17,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "Ñandú Guazú",
+"puntaje": 18,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "  b° 1° de   Mayo!! ",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 43,
+"normalizado": "B 1 DE MAYO",
+"fonetico": "B 1 MAIO"
+},
+{
+"buscado": "nandu guasu",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 27,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "VILLA BELGRANO",
+"puntaje": 25,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "SAN MARTIN",
+"puntaje": 30,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "CENTRO",
+"puntaje": 9,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "ALBERDI",
+"puntaje": 9,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "GENERAL PAZ",
+"puntaje": 30,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 20,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "YERBAL",
+"puntaje": 9,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "VILLA ALLENDE",
+"puntaje": 27,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "LOS CEIBOS",
+"puntaje": 9,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "BARRIO JARDÍN",
+"puntaje": 17,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "SAN VICENTE",
+"puntaje": 30,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "COFICO",
+"puntaje": 0,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "ALTO ALBERDI",
+"puntaje": 10,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "VILLA CABRERA",
+"puntaje": 17,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 21,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 18,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 12,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "B° 1° DE MAYO",
+"puntaje": 18,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 31,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "MANZANA M",
+"puntaje": 27,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "MAZANA C",
+"puntaje": 18,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "MARTIN SIX",
+"puntaje": 9,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "Ñandú Guazú",
+"puntaje": 99,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "nandu guasu",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 14,
+"normalizado": "NANDU GUASU",
+"fonetico": "NANDU GUASU"
+},
+{
+"buscado": "25 mayo",
+"valor": "BARRIO SAN MARTÍN",
+"puntaje": 27,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "VILLA BELGRANO",
+"puntaje": 25,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "SAN MARTIN",
+"puntaje": 40,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "CENTRO",
+"puntaje": 14,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "ALBERDI",
+"puntaje": 0,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "GENERAL PAZ",
+"puntaje": 9,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "NUEVA CÓRDOBA",
+"puntaje": 15,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "YERBAL",
+"puntaje": 14,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "VILLA ALLENDE",
+"puntaje": 20,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "LOS CEIBOS",
+"puntaje": 20,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "BARRIO JARDÍN",
+"puntaje": 30,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "SAN VICENTE",
+"puntaje": 9,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "COFICO",
+"puntaje": 17,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "ALTO ALBERDI",
+"puntaje": 8,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "VILLA CABRERA",
+"puntaje": 18,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "MARQUÉS DE SOBREMONTE",
+"puntaje": 17,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "CERRO DE LAS ROSAS",
+"puntaje": 17,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "HIPÓLITO YRIGOYEN",
+"puntaje": 19,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "B° 1° DE MAYO",
+"puntaje": 62,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "PARQUE CHACABUCO",
+"puntaje": 20,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "MANZANA M",
+"puntaje": 14,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "MAZANA C",
+"puntaje": 17,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "MARTIN SIX",
+"puntaje": 25,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "Ñandú Guazú",
+"puntaje": 18,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "25 mayo",
+"valor": "Calle 25 de Mayo 1234",
+"puntaje": 94,
+"normalizado": "25 MAYO",
+"fonetico": "25 MAIO"
+},
+{
+"buscado": "",
+"valor": "",
+"puntaje": 0,
+"normalizado": "",
+"fonetico": ""
+},
+{
+"buscado": "a",
+"valor": "",
+"puntaje": 0,
+"normalizado": "A",
+"fonetico": "A"
+},
+{
+"buscado": "",
+"valor": "X",
+"puntaje": 0,
+"normalizado": "",
+"fonetico": ""
+},
+{
+"buscado": "CASA",
+"valor": "CSAA",
+"puntaje": 75,
+"normalizado": "CASA",
+"fonetico": "KASA"
+},
+{
+"buscado": "KITTEN",
+"valor": "SITTING",
+"puntaje": 57,
+"normalizado": "KITTEN",
+"fonetico": "KITEN"
+},
+{
+"buscado": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+"valor": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXYYYYY",
+"puntaje": 99,
+"normalizado": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+"fonetico": "X"
+}
+]
+}

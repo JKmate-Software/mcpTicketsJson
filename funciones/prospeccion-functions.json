@@ -1,0 +1,680 @@
+{
+  "$schema": "./functions.schema.json",
+  "servidor": {
+    "nombre": "mcp-prospeccion-json",
+    "claimRequerida": "COD_VENDEDOR",
+    "instrucciones": "prospeccion-instructions.md"
+  },
+  "tools": [
+    {
+      "tipo": "compleja",
+      "nombre": "user_info",
+      "titulo": "👤 Consultando la sesión",
+      "handler": "user-info-vendedor",
+      "descripcion": "Identidad de la sesión: el usuario y el vendedor con los que operan todas las herramientas."
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "obtener_instrucciones",
+      "titulo": "📘 Leyendo instrucciones",
+      "handler": "obtener-instrucciones",
+      "descripcion": "Reglas de uso del CRM de prospección. Llamala ANTES que cualquier otra herramienta de este servidor."
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "resumen_prospeccion",
+      "titulo": "📊 Consultando el resumen",
+      "handler": "resumen-prospeccion",
+      "descripcion": "Resumen de la cartera del vendedor de la sesión: una fila por intervalo (día, semana, mes) con asignados, nuevos, agendados y gestionados. Una sola llamada.",
+      "parametros": [
+        {
+          "nombre": "fechaReferencia",
+          "descripcion": "Fecha ancla (AAAA-MM-DD). Si se omite, hoy."
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "totales_resultado_prospeccion",
+      "titulo": "📈 Contando gestiones por resultado",
+      "handler": "totales-resultado-prospeccion",
+      "descripcion": "Cantidad de gestiones del vendedor de la sesión agrupadas por resultado, en un intervalo relativo a una fecha.",
+      "parametros": [
+        {
+          "nombre": "intervalo",
+          "descripcion": "Exactamente Día, Sem, Mes o Año."
+        },
+        {
+          "nombre": "fechaReferencia",
+          "descripcion": "Fecha ancla (AAAA-MM-DD). Si se omite, hoy."
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "buscar_prospectos_vendedor",
+      "titulo": "🔎 Buscando prospectos",
+      "handler": "buscar-prospectos-vendedor",
+      "descripcion": "Listado de prospectos/gestiones del vendedor de la sesión (una fila por gestión, la más reciente primero, hasta maxFilas), con filtros combinables. Si hayMas, avisá que hay más y sugerí un filtro (fecha, campaña, nombre).",
+      "parametros": [
+        {
+          "nombre": "codCampania",
+          "descripcion": "Campaña: codigo de listar_catalogo catalogo='campanias'."
+        },
+        {
+          "nombre": "filtroFecha",
+          "descripcion": "Filtra por fecha de cita o de gestión. Va junto con fechaAgenda."
+        },
+        {
+          "nombre": "fechaAgenda",
+          "descripcion": "Fecha (AAAA-MM-DD) del filtro de fecha."
+        },
+        {
+          "nombre": "cliente",
+          "descripcion": "Parte del nombre del cliente."
+        },
+        {
+          "nombre": "codBarrio",
+          "descripcion": "Barrio: codigo de listar_catalogo catalogo='barrios'."
+        },
+        {
+          "nombre": "codAccion",
+          "descripcion": "Acción de la última gestión: codigo de listar_catalogo catalogo='acciones'."
+        },
+        {
+          "nombre": "archivado",
+          "descripcion": "true = solo archivados; false = solo no archivados."
+        },
+        {
+          "nombre": "maxFilas",
+          "descripcion": "Máximo de filas. Si hayMas, sugerir un filtro."
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "agendas_prospectos_vendedor",
+      "titulo": "📅 Consultando la agenda",
+      "handler": "agendas-prospectos-vendedor",
+      "descripcion": "Citas con prospectos del vendedor de la sesión entre dos fechas (las dos son obligatorias).",
+      "parametros": [
+        {
+          "nombre": "fechaDesde",
+          "descripcion": "Inicio del rango (AAAA-MM-DD)."
+        },
+        {
+          "nombre": "fechaHasta",
+          "descripcion": "Fin del rango (AAAA-MM-DD)."
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "historial_mensajes_prospecto",
+      "titulo": "🗂️ Leyendo el historial",
+      "handler": "historial-mensajes-prospecto",
+      "descripcion": "Historial de gestiones de un prospecto. Necesita el cliente Y el prospecto (de buscar_prospectos_vendedor).",
+      "parametros": [
+        {
+          "nombre": "codCliente",
+          "descripcion": "codCliente del prospecto (de buscar_prospectos_vendedor)."
+        },
+        {
+          "nombre": "codProspecto",
+          "descripcion": "codProspecto (de buscar_prospectos_vendedor)."
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "registrar_gestion_prospecto",
+      "titulo": "📝 Registrando la gestión",
+      "handler": "registrar-gestion-prospecto",
+      "descripcion": "Registra una gestión (contacto, acción, resultado, próxima cita) sobre un prospecto YA EXISTENTE del vendedor de la sesión. Para un prospecto nuevo usar registrar_prospecto. Todos los códigos salen de listar_catalogo. Antes de llamarla, confirmá los datos con el usuario: escribe en la base.",
+      "parametros": [
+        {
+          "nombre": "codCliente",
+          "descripcion": "codCliente del prospecto (de buscar_prospectos_vendedor)."
+        },
+        {
+          "nombre": "codProspecto",
+          "descripcion": "Prospecto existente que se gestiona (de buscar_prospectos_vendedor)."
+        },
+        {
+          "nombre": "codGrupoProspecto",
+          "descripcion": "Grupo: codigo de listar_catalogo catalogo='grupos'."
+        },
+        {
+          "nombre": "codComercializadora",
+          "descripcion": "Canal de venta: codigo de listar_catalogo catalogo='canales'. Sin canal no se ve bien en el listado."
+        },
+        {
+          "nombre": "codCategoriaMensaje",
+          "descripcion": "Acción: codigo de listar_catalogo catalogo='categorias'."
+        },
+        {
+          "nombre": "codResultado",
+          "descripcion": "Resultado: codigo de listar_catalogo catalogo='resultados' con codPadre = la acción elegida."
+        },
+        {
+          "nombre": "fechaHoraAgenda",
+          "descripcion": "Próxima cita (ISO 8601). Obligatoria si el resultado tiene exigeAgendamiento."
+        },
+        {
+          "nombre": "mensaje",
+          "descripcion": "Texto de la gestión."
+        },
+        {
+          "nombre": "fechaHora",
+          "descripcion": "Fecha y hora de la gestión (ISO 8601). Si se omite, ahora."
+        },
+        {
+          "nombre": "codReclamo",
+          "descripcion": "codReclamo del prospecto, si lo tiene (de buscar_prospectos_vendedor)."
+        },
+        {
+          "nombre": "codBarrio",
+          "descripcion": "listar_catalogo catalogo='barrios'."
+        },
+        {
+          "nombre": "codLocalidad",
+          "descripcion": "listar_catalogo catalogo='localidades'."
+        },
+        {
+          "nombre": "codProvincia",
+          "descripcion": "codProvincia de la localidad elegida."
+        },
+        {
+          "nombre": "fechaCierrePosible",
+          "descripcion": "Fecha estimada de cierre (AAAA-MM-DD)."
+        },
+        {
+          "nombre": "tipoPlanDisponible",
+          "descripcion": "Tipo de plan de interés."
+        },
+        {
+          "nombre": "codPlanDisponible",
+          "descripcion": "Plan de interés."
+        },
+        {
+          "nombre": "forecast",
+          "descripcion": "Proyección de venta."
+        },
+        {
+          "nombre": "montoCotizacion",
+          "descripcion": "Monto cotizado (se redondea a entero)."
+        },
+        {
+          "nombre": "cantEmpleados",
+          "descripcion": "Empleados (prospectos corporativos)."
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "registrar_prospecto",
+      "titulo": "🆕 Dando de alta el prospecto",
+      "handler": "registrar-prospecto",
+      "descripcion": "Da de alta un prospecto nuevo (y su cliente en la bolsa de prospección) con su primera gestión. Para uno existente usar registrar_gestion_prospecto. Exige al menos un contacto (telefono, telefonoMovil o email): sin ninguno, NO invocar. Todos los códigos salen de listar_catalogo. Antes de llamarla, confirmá los datos con el usuario: escribe en la base.",
+      "parametros": [
+        {
+          "nombre": "apellido",
+          "descripcion": "Apellido."
+        },
+        {
+          "nombre": "nombre",
+          "descripcion": "Nombre."
+        },
+        {
+          "nombre": "telefono",
+          "descripcion": "Teléfono fijo."
+        },
+        {
+          "nombre": "telefonoMovil",
+          "descripcion": "Celular."
+        },
+        {
+          "nombre": "email",
+          "descripcion": "Email."
+        },
+        {
+          "nombre": "codGrupoProspecto",
+          "descripcion": "Grupo: codigo de listar_catalogo catalogo='grupos'."
+        },
+        {
+          "nombre": "codComercializadora",
+          "descripcion": "Canal de venta: codigo de listar_catalogo catalogo='canales'. Sin canal no se ve bien en el listado."
+        },
+        {
+          "nombre": "codCategoriaMensaje",
+          "descripcion": "Acción: codigo de listar_catalogo catalogo='categorias'."
+        },
+        {
+          "nombre": "codResultado",
+          "descripcion": "Resultado: codigo de listar_catalogo catalogo='resultados' con codPadre = la acción elegida."
+        },
+        {
+          "nombre": "fechaHoraAgenda",
+          "descripcion": "Próxima cita (ISO 8601). Obligatoria si el resultado tiene exigeAgendamiento."
+        },
+        {
+          "nombre": "mensaje",
+          "descripcion": "Texto de la gestión."
+        },
+        {
+          "nombre": "fechaHora",
+          "descripcion": "Fecha y hora de la gestión (ISO 8601). Si se omite, ahora."
+        },
+        {
+          "nombre": "tipoDocumento",
+          "descripcion": "Tipo de documento."
+        },
+        {
+          "nombre": "nroDocumento",
+          "descripcion": "Número de documento."
+        },
+        {
+          "nombre": "domicilio",
+          "descripcion": "Dirección en texto libre."
+        },
+        {
+          "nombre": "fechaNacimiento",
+          "descripcion": "Fecha de nacimiento (AAAA-MM-DD)."
+        },
+        {
+          "nombre": "codBarrio",
+          "descripcion": "listar_catalogo catalogo='barrios'."
+        },
+        {
+          "nombre": "codLocalidad",
+          "descripcion": "listar_catalogo catalogo='localidades'."
+        },
+        {
+          "nombre": "codProvincia",
+          "descripcion": "codProvincia de la localidad elegida."
+        },
+        {
+          "nombre": "fechaCierrePosible",
+          "descripcion": "Fecha estimada de cierre (AAAA-MM-DD)."
+        },
+        {
+          "nombre": "tipoPlanDisponible",
+          "descripcion": "Tipo de plan de interés."
+        },
+        {
+          "nombre": "codPlanDisponible",
+          "descripcion": "Plan de interés."
+        },
+        {
+          "nombre": "forecast",
+          "descripcion": "Proyección de venta."
+        },
+        {
+          "nombre": "montoCotizacion",
+          "descripcion": "Monto cotizado (se redondea a entero)."
+        },
+        {
+          "nombre": "cantEmpleados",
+          "descripcion": "Empleados (prospectos corporativos)."
+        }
+      ]
+    },
+    {
+      "tipo": "compleja",
+      "nombre": "modificar_prospecto",
+      "titulo": "✏️ Corrigiendo el prospecto",
+      "handler": "modificar-prospecto",
+      "descripcion": "Corrige los datos personales de un prospecto YA EXISTENTE del vendedor de la sesión (nombre, apellido, email, teléfono, celular, documento, domicilio). Solo actualiza el prospecto: no registra gestión. Pasar solo los datos que cambian; los omitidos no se tocan. Para registrar un contacto usar registrar_gestion_prospecto. Antes de llamarla, confirmá los datos con el usuario: escribe en la base.",
+      "parametros": [
+        {
+          "nombre": "codCliente",
+          "descripcion": "codCliente del prospecto (de buscar_prospectos_vendedor)."
+        },
+        {
+          "nombre": "codProspecto",
+          "descripcion": "Prospecto que se modifica."
+        },
+        {
+          "nombre": "nombre",
+          "descripcion": "Nombre nuevo."
+        },
+        {
+          "nombre": "apellido",
+          "descripcion": "Apellido nuevo."
+        },
+        {
+          "nombre": "telefono",
+          "descripcion": "Teléfono fijo."
+        },
+        {
+          "nombre": "telefonoMovil",
+          "descripcion": "Celular."
+        },
+        {
+          "nombre": "email",
+          "descripcion": "Email."
+        },
+        {
+          "nombre": "tipoDocumento",
+          "descripcion": "Tipo de documento."
+        },
+        {
+          "nombre": "nroDocumento",
+          "descripcion": "Número de documento."
+        },
+        {
+          "nombre": "domicilio",
+          "descripcion": "Dirección en texto libre."
+        }
+      ]
+    },
+    {
+      "tipo": "agrupadora",
+      "nombre": "listar_catalogo",
+      "titulo": "📚 Consultando el catálogo",
+      "descripcion": "Catálogos de referencia de prospección. Elegí el catálogo con catalogo; los que dicen 'requiere codPadre' necesitan el código del catálogo padre. Los marcados [buscar] aceptan un texto aproximado (tolera errores de tipeo). Nunca inventes un código: resolvelo siempre con esta tool.",
+      "parametros": [
+        {
+          "nombre": "catalogo",
+          "descripcion": "Catálogo a listar."
+        },
+        {
+          "nombre": "codPadre",
+          "descripcion": "Código del catálogo padre (ver descripción)."
+        },
+        {
+          "nombre": "buscar",
+          "descripcion": "Texto aproximado, tal como lo dijo el usuario (solo catálogos [buscar])."
+        }
+      ]
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "grupos",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_GRUPOS_PROSP_X_VEND",
+      "descripcion": "Grupos de prospectos del vendedor de la sesión.",
+      "uso": "codigo → registrar_*.codGrupoProspecto (grupos del vendedor de la sesión; si hay uno solo, usarlo)",
+      "campoVendedor": "COD_VENDEDOR_IN",
+      "parametros": [
+        {
+          "nombre": "COD_VENDEDOR_IN",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_GRUPO_PROSPECTO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "ESTADO_GRUPO_PROSPECTO",
+          "nombre": "estado",
+          "tipo": "entero"
+        }
+      ]
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "canales",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_ENTIDADES_X_MCCATEG",
+      "descripcion": "Canales de venta (comercializadoras) de prospección.",
+      "uso": "codigo → registrar_*.codComercializadora",
+      "parametros": [
+        {
+          "nombre": "MACRO",
+          "tipo": "texto",
+          "valorFijo": "PROSPECCIO"
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_ENTIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "nombre"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "usuario"
+      }
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "categorias",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_CAT_MENS_ENC_PROSP",
+      "descripcion": "Acciones de una gestión (categorías de mensaje).",
+      "uso": "codigo → registrar_*.codCategoriaMensaje (la acción de la gestión; con codPadre = resultado anterior del prospecto acota a las acciones que siguen)",
+      "parametros": [
+        {
+          "nombre": "SEGUIMIENTO",
+          "tipo": "entero",
+          "valorFijo": 0
+        },
+        {
+          "nombre": "COD_RESULT_RECL_ORIGEN",
+          "tipo": "entero"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_RESULT_RECL_ORIGEN",
+        "catalogo": "resultados",
+        "requerido": false
+      },
+      "salida": [
+        {
+          "columna": "COD_CATEGORIA_MENSAJE",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CATEGORIA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "resultados",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_RESULTADOS_RECL_X_CAT",
+      "descripcion": "Resultados posibles de una acción.",
+      "uso": "codigo → registrar_*.codResultado; si exigeAgendamiento, pedir fechaHoraAgenda",
+      "parametros": [
+        {
+          "nombre": "COD_CATEGORIA_MENSAJE",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "padre": {
+        "parametro": "COD_CATEGORIA_MENSAJE",
+        "catalogo": "categorias"
+      },
+      "salida": [
+        {
+          "columna": "COD_RESULTADO_RECLAMO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "DESCRIPCION",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "EXIGE_AGENDAMIENTO",
+          "nombre": "exigeAgendamiento",
+          "tipo": "booleano"
+        }
+      ]
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "acciones",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_CAT_MENSAJES_PROSP",
+      "descripcion": "Acciones para filtrar el listado de prospectos.",
+      "uso": "codigo → buscar_prospectos_vendedor.codAccion (solo para filtrar el listado)",
+      "parametros": [
+        {
+          "nombre": "SEGUIMIENTO",
+          "tipo": "entero",
+          "valorFijo": 1
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_CATEGORIA_MENSAJE",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CATEGORIA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "campanias",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_CAMPANIAS",
+      "descripcion": "Campañas de venta.",
+      "uso": "codigo → buscar_prospectos_vendedor.codCampania (la más reciente primero)",
+      "salida": [
+        {
+          "columna": "COD_CAMPANIA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CAMPANIA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "FECHA_INICIO",
+          "nombre": "fechaInicio",
+          "tipo": "fecha"
+        },
+        {
+          "columna": "FECHA_FIN",
+          "nombre": "fechaFin",
+          "tipo": "fecha"
+        }
+      ],
+      "orden": [
+        {
+          "campo": "fechaFin",
+          "desc": true
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "nombre"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "localidades",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_LOCALIDADES",
+      "descripcion": "Localidades.",
+      "uso": "codigo y codProvincia → registrar_*.codLocalidad y codProvincia",
+      "salida": [
+        {
+          "columna": "COD_LOCALIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "COD_PROVINCIA",
+          "nombre": "codProvincia",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CODIGO_POSTAL",
+          "nombre": "codigoPostal",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "nombre"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "procedure",
+      "nombre": "barrios",
+      "grupo": "listar_catalogo",
+      "procedure": "PROC_GET_BARRIOS",
+      "descripcion": "Barrios.",
+      "uso": "codigo → registrar_*.codBarrio o buscar_prospectos_vendedor.codBarrio (no se filtra por localidad: buscar por nombre)",
+      "salida": [
+        {
+          "columna": "COD_BARRIO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "COD_LOCALIDAD",
+          "nombre": "codLocalidad",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CODIGO_POSTAL",
+          "nombre": "codigoPostal",
+          "tipo": "texto"
+        }
+      ],
+      "orden": [
+        {
+          "campo": "nombre"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "nombre"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    }
+  ]
+}

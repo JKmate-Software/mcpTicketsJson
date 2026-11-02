@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import { aFechaHoraIso } from '../mapeo/fecha.js';
 import { ErrorTool } from '../errores.js';
-import { crearAccesoFirebird, esBaseNoDisponible, relojDesdeDriver, type AccesoDatos } from './firebird.js';
+import { crearAccesoFirebird, esBaseNoDisponible, relojDesdeDriver, sqlContexto, type AccesoDatos } from './firebird.js';
 
 describe('db/firebird (unitario)', () => {
   it('relojDesdeDriver deshace la cuenta de node-firebird sin importar la zona del proceso', () => {
@@ -11,6 +11,13 @@ describe('db/firebird (unitario)', () => {
     expect(aFechaHoraIso(relojDesdeDriver(delDriver), 'America/Argentina/Buenos_Aires')).toBe(
       '2026-09-28T15:44:11.925-03:00',
     );
+  });
+
+  it('sqlContexto escribe todas las claves en una sola sentencia', () => {
+    expect(sqlContexto(['COD_USUARIO', 'COD_VENDEDOR'])).toBe(
+      "SELECT RDB$SET_CONTEXT('USER_SESSION', 'COD_USUARIO', ?) AS C0, RDB$SET_CONTEXT('USER_SESSION', 'COD_VENDEDOR', ?) AS C1 FROM RDB$DATABASE",
+    );
+    expect(() => sqlContexto(["X', 'Y"])).toThrow(/inválida/);
   });
 
   it('reconoce errores de base no disponible', () => {

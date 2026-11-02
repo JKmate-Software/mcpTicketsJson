@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { crearTools } from '../src/tools/index.js';
-import { accesoSimulado, conectarCliente } from './apoyo.js';
+import { accesoSimulado, conectarCliente, toolsDe } from './apoyo.js';
 
 async function listarTools() {
   const { acceso } = accesoSimulado({});
-  const { cliente } = await conectarCliente(crearTools({ acceso, zonaHoraria: 'America/Argentina/Buenos_Aires' }));
+  const { cliente } = await conectarCliente(await toolsDe('tickets', { acceso, zonaHoraria: 'America/Argentina/Buenos_Aires' }));
   return (await cliente.listTools()).tools;
 }
 

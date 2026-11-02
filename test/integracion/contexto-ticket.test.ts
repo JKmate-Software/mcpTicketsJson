@@ -1,8 +1,8 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import type { AccesoDatos } from '../../src/db/firebird.js';
-import { ESTADOS_TAREA, ESTADOS_TICKET, PRIORIDADES_TICKET, SISTEMAS } from '../../src/tools/esquemas.js';
-import { crearObtenerContextoTicket, type ContextoTicket } from '../../src/tools/obtener-contexto-ticket.js';
-import { conectarCliente } from '../apoyo.js';
+import { ESTADOS_TAREA, ESTADOS_TICKET, PRIORIDADES_TICKET, SISTEMAS } from '../../src/comunes/esquemas-tickets.js';
+import type { ContextoTicket } from '../../src/catalogos/obtener-contexto-ticket.js';
+import { conectarCliente, toolDe } from '../apoyo.js';
 import { accesoDesdeEntorno, consultarDirecto, hayBase, hayProcedimientosAg } from './base.js';
 
 const ZONA = 'America/Argentina/Buenos_Aires';
@@ -33,7 +33,7 @@ describe.skipIf(!hayAg)('obtener_contexto_ticket contra la base de desarrollo', 
 
   it('#74836: structuredContent valida contra el outputSchema publicado', async () => {
     acceso = accesoDesdeEntorno();
-    const { cliente, eventos } = await conectarCliente([crearObtenerContextoTicket({ acceso, zonaHoraria: ZONA })]);
+    const { cliente, eventos } = await conectarCliente([await toolDe('tickets', 'obtener_contexto_ticket', { acceso, zonaHoraria: ZONA })]);
     await cliente.listTools();
     const resultado = await cliente.callTool({ name: 'obtener_contexto_ticket', arguments: { ticketId: 74836 } });
     expect(resultado.isError).toBeFalsy();

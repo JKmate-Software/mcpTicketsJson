@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it } from 'vitest';
-import { cargarConfig } from '../../src/config.js';
+import { cargarConfig, codUsuarioStdio } from '../../src/config.js';
 import { abrirBase, coincidencias, normalizar, obtenerReferencia, type BaseLectura, type Desarrollador } from './base.js';
 import { cargarCasos } from './casos.js';
 import { leerJson } from './configuracion.js';
@@ -45,7 +45,7 @@ describe.skipIf(!hayBase)('verdad de referencia contra la base de prueba', { tim
     const config = cargarConfig();
     base = abrirBase(config);
     const { casos } = cargarCasos(await leerJson('casos.json'));
-    const ref = await obtenerReferencia(base, casos, config.MCP_COD_USUARIO);
+    const ref = await obtenerReferencia(base, casos, codUsuarioStdio(config));
     expect(ref['estado-ticket']?.estado).toBeTruthy();
     expect(ref['mis-tickets-agendados']?.ids.length).toBeGreaterThan(0);
     expect(ref['mis-tareas-pendientes']?.total).toBeGreaterThan(0);

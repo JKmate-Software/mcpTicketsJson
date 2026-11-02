@@ -1,0 +1,493 @@
+[
+  {
+    "args": {
+      "catalogo": "grupos"
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "grupos",
+      "elementos": [
+        {
+          "codigo": 4,
+          "nombre": "CARTERA PROPIA",
+          "estado": 1
+        },
+        {
+          "codigo": 5,
+          "nombre": "REFERIDOS",
+          "estado": null
+        }
+      ],
+      "avisos": []
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "grupos: 2 elementos. 4 CARTERA PROPIA; 5 REFERIDOS."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"grupos\",\"elementos\":[{\"codigo\":4,\"nombre\":\"CARTERA PROPIA\",\"estado\":1},{\"codigo\":5,\"nombre\":\"REFERIDOS\",\"estado\":null}],\"avisos\":[]}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "canales"
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "canales",
+      "elementos": [
+        {
+          "codigo": 31,
+          "nombre": "FACEBOOK"
+        },
+        {
+          "codigo": 32,
+          "nombre": "INSTAGRAM"
+        },
+        {
+          "codigo": 33,
+          "nombre": "REFERIDO DE CLIENTE"
+        }
+      ],
+      "avisos": [],
+      "busqueda": {
+        "texto": null,
+        "totalCatalogo": 3,
+        "devueltos": 3,
+        "mensaje": null
+      }
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "canales: 3 elementos. 31 FACEBOOK; 32 INSTAGRAM; 33 REFERIDO DE CLIENTE."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"canales\",\"elementos\":[{\"codigo\":31,\"nombre\":\"FACEBOOK\"},{\"codigo\":32,\"nombre\":\"INSTAGRAM\"},{\"codigo\":33,\"nombre\":\"REFERIDO DE CLIENTE\"}],\"avisos\":[],\"busqueda\":{\"texto\":null,\"totalCatalogo\":3,\"devueltos\":3,\"mensaje\":null}}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "canales",
+      "buscar": "instagran"
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "canales",
+      "elementos": [
+        {
+          "codigo": 32,
+          "nombre": "INSTAGRAM",
+          "similitud": 89
+        }
+      ],
+      "avisos": [],
+      "busqueda": {
+        "texto": "instagran",
+        "totalCatalogo": 3,
+        "devueltos": 1,
+        "mensaje": null
+      }
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "canales: 1 elementos. 32 INSTAGRAM (89)."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"canales\",\"elementos\":[{\"codigo\":32,\"nombre\":\"INSTAGRAM\",\"similitud\":89}],\"avisos\":[],\"busqueda\":{\"texto\":\"instagran\",\"totalCatalogo\":3,\"devueltos\":1,\"mensaje\":null}}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "categorias"
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "categorias",
+      "elementos": [
+        {
+          "codigo": 100,
+          "nombre": "LLAMADA"
+        },
+        {
+          "codigo": 200,
+          "nombre": "VISITA"
+        }
+      ],
+      "avisos": []
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "categorias: 2 elementos. 100 LLAMADA; 200 VISITA."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"categorias\",\"elementos\":[{\"codigo\":100,\"nombre\":\"LLAMADA\"},{\"codigo\":200,\"nombre\":\"VISITA\"}],\"avisos\":[]}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "categorias",
+      "codPadre": 7
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "categorias",
+      "elementos": [
+        {
+          "codigo": 107,
+          "nombre": "LLAMADA"
+        },
+        {
+          "codigo": 200,
+          "nombre": "VISITA"
+        }
+      ],
+      "avisos": []
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "categorias: 2 elementos. 107 LLAMADA; 200 VISITA."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"categorias\",\"elementos\":[{\"codigo\":107,\"nombre\":\"LLAMADA\"},{\"codigo\":200,\"nombre\":\"VISITA\"}],\"avisos\":[]}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "resultados",
+      "codPadre": 5
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "resultados",
+      "elementos": [
+        {
+          "codigo": 51,
+          "nombre": "VOLVER A LLAMAR",
+          "exigeAgendamiento": true
+        },
+        {
+          "codigo": 52,
+          "nombre": "NO LE INTERESA",
+          "exigeAgendamiento": false
+        }
+      ],
+      "avisos": []
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "resultados: 2 elementos. 51 VOLVER A LLAMAR; 52 NO LE INTERESA."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"resultados\",\"elementos\":[{\"codigo\":51,\"nombre\":\"VOLVER A LLAMAR\",\"exigeAgendamiento\":true},{\"codigo\":52,\"nombre\":\"NO LE INTERESA\",\"exigeAgendamiento\":false}],\"avisos\":[]}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "resultados"
+    },
+    "isError": true,
+    "structuredContent": {
+      "error": {
+        "codigo": "PARAMETRO_INVALIDO",
+        "mensaje": "resultados requiere codPadre: el codigo elegido de 'categorias'."
+      }
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "PARAMETRO_INVALIDO: resultados requiere codPadre: el codigo elegido de 'categorias'."
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "acciones",
+      "buscar": "x"
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "acciones",
+      "elementos": [
+        {
+          "codigo": 100,
+          "nombre": "LLAMADA"
+        },
+        {
+          "codigo": 300,
+          "nombre": "WHATSAPP"
+        }
+      ],
+      "avisos": [
+        "buscar no aplica a acciones: se ignoró."
+      ]
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "acciones: 2 elementos. 100 LLAMADA; 300 WHATSAPP."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"acciones\",\"elementos\":[{\"codigo\":100,\"nombre\":\"LLAMADA\"},{\"codigo\":300,\"nombre\":\"WHATSAPP\"}],\"avisos\":[\"buscar no aplica a acciones: se ignoró.\"]}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "campanias"
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "campanias",
+      "elementos": [
+        {
+          "codigo": 3,
+          "nombre": "PRIMAVERA 2026",
+          "fechaInicio": "2026-09-01",
+          "fechaFin": "2026-12-31"
+        },
+        {
+          "codigo": 1,
+          "nombre": "VERANO 2026",
+          "fechaInicio": "2026-01-01",
+          "fechaFin": "2026-03-31"
+        },
+        {
+          "codigo": 2,
+          "nombre": "OTOÑO 2026",
+          "fechaInicio": "2026-04-01",
+          "fechaFin": null
+        }
+      ],
+      "avisos": [],
+      "busqueda": {
+        "texto": null,
+        "totalCatalogo": 3,
+        "devueltos": 3,
+        "mensaje": null
+      }
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "campanias: 3 elementos. 3 PRIMAVERA 2026; 1 VERANO 2026; 2 OTOÑO 2026."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"campanias\",\"elementos\":[{\"codigo\":3,\"nombre\":\"PRIMAVERA 2026\",\"fechaInicio\":\"2026-09-01\",\"fechaFin\":\"2026-12-31\"},{\"codigo\":1,\"nombre\":\"VERANO 2026\",\"fechaInicio\":\"2026-01-01\",\"fechaFin\":\"2026-03-31\"},{\"codigo\":2,\"nombre\":\"OTOÑO 2026\",\"fechaInicio\":\"2026-04-01\",\"fechaFin\":null}],\"avisos\":[],\"busqueda\":{\"texto\":null,\"totalCatalogo\":3,\"devueltos\":3,\"mensaje\":null}}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "campanias",
+      "buscar": "primavera"
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "campanias",
+      "elementos": [
+        {
+          "codigo": 3,
+          "nombre": "PRIMAVERA 2026",
+          "fechaInicio": "2026-09-01",
+          "fechaFin": "2026-12-31",
+          "similitud": 97
+        }
+      ],
+      "avisos": [],
+      "busqueda": {
+        "texto": "primavera",
+        "totalCatalogo": 3,
+        "devueltos": 1,
+        "mensaje": null
+      }
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "campanias: 1 elementos. 3 PRIMAVERA 2026 (97)."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"campanias\",\"elementos\":[{\"codigo\":3,\"nombre\":\"PRIMAVERA 2026\",\"fechaInicio\":\"2026-09-01\",\"fechaFin\":\"2026-12-31\",\"similitud\":97}],\"avisos\":[],\"busqueda\":{\"texto\":\"primavera\",\"totalCatalogo\":3,\"devueltos\":1,\"mensaje\":null}}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "localidades",
+      "buscar": "carlos paz"
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "localidades",
+      "elementos": [
+        {
+          "codigo": 2,
+          "nombre": "VILLA CARLOS PAZ",
+          "codProvincia": 5,
+          "codigoPostal": "5152",
+          "similitud": 97
+        }
+      ],
+      "avisos": [],
+      "busqueda": {
+        "texto": "carlos paz",
+        "totalCatalogo": 3,
+        "devueltos": 1,
+        "mensaje": null
+      }
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "localidades: 1 elementos. 2 VILLA CARLOS PAZ (97)."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"localidades\",\"elementos\":[{\"codigo\":2,\"nombre\":\"VILLA CARLOS PAZ\",\"codProvincia\":5,\"codigoPostal\":\"5152\",\"similitud\":97}],\"avisos\":[],\"busqueda\":{\"texto\":\"carlos paz\",\"totalCatalogo\":3,\"devueltos\":1,\"mensaje\":null}}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "barrios"
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "barrios",
+      "elementos": [
+        {
+          "codigo": 12,
+          "nombre": "ALBERDI",
+          "codLocalidad": 1,
+          "codigoPostal": "5000"
+        },
+        {
+          "codigo": 14,
+          "nombre": "ALTO ALBERDI",
+          "codLocalidad": 2,
+          "codigoPostal": "5003"
+        },
+        {
+          "codigo": 13,
+          "nombre": "CENTRO",
+          "codLocalidad": 1,
+          "codigoPostal": null
+        },
+        {
+          "codigo": 11,
+          "nombre": "NUEVA CORDOBA",
+          "codLocalidad": 1,
+          "codigoPostal": "5000"
+        }
+      ],
+      "avisos": [],
+      "busqueda": {
+        "texto": null,
+        "totalCatalogo": 4,
+        "devueltos": 4,
+        "mensaje": null
+      }
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "barrios: 4 elementos. 12 ALBERDI; 14 ALTO ALBERDI; 13 CENTRO; 11 NUEVA CORDOBA."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"barrios\",\"elementos\":[{\"codigo\":12,\"nombre\":\"ALBERDI\",\"codLocalidad\":1,\"codigoPostal\":\"5000\"},{\"codigo\":14,\"nombre\":\"ALTO ALBERDI\",\"codLocalidad\":2,\"codigoPostal\":\"5003\"},{\"codigo\":13,\"nombre\":\"CENTRO\",\"codLocalidad\":1,\"codigoPostal\":null},{\"codigo\":11,\"nombre\":\"NUEVA CORDOBA\",\"codLocalidad\":1,\"codigoPostal\":\"5000\"}],\"avisos\":[],\"busqueda\":{\"texto\":null,\"totalCatalogo\":4,\"devueltos\":4,\"mensaje\":null}}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "barrios",
+      "buscar": "alberdi",
+      "codPadre": 1
+    },
+    "isError": false,
+    "structuredContent": {
+      "catalogo": "barrios",
+      "elementos": [
+        {
+          "codigo": 12,
+          "nombre": "ALBERDI",
+          "codLocalidad": 1,
+          "codigoPostal": "5000",
+          "similitud": 100
+        },
+        {
+          "codigo": 14,
+          "nombre": "ALTO ALBERDI",
+          "codLocalidad": 2,
+          "codigoPostal": "5003",
+          "similitud": 97
+        }
+      ],
+      "avisos": [
+        "codPadre no aplica a barrios: se ignoró."
+      ],
+      "busqueda": {
+        "texto": "alberdi",
+        "totalCatalogo": 4,
+        "devueltos": 2,
+        "mensaje": null
+      }
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "barrios: 2 elementos. 12 ALBERDI (100); 14 ALTO ALBERDI (97)."
+      },
+      {
+        "type": "text",
+        "text": "{\"catalogo\":\"barrios\",\"elementos\":[{\"codigo\":12,\"nombre\":\"ALBERDI\",\"codLocalidad\":1,\"codigoPostal\":\"5000\",\"similitud\":100},{\"codigo\":14,\"nombre\":\"ALTO ALBERDI\",\"codLocalidad\":2,\"codigoPostal\":\"5003\",\"similitud\":97}],\"avisos\":[\"codPadre no aplica a barrios: se ignoró.\"],\"busqueda\":{\"texto\":\"alberdi\",\"totalCatalogo\":4,\"devueltos\":2,\"mensaje\":null}}"
+      }
+    ]
+  },
+  {
+    "args": {
+      "catalogo": "provincias"
+    },
+    "isError": true,
+    "structuredContent": {
+      "error": {
+        "codigo": "PARAMETRO_INVALIDO",
+        "mensaje": "Parámetros inválidos",
+        "detalle": [
+          {
+            "campo": "catalogo",
+            "mensaje": "catalogo debe ser uno de: grupos, canales, categorias, resultados, acciones, campanias, localidades, barrios"
+          }
+        ]
+      }
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "PARAMETRO_INVALIDO: Parámetros inválidos"
+      }
+    ]
+  }
+]
