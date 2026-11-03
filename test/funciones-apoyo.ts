@@ -53,7 +53,7 @@ export async function catalogoDePrueba(
   });
   const cache = new CacheCatalogos();
   const archivo = esquemaArchivoFunciones.parse({ servidor, tools });
-  const catalogo = construirCatalogo(archivo, 'C:/prueba/prueba-functions.json', await resolverHandlers(archivo), { acceso: simulado.acceso, zonaHoraria: ZONA, cache });
+  const catalogo = construirCatalogo(archivo, 'C:/prueba/prueba-functions.json', await resolverHandlers(archivo, undefined), { acceso: simulado.acceso, zonaHoraria: ZONA, cache });
   const conexion = await conectarCliente(catalogo.tools, sesion);
   return { ...simulado, ...conexion, catalogo, cache };
 }

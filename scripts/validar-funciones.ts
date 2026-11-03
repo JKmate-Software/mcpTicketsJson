@@ -9,7 +9,7 @@ import { cargarCatalogo } from '../src/funciones/catalogo.js';
 import { cargarConfig, rutaArchivoFunciones } from '../src/config.js';
 import { crearAccesoFirebird } from '../src/db/firebird.js';
 import { leerArchivoFunciones } from '../src/funciones/cargar.js';
-import { importarCompletarSesion, importarHandler } from '../src/funciones/handlers.js';
+import { importarCompletarSesion, importarHandler, mcpDeArchivo } from '../src/funciones/handlers.js';
 import { validarContraBase } from '../src/funciones/validar.js';
 
 const salida = (texto: string) => process.stdout.write(`${texto}\n`);
@@ -26,12 +26,13 @@ try {
 
   // Handlers de las tools complejas: todos los que no resuelven, no solo el primero.
   const sinResolver: string[] = [];
+  const mcp = mcpDeArchivo(ruta);
   for (const tool of archivo.tools) {
     if (tool.tipo !== 'compleja') continue;
-    await importarHandler(tool.handler, `Tool '${tool.nombre}', handler '${tool.handler}'`).catch((e: unknown) => sinResolver.push(e instanceof Error ? e.message : String(e)));
+    await importarHandler(tool.handler, mcp, `Tool '${tool.nombre}', handler '${tool.handler}'`).catch((e: unknown) => sinResolver.push(e instanceof Error ? e.message : String(e)));
   }
   if (archivo.servidor.completarSesion) {
-    await importarCompletarSesion(archivo.servidor.completarSesion).catch((e: unknown) => sinResolver.push(e instanceof Error ? e.message : String(e)));
+    await importarCompletarSesion(archivo.servidor.completarSesion, mcp).catch((e: unknown) => sinResolver.push(e instanceof Error ? e.message : String(e)));
   }
   for (const p of sinResolver) salida(`ERROR  ${p}`);
   if (sinResolver.length) throw new Error('Hay handlers que no resuelven: corregilos antes de validar contra la base.');

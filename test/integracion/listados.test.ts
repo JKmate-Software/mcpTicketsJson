@@ -1,8 +1,8 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import type { AccesoDatos } from '../../src/db/firebird.js';
-import type { ListadoTareas } from '../../src/catalogos/listar-tareas.js';
-import type { ListadoTickets } from '../../src/catalogos/listar-tickets.js';
-import type { ResumenTickets } from '../../src/catalogos/resumir-tickets.js';
+import type { ListadoTareas } from '../../src/catalogos/tickets/listar-tareas.js';
+import type { ListadoTickets } from '../../src/catalogos/tickets/listar-tickets.js';
+import type { ResumenTickets } from '../../src/catalogos/tickets/resumir-tickets.js';
 import { conectarCliente, toolsDe } from '../apoyo.js';
 import { accesoDesdeEntorno, hayProcedimientosAg } from './base.js';
 

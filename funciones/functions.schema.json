@@ -41,7 +41,7 @@
           "type": "boolean"
         },
         "completarSesion": {
-          "description": "Archivo src/comunes/<nombre>.ts que completa la sesión stdio desde la base.",
+          "description": "Archivo src/catalogos/<mcp>/comunes/<nombre>.ts (o compartidas/comunes/) que completa la sesión stdio desde la base.",
           "type": "string",
           "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
         }
@@ -708,7 +708,7 @@
               "handler": {
                 "type": "string",
                 "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
-                "description": "Archivo src/catalogos/<handler>.ts con la lógica de la tool."
+                "description": "Archivo src/catalogos/<mcp>/<handler>.ts (o src/catalogos/compartidas/<handler>.ts) con la lógica de la tool; <mcp> es el nombre del archivo de funciones sin -functions.json."
               },
               "parametros": {
                 "type": "array",

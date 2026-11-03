@@ -2,7 +2,7 @@ import { accesoSimulado, conectarCliente, toolDe } from '../apoyo.js';
 import type { Sesion } from '../../src/auth/sesion.js';
 import { CacheCatalogos } from '../../src/busqueda/catalogo.js';
 import type { Fila } from '../../src/db/firebird.js';
-import type { ResultadoRegistro } from '../../src/comunes/registro-prospeccion.js';
+import type { ResultadoRegistro } from '../../src/catalogos/prospeccion/comunes/registro-prospeccion.js';
 
 export const ZONA = 'America/Argentina/Buenos_Aires';
 export const SESION: Sesion = { codUsuario: 874, codDesarrollador: null, codVendedor: 12, transporte: 'http' };

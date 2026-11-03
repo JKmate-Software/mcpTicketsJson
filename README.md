@@ -158,7 +158,7 @@ Cada MCP que publica este proyecto se define en un archivo `funciones/<catalogo>
 | `version` | `serverInfo.version` (opcional). |
 | `instrucciones` | `.md` al lado del archivo; lo devuelve la tool `obtener_instrucciones`. |
 | `instruccionesEnHandshake` | `true` = enviarlas también como `instructions` del handshake (por defecto no, como en la v1). |
-| `completarSesion` | Archivo `src/comunes/<nombre>.ts` que completa la sesión stdio desde la base (`completar-sesion-tickets` resuelve el desarrollador). |
+| `completarSesion` | Archivo `src/catalogos/<mcp>/comunes/<nombre>.ts` que completa la sesión stdio desde la base (`completar-sesion-tickets` resuelve el desarrollador). |
 
 ### Tipos de tool
 
@@ -166,7 +166,7 @@ Cada MCP que publica este proyecto se define en un archivo `funciones/<catalogo>
 |---|---|---|
 | `procedure` | `procedure` y `parametros` | Pasamano: lee de la base el orden y los tipos de los parámetros (`RDB$PROCEDURE_PARAMETERS`) y arma `SELECT * FROM P(?, ...)`, o `EXECUTE PROCEDURE` si es ejecutable. Sin parámetros, sin `()`. |
 | `webservice` | `metodo` y `parametros` | Usa la definición guardada en `METODOS_WEBSERVICES` (`PROC_GET_METODO_WEBSERV_X_NOMB` y `PROC_GET_PARAMS_METODOS_WEBSERV`, como JKMate3 y la v1) para componer la llamada: verifica los parámetros contra el método, convierte cada valor según su tipo y ejecuta el SSQL directo en Firebird (no hay HTTP). La definición se reusa `MCP_WEBSERVICE_CACHE_SEGUNDOS`. |
-| `compleja` | `handler` y la descripción de sus `parametros` | Lógica escrita en código en `src/catalogos/<handler>.ts`, que se carga sola por el nombre; el archivo aporta los textos. Ver [Dónde va cada cosa](#dónde-va-cada-cosa). |
+| `compleja` | `handler` y la descripción de sus `parametros` | Lógica escrita en código en `src/catalogos/<mcp>/<handler>.ts` (o en `compartidas/`), que se carga sola por el nombre; el archivo aporta los textos. Ver [Dónde va cada cosa](#dónde-va-cada-cosa). |
 | `agrupadora` | `descripcion` y la descripción de `catalogo`, `codPadre` y `buscar` | Una sola tool (como `listar_catalogo`) para varios listados simples, declarados como variantes `procedure` o `webservice` con `"grupo"`. El motor es genérico y no lleva código propio. |
 
 Las tools `procedure` y `webservice` responden `{ resultado: [filas] }` con las columnas en camelCase (`COD_BARRIO` → `codBarrio`), fechas ISO y textos sin relleno.
@@ -225,18 +225,19 @@ Las tools `procedure` y `webservice` responden `{ resultado: [filas] }` con las 
 | Qué | Dónde |
 |---|---|
 | Tools `procedure`, `webservice` y `agrupadora` | Solo en el archivo de funciones: no llevan código. |
-| Una tool compleja | `src/catalogos/<handler>.ts`, un archivo por tool, con su test al lado (`<handler>.test.ts`). El nombre del archivo es el `handler` del JSON: kebab-case, igual que la tool (`listar_tickets` → `listar-tickets.ts`). |
-| Lo que comparten varias tools complejas (procedures, esquemas, campos, mapeos, `completarSesion`) | `src/comunes/`, con el MCP como sufijo cuando es de uno solo (`sp-tickets.ts`, `campos-prospeccion.ts`). |
+| Una tool compleja de un MCP | `src/catalogos/<mcp>/<handler>.ts`, donde `<mcp>` es el nombre de su archivo de funciones sin `-functions.json` (`tickets`, `prospeccion`). Un archivo por tool, con su test al lado (`<handler>.test.ts`). El nombre del archivo es el `handler` del JSON: kebab-case, igual que la tool (`listar_tickets` → `tickets/listar-tickets.ts`). |
+| Una tool compleja que sirve a cualquier MCP (`user-info`, `obtener-instrucciones`) | `src/catalogos/compartidas/<handler>.ts`. |
+| Lo que comparten las tools complejas de un MCP (procedures, esquemas, campos, mapeos, `completarSesion`) | `src/catalogos/<mcp>/comunes/` (`tickets/comunes/sp-tickets.ts`). Lo que compartan varios MCP, en `compartidas/comunes/`. |
 | El motor (carga del archivo, procedure, webservice, agrupadora, sanitización) | `src/funciones/` y `src/nucleo/`. |
 
 **Para agregar una tool compleja:**
 
-1. Creá `src/catalogos/<handler>.ts` con la lógica: validador zod de la entrada (sin descripciones), `outputSchema`, annotations y `ejecutar`. El archivo exporta `export const handler: HandlerCompleja = { crear: ({ deps }) => ... }`.
-2. Si necesita llamadas a procedures o campos que comparte con otras tools, van en `src/comunes/`.
+1. Creá `src/catalogos/<mcp>/<handler>.ts` con la lógica (o en `compartidas/` si no es de un MCP): validador zod de la entrada (sin descripciones), `outputSchema`, annotations y `ejecutar`. El archivo exporta `export const handler: HandlerCompleja = { crear: ({ deps }) => ... }`.
+2. Si necesita llamadas a procedures o campos que comparte con otras tools del MCP, van en `src/catalogos/<mcp>/comunes/`.
 3. Declarala en el archivo de funciones con `"tipo": "compleja"`, `"handler": "<handler>"` y sus textos.
 4. Su test al lado, con la base simulada de `test/apoyo.ts` (`toolDe('<catalogo>', '<tool>', deps)`).
 
-No hay registro que mantener: el servidor importa el archivo por el nombre del `handler`. `npm test` falla si un JSON nombra un handler que no existe, si un archivo de `src/catalogos/` no exporta `handler` o si ningún JSON lo usa. Cambiar el código de una tool requiere `npm run build` y reiniciar; sus textos se siguen editando en caliente.
+No hay registro que mantener: el servidor importa el archivo por el nombre del `handler`, buscándolo primero en la carpeta del MCP y después en `compartidas/` (si está en las dos, falla por ambiguo). `npm test` falla si un JSON nombra un handler que no existe, si un archivo no exporta `handler`, si una tool de `<mcp>/` no la usa ese MCP (o una de `compartidas/` ninguno), o si hay una carpeta sin su archivo de funciones. Cambiar el código de una tool requiere `npm run build` y reiniciar; sus textos se siguen editando en caliente.
 
 ### Equivalencias con `functions.json` de la v1
 
@@ -399,8 +400,10 @@ src/
   nucleo/               genérico: DefinicionTool, wrapper común de ejecución (sanitización), Server del SDK
   funciones/            motor del archivo de funciones: esquema, carga de handlers por nombre, recarga,
                         tipos procedure y webservice, agrupadora y validar-funciones
-  catalogos/            una tool compleja por archivo (<handler>.ts + su test), de cualquier MCP
-  comunes/              lo compartido entre tools complejas: procedures, esquemas, campos, completarSesion
+  catalogos/            tools complejas, una carpeta por MCP (como su <mcp>-functions.json)
+    tickets/            sus 4 tools (<handler>.ts + test) y comunes/ (SP _AG, esquemas, filtros, completarSesion)
+    prospeccion/        sus 9 tools y comunes/ (procedures, campos, registro)
+    compartidas/        tools que sirven a cualquier MCP: user-info, obtener-instrucciones
   auth/                 sesión, JWT, credenciales (PROC_GET_AUTH_CREDENCIAL), login, Bearer
   busqueda/             búsqueda aproximada (port de la v1) y caché de catálogos
   db/firebird.ts        pool, transacciones (lectura y escritura) y errores de conexión

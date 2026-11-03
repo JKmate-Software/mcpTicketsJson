@@ -24,8 +24,15 @@
 - [x] 4.3 `test/convencion-catalogos.test.ts` (D5) y `validar-funciones` informando los handlers que no resuelven.
 - [x] 4.4 Captura de `tools/list` y de respuestas en verde, sin regenerar los archivos de `test/datos/`.
 
-## 5. Cierre
+## 5. Carpeta por MCP (corrección del usuario, 2026-11-03)
 
-- [x] 5.1 README: secciones "Archivo de funciones" (tipo `agrupadora`, nombres de handler) y "Estructura", y la convención "dónde va cada cosa" con los pasos para agregar una tool compleja.
-- [x] 5.2 Lint, typecheck, tests, build, prueba de humo por stdio desde `dist/` (tickets, prospección y demo) y `openspec validate reorganizar-tools-complejas --strict`.
-- [ ] 5.3 Antes de archivar: archivar primero `agregar-catalogo-funciones-json` y convertir en MODIFIED de `tools-compleja` y `listar-catalogo` los requisitos que este change reemplaza.
+- [x] 5.1 Mover las tools a `src/catalogos/tickets/`, `prospeccion/` y `compartidas/`, y lo de `src/comunes/` a `<mcp>/comunes/`, reescribiendo los imports. Eliminar `src/comunes/`.
+- [x] 5.2 Cargador: `mcpDeArchivo`, búsqueda en `<mcp>/` y `compartidas/` (ambiguo si está en las dos), `completarSesion` en `<mcp>/comunes/`. `cargarCatalogo`, `validar-funciones` y los tests del cargador adaptados.
+- [x] 5.3 `test/convencion-catalogos.test.ts` por carpeta; textos de `esquema.ts`, `functions.schema.json` y README.
+- [x] 5.4 Lint, typecheck, tests (532), build y prueba de humo por stdio desde `dist/` (tickets 4, prospección 11, demo 3 tools).
+
+## 6. Cierre
+
+- [x] 6.1 README: secciones "Archivo de funciones" (tipo `agrupadora`, nombres de handler) y "Estructura", y la convención "dónde va cada cosa" con los pasos para agregar una tool compleja.
+- [x] 6.2 Lint, typecheck, tests, build, prueba de humo por stdio desde `dist/` (tickets, prospección y demo) y `openspec validate reorganizar-tools-complejas --strict`.
+- [ ] 6.3 Antes de archivar: archivar primero `agregar-catalogo-funciones-json` y convertir en MODIFIED de `tools-compleja` y `listar-catalogo` los requisitos que este change reemplaza.

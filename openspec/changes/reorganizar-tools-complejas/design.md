@@ -41,7 +41,11 @@ La motivación está en proposal.md. Estado de partida (después de `agregar-cat
 | `catalogos/prospeccion/comun.ts`, `sp.ts` | `comunes/campos-prospeccion.ts`, `comunes/sp-prospeccion.ts` |
 | `catalogos/index.ts` (`REGISTRO`), `tickets/handlers.ts`, `prospeccion/handlers.ts`, `tickets/index.ts`, `prospeccion/index.ts` | se eliminan; `cargarCatalogo` y `rutaCatalogo` pasan a `funciones/catalogo.ts` |
 
-- Los nombres de `src/comunes/` llevan el MCP como sufijo (`sp-tickets`, `sp-prospeccion`), porque la carpeta es una sola. Si algún día algo lo usan varios MCP, va sin sufijo.
+- **Corrección del usuario (2026-11-03): carpeta por MCP.** La tabla de arriba es la primera versión, que dejó todas las tools sueltas en `src/catalogos/` y lo compartido en `src/comunes/`. La ubicación final es:
+  - `src/catalogos/tickets/` (4 tools) y `tickets/comunes/` (`sp-tickets`, `esquemas-tickets`, `filtros-tickets`, `mapeo-tickets`, `completar-sesion-tickets`);
+  - `src/catalogos/prospeccion/` (9 tools, con `user-info-vendedor`) y `prospeccion/comunes/` (`campos-prospeccion`, `sp-prospeccion`, `registro-prospeccion`);
+  - `src/catalogos/compartidas/` (`user-info`, `obtener-instrucciones`); lo que compartan varios MCP iría en `compartidas/comunes/`;
+  - `src/comunes/` deja de existir. Los archivos conservan su nombre (con el sufijo del MCP), así el `completarSesion` de los JSON no cambia.
 - El handler se llama igual que la tool, en kebab-case (`listar_tickets` → `listar-tickets`), salvo `user-info-vendedor`. Así, buscar un nombre de tool lleva al archivo.
 
 ### D2. Contrato de un archivo de `src/catalogos/`
@@ -58,7 +62,8 @@ export const handler: HandlerCompleja = { crear: ({ deps }) => ({ inputSchema, o
 - `funciones/handlers.ts` exporta `resolverHandlers(archivo): Promise<RegistroHandlers>`:
   - Junta los `handler` de las tools `compleja` y el `servidor.completarSesion`.
   - Valida cada nombre con `^[a-z0-9]+(-[a-z0-9]+)*$`.
-  - Arma la ruta: `resolve(DIR_CATALOGOS, nombre + EXT)` para los handlers y `resolve(DIR_COMUNES, nombre + EXT)` para `completarSesion`.
+  - El MCP sale del nombre del archivo de funciones (`mcpDeArchivo`: `tickets-functions.json` → `tickets`; sin esa forma, ninguno).
+  - Busca el handler en `catalogos/<mcp>/` y después en `catalogos/compartidas/`; `completarSesion`, en `<mcp>/comunes/` y `compartidas/comunes/`. Si no está en ninguna, el error nombra las dos rutas; si está en las dos, falla por ambiguo.
   - Verifica con `existsSync` (así el error lleva la ruta, no un mensaje de Node) y hace `import(pathToFileURL(ruta).href)`.
   - Verifica que el módulo exporte `handler` con `crear`, o `completarSesion` como función.
 - `EXT` es `.ts` si el cargador corre desde fuente (tsx, vitest) y `.js` si corre desde `dist/`. Se decide con `import.meta.url.endsWith('.ts')`. Que `import()` de un `.ts` por URL funcione en tsx y vitest queda A CONFIRMAR en la tarea 2.1 (vitest seguro; tsx resuelve `.ts` por ruta absoluta).
@@ -73,9 +78,10 @@ export const handler: HandlerCompleja = { crear: ({ deps }) => ({ inputSchema, o
 
 ### D5. Convención verificada
 `test/convencion-catalogos.test.ts`:
-1. Para cada `funciones/*-functions.json`, `resolverHandlers` no falla.
-2. Cada `src/catalogos/*.ts` que no es `.test.ts` exporta `handler` con `crear`.
-3. El conjunto de handlers usados por los JSON es igual al de archivos de `src/catalogos/`. Uno sin usar falla, con su nombre.
+1. Para cada `funciones/*-functions.json`, `resolverHandlers` (con su MCP) no falla.
+2. Cada `src/catalogos/<carpeta>/*.ts` que no es `.test.ts` exporta `handler` con `crear`.
+3. Cada tool de `<mcp>/` la usa ese MCP, y cada una de `compartidas/` algún MCP. Una sin usar falla, con su carpeta y nombre.
+4. `src/catalogos/` solo tiene carpetas, y cada carpeta que no es `compartidas` tiene su `<mcp>-functions.json`.
 
 `validar-funciones` llama a `resolverHandlers` antes de ir a la base, e informa cada handler que no resuelve como `ERROR`.
 

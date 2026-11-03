@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import type { AccesoDatos } from '../../src/db/firebird.js';
-import { ESTADOS_TAREA, ESTADOS_TICKET, PRIORIDADES_TICKET, SISTEMAS } from '../../src/comunes/esquemas-tickets.js';
-import type { ContextoTicket } from '../../src/catalogos/obtener-contexto-ticket.js';
+import { ESTADOS_TAREA, ESTADOS_TICKET, PRIORIDADES_TICKET, SISTEMAS } from '../../src/catalogos/tickets/comunes/esquemas-tickets.js';
+import type { ContextoTicket } from '../../src/catalogos/tickets/obtener-contexto-ticket.js';
 import { conectarCliente, toolDe } from '../apoyo.js';
 import { accesoDesdeEntorno, consultarDirecto, hayBase, hayProcedimientosAg } from './base.js';
 

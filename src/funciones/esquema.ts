@@ -152,8 +152,8 @@ const toolCompleja = z
     ...base,
     handler: z
       .string()
-      .regex(NOMBRE_HANDLER, 'el nombre del archivo de src/catalogos/, en minúsculas con guiones (ej. listar-tickets)')
-      .describe('Archivo src/catalogos/<handler>.ts con la lógica de la tool.'),
+      .regex(NOMBRE_HANDLER, 'el nombre del archivo de src/catalogos/<mcp>/ o compartidas/, en minúsculas con guiones (ej. listar-tickets)')
+      .describe('Archivo src/catalogos/<mcp>/<handler>.ts (o src/catalogos/compartidas/<handler>.ts) con la lógica de la tool; <mcp> es el nombre del archivo de funciones sin -functions.json.'),
     parametros: z.array(parametroTexto).optional(),
   })
   .strict();
@@ -185,9 +185,9 @@ export const esquemaArchivoFunciones = z
         instruccionesEnHandshake: z.boolean().optional().describe('true = enviar las instrucciones también en el handshake.'),
         completarSesion: z
           .string()
-          .regex(NOMBRE_HANDLER, 'el nombre del archivo de src/comunes/, en minúsculas con guiones')
+          .regex(NOMBRE_HANDLER, 'el nombre del archivo de src/catalogos/<mcp>/comunes/, en minúsculas con guiones')
           .optional()
-          .describe('Archivo src/comunes/<nombre>.ts que completa la sesión stdio desde la base.'),
+          .describe('Archivo src/catalogos/<mcp>/comunes/<nombre>.ts (o compartidas/comunes/) que completa la sesión stdio desde la base.'),
       })
       .strict(),
     tools: z.array(esquemaTool).min(1),
