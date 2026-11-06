@@ -1,0 +1,101 @@
+name: Release mcp_generico
+
+# Compila el proyecto y publica el compilado en la carpeta mcp_generico/ del repo
+# JKmate-Software/jk_Agente_Release.
+#
+# Requiere el secret RELEASE_REPO_TOKEN en este repo: Fine-grained PAT con
+# "Contents: Read and write" solo sobre jk_Agente_Release.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Evita que dos publicaciones pisen la misma carpeta al mismo tiempo.
+concurrency:
+  group: release-mcp_generico
+  cancel-in-progress: false
+
+env:
+  RELEASE_REPO: JKmate-Software/jk_Agente_Release
+  RELEASE_BRANCH: main
+  RELEASE_DIR: mcp_generico
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar
+        run: npm run build
+
+      - name: Armar paquete de produccion
+        run: |
+          set -euo pipefail
+          OUT=release_out
+          mkdir -p "$OUT"
+
+          # Codigo compilado (sin source maps) + manifiestos para "npm ci --omit=dev" en el servidor
+          cp -r dist "$OUT/dist"
+          find "$OUT/dist" -name "*.map" -delete
+          cp package.json package-lock.json "$OUT/"
+
+          # Archivos que el servidor lee en runtime: <dist>/../funciones (ver src/config.ts)
+          cp -r funciones "$OUT/funciones"
+          cp .env.example "$OUT/"
+
+          # Datos del build, para que el sincronizador sepa que version tiene
+          cat > "$OUT/VERSION.txt" <<EOF
+          repo=${GITHUB_REPOSITORY}
+          commit=${GITHUB_SHA}
+          ref=${GITHUB_REF_NAME}
+          build=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          EOF
+
+      - name: Clonar repo de release
+        env:
+          TOKEN: ${{ secrets.RELEASE_REPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "$RELEASE_BRANCH" \
+            "https://x-access-token:${TOKEN}@github.com/${RELEASE_REPO}.git" release_repo \
+          || git clone "https://x-access-token:${TOKEN}@github.com/${RELEASE_REPO}.git" release_repo
+
+      - name: Copiar compilado a mcp_generico/
+        run: |
+          set -euo pipefail
+          # Solo se reemplaza mcp_generico/; el resto del repo de release no se toca
+          rm -rf "release_repo/$RELEASE_DIR"
+          mkdir -p "release_repo/$RELEASE_DIR"
+          cp -r release_out/. "release_repo/$RELEASE_DIR/"
+
+      - name: Commit y push
+        working-directory: release_repo
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A "$RELEASE_DIR"
+          if git diff --cached --quiet; then
+            echo "Sin cambios en $RELEASE_DIR, no se publica nada."
+            exit 0
+          fi
+
+          git commit -m "mcp_generico: build ${GITHUB_SHA::7}" \
+                     -m "Origen: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
+          git push origin "HEAD:${RELEASE_BRANCH}"
