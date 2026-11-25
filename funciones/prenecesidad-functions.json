@@ -1,0 +1,1375 @@
+{
+  "$schema": "./functions.schema.json",
+  "servidor": {
+    "nombre": "mcp-prenecesidad-json",
+    "claimRequerida": "COD_VENDEDOR"
+  },
+  "tools": [
+    {
+      "tipo": "webservice",
+      "nombre": "buscar_categorias_productos",
+      "titulo": "📂 Buscando categorías y productos",
+      "metodo": "MM_PROC_GET_NODOSCATEGORIAJKMT",
+      "descripcion": "Trae el árbol completo de categorías y productos de prenecesidad (nodos tipo carpeta y nodos finales de producto) — es el catálogo raíz para elegir un producto por nombre o navegando categorías. Para encontrar un producto por nombre usar BUSCAR (tolera errores de tipeo); sin BUSCAR devuelve el árbol completo para navegarlo por categorías. Primer paso del flujo de carga de contrato — los nodos TYPE='NODE' son los productos/planes cotizables: su ID es el plan que se usa en obtener_detalle_plan (ID_PLAN) y como COD_PLAN_MOV en los pasos siguientes.",
+      "parametros": [
+        {
+          "nombre": "CATEGORIA_IN",
+          "tipo": "texto",
+          "descripcion": "Categoría raíz a listar. Fijo en 'PREVISION' para el catálogo de productos de prenecesidad.",
+          "requerido": true,
+          "valorFijo": "PREVISION"
+        }
+      ],
+      "salida": [
+        "ID",
+        "NAME",
+        "TYPE",
+        "GROUP_ID",
+        "PENULTIMO"
+      ],
+      "busqueda": {
+        "campos": [
+          "NAME"
+        ],
+        "maxSinBusqueda": 100,
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "obtener_detalle_plan",
+      "titulo": "📄 Consultando detalle del plan",
+      "metodo": "PROC_MM_GET_PLAN_MOV_BY_ID",
+      "descripcion": "Detalle completo de un plan/producto puntual: precio de lista, descripción, beneficios, características, observaciones, imágenes, y el tipo de contrato del plan (COD_TIPO_CONTRATO — si es de tipo 'Parcela', después de cargar el titular corresponde elegir parcela con listar_parcelas). Usar con el ID del producto elegido en buscar_categorias_productos (nodo TYPE='NODE').",
+      "parametros": [
+        {
+          "nombre": "ID_PLAN",
+          "tipo": "entero",
+          "descripcion": "Plan/producto a consultar: ID de un nodo TYPE='NODE' de buscar_categorias_productos.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "ID",
+        "NAME",
+        "COST",
+        "DESCRIPTION",
+        "BENEFITS",
+        "FEATURES",
+        "OBSERVATIONS",
+        "COMENTARIOS_VENDEDOR",
+        "COD_TIPO_CONTRATO",
+        "COD_LISTA_PRECIO",
+        "PROMOCION_PORCENTAJE_DESCUENTO",
+        "COST_PROMOTION",
+        "PROMOTION_MONTHS_TO_PAY",
+        "PROMOTION_FIRST_PAY"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_planes_venta_modelo",
+      "titulo": "📋 Buscando planes de venta",
+      "metodo": "PROC_GET_PLANES_MOD_X_PROD",
+      "descripcion": "Catálogo de planes de venta modelo disponibles para un producto — define bajo qué condiciones comerciales se puede vender ese plan. Necesario antes de listar_condiciones_venta_plan y cotizar_plan (parámetro COD_PLAN_VENTA_MODELO).",
+      "parametros": [
+        {
+          "nombre": "COD_PLAN_MOV",
+          "tipo": "entero",
+          "descripcion": "Producto/plan a consultar (ver obtener_detalle_plan).",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "COD_PLAN_VENTA_MODELO",
+        "NOMBRE",
+        "IMPORTE"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_condiciones_venta_plan",
+      "titulo": "📆 Consultando condiciones de venta",
+      "metodo": "PROC_GET_COND_VENTAXMMPLAN",
+      "descripcion": "Condiciones de venta (mensualidades) disponibles para un producto + plan de venta modelo — cada condición trae los límites válidos de cuotas (CANT_CUOTAS_POR_PARAMETRO, CANT_CUOTA_MIN/MAX o CUOTAS fijas), anticipo mínimo (MONTO_MIN_ANTICIPO), descuento máximo (MONTO_MAX_DESCUENTO). Cuotas válidas para cotizar_plan (parámetro CUOTAS): si CANT_CUOTAS_POR_PARAMETRO=0, exactamente el valor de CUOTAS; si es 1, cualquier entero entre CANT_CUOTA_MIN y CANT_CUOTA_MAX. No exceder los límites de anticipo/descuento.",
+      "parametros": [
+        {
+          "nombre": "COD_PLAN_MOV",
+          "tipo": "entero",
+          "descripcion": "Producto/plan a consultar.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_PLAN_VENTA_MODELO_IN",
+          "tipo": "entero",
+          "descripcion": "Plan de venta modelo elegido (ver listar_planes_venta_modelo).",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "COD_CONDICION_VENTA",
+        "DESCRIPCION",
+        "MODALIDAD_PAGO",
+        "CUOTAS",
+        "CANT_CUOTAS_POR_PARAMETRO",
+        "CANT_CUOTA_MIN",
+        "CANT_CUOTA_MAX",
+        "PRECIO",
+        "MONTO_MIN_ANTICIPO",
+        "MONTO_MAX_DESCUENTO",
+        "INTERES_CUOTA"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "cotizar_plan",
+      "titulo": "🧮 Cotizando plan",
+      "metodo": "PROC_GET_COTIZ_PLAN_MOV",
+      "descripcion": "Cotiza el plan con las condiciones elegidas — devuelve monto total, monto de cuota, capital, interés, fechas/tiempos de vencimiento y base de comisión (y, si el plan es de ampliación, CANT_LUGARES_HABILITA). El resultado es la 'cotización' que se pasa luego a crear_precontrato_venta. Después de mostrarle al usuario la cotización (plan, total, anticipo, cantidad y monto de cuota), preguntarle SIEMPRE cómo quiere seguir: (a) CONTINUAR con la carga del contrato (seguir con verificar_persona y crear_precontrato_venta) o (b) ENVIARLE la cotización por email al cliente: en ese caso llamar enviar_cotizacion_prenecesidad con los MISMOS COD_PLAN_MOV, COD_CONDICION_VENTA, COD_PLAN_VENTA_MODELO, CUOTAS, RECONOCIMIENTO, DESCUENTO, ANTICIPO y TIPO_MONTO_DESCUENTO usados en esta cotización, más los datos de contacto del cliente.",
+      "parametros": [
+        {
+          "nombre": "COD_PLAN_MOV",
+          "tipo": "entero",
+          "descripcion": "Producto/plan cotizado.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CONDICION_VENTA",
+          "tipo": "entero",
+          "descripcion": "Condición de venta elegida (ver listar_condiciones_venta_plan).",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_PLAN_VENTA_MODELO",
+          "tipo": "entero",
+          "descripcion": "Plan de venta modelo elegido (ver listar_planes_venta_modelo).",
+          "requerido": true
+        },
+        {
+          "nombre": "CUOTAS",
+          "tipo": "entero",
+          "descripcion": "Cantidad de cuotas elegida — debe respetar la regla de cuotas de la condición de venta (ver listar_condiciones_venta_plan).",
+          "requerido": true
+        },
+        {
+          "nombre": "RECONOCIMIENTO",
+          "tipo": "decimal",
+          "descripcion": "Monto de reconocimiento/bonificación adicional a aplicar.",
+          "default": 0
+        },
+        {
+          "nombre": "DESCUENTO",
+          "tipo": "decimal",
+          "descripcion": "Monto de descuento a aplicar — no debe superar MONTO_MAX_DESCUENTO de la condición de venta elegida.",
+          "default": 0
+        },
+        {
+          "nombre": "ANTICIPO",
+          "tipo": "decimal",
+          "descripcion": "Monto de anticipo/enganche — no debe ser menor a MONTO_MIN_ANTICIPO de la condición de venta elegida.",
+          "default": 0
+        },
+        {
+          "nombre": "MONTOPLANVENTAMODELO",
+          "tipo": "decimal",
+          "descripcion": "Fijo en 0.",
+          "valorFijo": 0
+        },
+        {
+          "nombre": "TIPO_MONTO_DESCUENTO",
+          "tipo": "texto",
+          "descripcion": "Tipo de descuento a aplicar, si el descuento se maneja por tipo. Opcional."
+        }
+      ],
+      "salida": [
+        "MONTO",
+        "MONTO_NUEVO",
+        "SUBTOTAL",
+        "MONTO_CUOTA",
+        "CONDICION_VENTA",
+        "NOMBRE_PLAN_VENTA_MODELO",
+        "COD_PLAN_VENTA_MODELO_OUT",
+        "TIPO_INTERES",
+        "TIEMPO_INTERES_CUOTA",
+        "INTERES_CUOTA",
+        "INTERES_CRED",
+        "FECHA_PRIMER_PAGO",
+        "TOTAL_AHORRO",
+        "CANT_LUGARES_HABILITA"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "enviar_cotizacion_prenecesidad",
+      "titulo": "📧 Enviando cotización por email",
+      "metodo": "PROC_MCP_ENVIAR_COTIZACION_PREN",
+      "descripcion": "Envía por email al cliente la cotización de un plan de prenecesidad, en UNA llamada: vuelve a cotizar en el servidor con las mismas condiciones de cotizar_plan, da de alta el prospecto (o reutiliza el del vendedor con el mismo email), graba la cotización y encola el email. Usar cuando el usuario elige enviarle la cotización al cliente en vez de (o antes de) cargar el contrato. Pedirle nombre, apellido, email y, opcionalmente, teléfono móvil del cliente; los parámetros del plan tienen que ser EXACTAMENTE los que se usaron en cotizar_plan. RESULTADO=0 → explicarle el MENSAJE. RESULTADO=1 → confirmarle que la cotización quedó en camino a ese email y, ENSEGUIDA, llamar pdf_cotizacion_prenecesidad con el COD_COTIZACION_MOV que devuelve esta tool y mostrarle la URL del PDF como enlace para que verifique cómo le llegó la cotización al cliente. Después preguntarle si además quiere continuar con la carga del contrato.",
+      "campoUsuario": "COD_USUARIO",
+      "campoVendedor": "COD_VENDEDOR",
+      "parametros": [
+        {
+          "nombre": "NOMBRE_SOLO",
+          "alias": "NOMBRE",
+          "tipo": "texto",
+          "descripcion": "Nombre del cliente.",
+          "requerido": true
+        },
+        {
+          "nombre": "APELLIDO_SOLO",
+          "alias": "APELLIDO",
+          "tipo": "texto",
+          "descripcion": "Apellido del cliente.",
+          "requerido": true
+        },
+        {
+          "nombre": "EMAIL",
+          "tipo": "texto",
+          "descripcion": "Email al que se envía la cotización.",
+          "requerido": true
+        },
+        {
+          "nombre": "TELEFONO_MOVIL",
+          "tipo": "texto",
+          "descripcion": "Teléfono móvil del cliente. Opcional."
+        },
+        {
+          "nombre": "COD_PLAN_MOV",
+          "tipo": "entero",
+          "descripcion": "Plan cotizado (el mismo de cotizar_plan).",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CONDICION_VENTA",
+          "tipo": "entero",
+          "descripcion": "Condición de venta usada en cotizar_plan.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_PLAN_VENTA_MODELO",
+          "tipo": "entero",
+          "descripcion": "Plan de venta modelo usado en cotizar_plan.",
+          "requerido": true
+        },
+        {
+          "nombre": "CUOTAS",
+          "tipo": "entero",
+          "descripcion": "Cantidad de cuotas usada en cotizar_plan.",
+          "requerido": true
+        },
+        {
+          "nombre": "RECONOCIMIENTO",
+          "tipo": "decimal",
+          "descripcion": "Reconocimiento usado en cotizar_plan, si hubo."
+        },
+        {
+          "nombre": "DESCUENTO",
+          "tipo": "decimal",
+          "descripcion": "Descuento usado en cotizar_plan, si hubo."
+        },
+        {
+          "nombre": "ANTICIPO",
+          "tipo": "decimal",
+          "descripcion": "Anticipo usado en cotizar_plan, si hubo."
+        },
+        {
+          "nombre": "TIPO_MONTO_DESCUENTO",
+          "tipo": "texto",
+          "descripcion": "Tipo de descuento usado en cotizar_plan, si hubo."
+        },
+        {
+          "nombre": "COD_USUARIO",
+          "tipo": "entero",
+          "descripcion": "Usuario de la sesión.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_VENDEDOR",
+          "tipo": "entero",
+          "descripcion": "Vendedor de la sesión.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "RESULTADO",
+        "MENSAJE",
+        "COD_COTIZACION_MOV",
+        "TOTAL",
+        "MONTO_CUOTA"
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "verificar_persona",
+      "titulo": "🔍 Verificando persona",
+      "metodo": "PROC_MCP_VERIFICAR_PERSONA",
+      "descripcion": "Verifica a una persona por su documento antes de cargarla como titular o beneficiario, en UNA llamada: si ya es cliente (COD_CLIENTE a reutilizar, con nombre, contacto y domicilio para confirmar con el usuario), si el documento está en uso por otro cliente (DOCUMENTO_VALIDO=0), si tiene un contrato activo (PLAN_SERVICIO), y la ACCION a seguir: CONTINUAR, ADVERTIR (contarle al usuario y seguir solo si confirma) o DENEGAR (no cargarla; explicarle el MENSAJE). Devuelve también COD_PARENTEZCO_TITULAR, el código de parentesco para cargar_titular_precontrato. Solo busca por documento exacto.",
+      "parametros": [
+        {
+          "nombre": "TIPO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Tipo de documento (ver listar_catalogo catalogo='tipo_documento'). Si se omite, se busca solo por número."
+        },
+        {
+          "nombre": "NRO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Número de documento de la persona.",
+          "requerido": true
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "crear_precontrato_venta",
+      "titulo": "📝 Creando precontrato",
+      "metodo": "ws_crm_crear_precontrato_2",
+      "descripcion": "Crea el pre-contrato de venta a partir de la cotización armada (ver cotizar_plan) — es el paso 'Vender'. Devuelve COD_CONTRATO, que identifica el pre-contrato para TODOS los pasos siguientes del flujo (carga de titular, beneficiarios, facturación, finalización). ⚠️ CANT_BENEFICIARIOS no siempre representa la cantidad real de beneficiarios del contrato — ver ese parámetro antes de asumir su valor.",
+      "campoVendedor": "COD_VENDEDOR",
+      "parametros": [
+        {
+          "nombre": "PCOD_PRE_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Id de un pre-contrato existente a actualizar. Omitir para crear uno nuevo."
+        },
+        {
+          "nombre": "COD_PLAN_MOV",
+          "tipo": "entero",
+          "descripcion": "Producto/plan vendido.",
+          "requerido": true
+        },
+        {
+          "nombre": "CANT_BENEFICIARIOS",
+          "tipo": "entero",
+          "descripcion": "Cantidad de beneficiarios esperada para el contrato. ⚠️ No confiar en este valor para decidir cuántos beneficiarios cargar — no siempre representa la cantidad real; si hace falta saber cuántos hay, usar listar_integrantes_precontrato."
+        },
+        {
+          "nombre": "COD_CONDICION_VENTA",
+          "tipo": "entero",
+          "descripcion": "Condición de venta usada al cotizar.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_VENDEDOR",
+          "tipo": "entero",
+          "descripcion": "Vendedor de la venta (resuelto de la sesión).",
+          "requerido": true
+        },
+        {
+          "nombre": "DESCRIPCION",
+          "tipo": "texto",
+          "descripcion": "Fijo en cadena vacía.",
+          "valorFijo": ""
+        },
+        {
+          "nombre": "OBSERVACIONES",
+          "tipo": "texto",
+          "descripcion": "Fijo en 'Ingreso de contrato por crm nuevo'.",
+          "valorFijo": "Ingreso de contrato por crm nuevo"
+        },
+        {
+          "nombre": "ANTICIPO",
+          "tipo": "decimal",
+          "descripcion": "Anticipo cotizado (ver cotizar_plan)."
+        },
+        {
+          "nombre": "VALOR_CUOTA",
+          "tipo": "decimal",
+          "descripcion": "Monto de cada cuota (ver cotizar_plan → MONTO_CUOTA)."
+        },
+        {
+          "nombre": "TASA_INTERES",
+          "tipo": "decimal",
+          "descripcion": "Fijo en 0.",
+          "valorFijo": 0
+        },
+        {
+          "nombre": "TIPO_INTERES",
+          "tipo": "texto",
+          "descripcion": "Ver cotizar_plan → TIPO_INTERES."
+        },
+        {
+          "nombre": "TIEMPO_INTERES",
+          "tipo": "texto",
+          "descripcion": "Ver cotizar_plan → TIEMPO_INTERES_CUOTA."
+        },
+        {
+          "nombre": "CANT_CUOTAS",
+          "tipo": "entero",
+          "descripcion": "Cantidad de cuotas cotizada.",
+          "requerido": true
+        },
+        {
+          "nombre": "FECHA_PRIMER_CUOTA",
+          "tipo": "texto",
+          "descripcion": "Fecha del primer pago (ISO 8601). Opcional."
+        },
+        {
+          "nombre": "PCOD_PLAN_VENTA_MODELO",
+          "tipo": "entero",
+          "descripcion": "Plan de venta modelo usado al cotizar.",
+          "requerido": true
+        },
+        {
+          "nombre": "FECHA_PROMESA_PAGO",
+          "tipo": "texto",
+          "descripcion": "No aplica a este flujo — omitir."
+        },
+        {
+          "nombre": "DESCUENTO_LISTA",
+          "tipo": "decimal",
+          "descripcion": "Fijo en 0.",
+          "valorFijo": 0
+        },
+        {
+          "nombre": "PCOD_SUCURSAL",
+          "tipo": "entero",
+          "descripcion": "No aplica a este flujo — omitir."
+        },
+        {
+          "nombre": "PCOD_CAT_CLIENTE_DESCUENTO",
+          "tipo": "entero",
+          "descripcion": "No aplica a este flujo — omitir."
+        },
+        {
+          "nombre": "TOTAL",
+          "tipo": "decimal",
+          "descripcion": "Total cotizado.",
+          "requerido": true
+        },
+        {
+          "nombre": "DESCUENTO_MONTO",
+          "tipo": "decimal",
+          "descripcion": "Descuento aplicado (ver cotizar_plan → DESCUENTO)."
+        },
+        {
+          "nombre": "RECONOCIMIENTO",
+          "tipo": "decimal",
+          "descripcion": "Reconocimiento aplicado."
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "obtener_precontrato",
+      "titulo": "📄 Consultando precontrato",
+      "metodo": "PROC_GET_PRE_CONTRATO_X_COD",
+      "descripcion": "Datos generales del pre-contrato: tipo de contrato (CAT_TIPO_CONTRATO, para saber si es venta de parcela y por lo tanto corresponde asignar_parcela_precontrato), plan/lista de precio asociado, importe y descuento del contrato, si ya tiene parcela asignada (COD_PARCELA) y si ya tiene registrada la facturación (COD_COMERCIALIZADORA / COD_CAMPANIA_VENTA / COD_CANAL). Se usa en varios pasos del flujo para decidir ramas y mostrar totales.",
+      "parametros": [
+        {
+          "nombre": "COD_PRE_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato a consultar.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "COD_ESTADO_CONTRATO",
+        "FECHA",
+        "ANULADO",
+        "COD_CLIENTE",
+        "COD_PLAN_MOV",
+        "COD_PLAN_VENTA_MODELO",
+        "COD_CONDICION_VENTA",
+        "COD_LISTA_PRECIO",
+        "COD_TIPO_CONTRATO",
+        "CAT_TIPO_CONTRATO",
+        "COD_PARCELA",
+        "CANT_CUOTAS",
+        "VALOR_CUOTA",
+        "ANTICIPO",
+        "IMPORTE_CONTRATO",
+        "DESCUENTO_MONTO",
+        "RECONOCIMIENTO",
+        "FECHA_PRIMER_CUOTA",
+        "COD_COMERCIALIZADORA",
+        "COD_CAMPANIA_VENTA",
+        "COD_CANAL"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "obtener_parcela_seleccionada_precontrato",
+      "titulo": "📍 Consultando parcela asignada",
+      "metodo": "PROC_GET_PARCELA_SEL_PRECONTR",
+      "descripcion": "Trae la parcela (parque/zona/parcela) ya asignada a un pre-contrato de tipo 'Parcela' (ver obtener_precontrato → CAT_TIPO_CONTRATO). Solo devuelve datos si ya se asignó una parcela (ver asignar_parcela_precontrato).",
+      "parametros": [
+        {
+          "nombre": "COD_PRE_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato a consultar.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "COD_PARCELA",
+        "LEGAJO_PARCELA",
+        "ZONA",
+        "ZONA_PARQUE"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "cargar_titular_precontrato",
+      "titulo": "👤 Guardando datos del titular",
+      "metodo": "ws_crm_crear_cliente_a_precontrato",
+      "descripcion": "Da de alta o actualiza al TITULAR de un pre-contrato, fijando COD_CARACTER_TITULAR=1 y COD_PARENTEZCO al código de parentesco 'titular' de esta instalación (sale de verificar_persona → COD_PARENTEZCO_TITULAR — varía por instalación, nunca asumir un valor). Antes de invocar: verificar_persona con el documento (reusar COD_CLIENTE si ya existe; respetar ACCION). Si el pre-contrato es de tipo 'Parcela' (ver obtener_precontrato → CAT_TIPO_CONTRATO), después de esta llamada corresponde asignar_parcela_precontrato.",
+      "parametros": [
+        {
+          "nombre": "COD_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato al que se asocia el titular.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CLIENTE",
+          "tipo": "entero",
+          "descripcion": "Cliente ya existente a asociar como titular (ver verificar_persona → COD_CLIENTE). Omitir para dar de alta un cliente nuevo."
+        },
+        {
+          "nombre": "ORDEN",
+          "tipo": "entero",
+          "descripcion": "Fijo en 1 para el titular.",
+          "valorFijo": 1
+        },
+        {
+          "nombre": "COD_CARACTER_TITULAR",
+          "tipo": "entero",
+          "descripcion": "Fijo en 1 (carácter 'titular').",
+          "valorFijo": 1
+        },
+        {
+          "nombre": "COD_PARENTEZCO",
+          "tipo": "entero",
+          "descripcion": "Código de parentesco 'titular' de esta instalación — usar verificar_persona → COD_PARENTEZCO_TITULAR. El código varía por instalación, nunca asumir un valor.",
+          "requerido": true
+        },
+        {
+          "nombre": "TIPO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Tipo de documento del titular (ver listar_catalogo catalogo='tipo_documento').",
+          "requerido": true
+        },
+        {
+          "nombre": "NRO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Número de documento del titular.",
+          "requerido": true
+        },
+        {
+          "nombre": "CUIT",
+          "tipo": "texto",
+          "descripcion": "CUIT del titular. Solo visible/usado en proyectos que lo requieren."
+        },
+        {
+          "nombre": "NOMBRE_SOLO",
+          "tipo": "texto",
+          "descripcion": "Nombre del titular.",
+          "requerido": true
+        },
+        {
+          "nombre": "APELLIDO_SOLO",
+          "tipo": "texto",
+          "descripcion": "Apellido paterno del titular.",
+          "requerido": true
+        },
+        {
+          "nombre": "APELLIDO_MATERNO",
+          "tipo": "texto",
+          "descripcion": "Apellido materno del titular. Requerido salvo en proyectos de Paraguay (precompilador PRJ_PY_JDPAZ)."
+        },
+        {
+          "nombre": "FECHA_NACIMIENTO",
+          "tipo": "texto",
+          "descripcion": "Fecha de nacimiento (ISO 8601).",
+          "requerido": true
+        },
+        {
+          "nombre": "EMAIL",
+          "tipo": "texto",
+          "descripcion": "Email del titular.",
+          "requerido": true
+        },
+        {
+          "nombre": "TELEFONO",
+          "tipo": "texto",
+          "descripcion": "Teléfono auxiliar del titular."
+        },
+        {
+          "nombre": "TELEFONO_MOVIL",
+          "tipo": "texto",
+          "descripcion": "Teléfono principal del titular.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_NACIONALIDAD",
+          "tipo": "entero",
+          "descripcion": "Nacionalidad del titular (ver listar_catalogo catalogo='nacionalidades')."
+        },
+        {
+          "nombre": "COD_PROVINCIA",
+          "tipo": "entero",
+          "descripcion": "Provincia del domicilio (ver listar_catalogo catalogo='provincias').",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_LOCALIDAD",
+          "tipo": "entero",
+          "descripcion": "Localidad del domicilio (ver listar_catalogo catalogo='localidades' con codPadre=COD_PROVINCIA).",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_BARRIO",
+          "tipo": "entero",
+          "descripcion": "Barrio del domicilio (ver listar_catalogo catalogo='barrios' con codPadre=COD_LOCALIDAD).",
+          "requerido": true
+        },
+        {
+          "nombre": "BARRIO",
+          "tipo": "texto",
+          "descripcion": "Descripción del barrio elegido."
+        },
+        {
+          "nombre": "COD_CALLE",
+          "tipo": "entero",
+          "descripcion": "Calle elegida por selector, en proyectos con calles catalogadas (ver listar_catalogo catalogo='calles'). Alternativo a CALLE (mutuamente excluyentes según el proyecto)."
+        },
+        {
+          "nombre": "CALLE",
+          "tipo": "texto",
+          "descripcion": "Calle en texto libre. Alternativo a COD_CALLE."
+        },
+        {
+          "nombre": "PISO_DEPARTAMENTO",
+          "tipo": "texto",
+          "descripcion": "Piso/departamento del domicilio."
+        },
+        {
+          "nombre": "ALTURA",
+          "tipo": "entero",
+          "descripcion": "Altura/número del domicilio.",
+          "requerido": true
+        },
+        {
+          "nombre": "OBSERVACIONES",
+          "tipo": "texto",
+          "descripcion": "Calle secundaria u observaciones de domicilio, según el proyecto (ej. Paraguay usa este campo como 'calle secundaria')."
+        },
+        {
+          "nombre": "SEXO",
+          "tipo": "texto",
+          "descripcion": "Género del titular (ver listar_catalogo catalogo='sexo').",
+          "requerido": true
+        },
+        {
+          "nombre": "OBSERVACIONES_CLIENTE",
+          "tipo": "texto",
+          "descripcion": "Notas libres sobre el cliente."
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "asignar_parcela_precontrato",
+      "titulo": "📍 Asignando parcela",
+      "metodo": "ws_crm_asignar_parcela_a_precontrato",
+      "descripcion": "Asigna una parcela (parque/zona/parcela) a un pre-contrato de tipo 'Parcela' (ver obtener_precontrato → CAT_TIPO_CONTRATO). La parcela se elige con listar_parcelas (COD_PARCELA). Se llama justo después de cargar_titular_precontrato, solo cuando corresponde.",
+      "parametros": [
+        {
+          "nombre": "COD_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato al que se asigna la parcela.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_PARCELA",
+          "tipo": "entero",
+          "descripcion": "Parcela elegida.",
+          "requerido": true
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_integrantes_precontrato",
+      "titulo": "👥 Revisando integrantes",
+      "metodo": "PROC_GET_PRECONTRATO_CLIENTES",
+      "descripcion": "Lista todos los integrantes ya cargados en un pre-contrato (titular + beneficiarios/cotitulares), con documento, contacto y domicilio (códigos y nombres de provincia, localidad, barrio y calle). El titular es la fila con TIPO_CARACTER='Titular'. Es la tool para: retomar un precontrato y ver el titular ya cargado; copiar teléfono/email/domicilio del titular a un beneficiario; mostrar el estado del contrato y decidir si falta cargar más beneficiarios (ver cargar_beneficiario_precontrato) o eliminar alguno (ver eliminar_beneficiario_precontrato).",
+      "parametros": [
+        {
+          "nombre": "COD_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato a consultar.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "COD_CLIENTE",
+        "ORDEN",
+        "TIPO_CARACTER",
+        "CARACTER_TITULAR",
+        "PARENTEZCO",
+        "TIPO_DOCUMENTO",
+        "NRO_DOCUMENTO",
+        "NOMBRE",
+        "FECHA_NACIMIENTO",
+        "SEXO",
+        "TELEFONO_MOVIL",
+        "EMAIL",
+        "COD_PROVINCIA",
+        "PROVINCIA",
+        "COD_LOCALIDAD",
+        "LOCALIDAD",
+        "COD_BARRIO",
+        "BARRIO",
+        "COD_CALLE",
+        "CALLE",
+        "ALTURA",
+        "PISO_DEPARTAMENTO",
+        "CODIGO_POSTAL",
+        "DOMICILIO"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "cargar_beneficiario_precontrato",
+      "titulo": "👤 Guardando datos del beneficiario",
+      "metodo": "ws_crm_crear_cliente_a_precontrato",
+      "descripcion": "Da de alta o edita un BENEFICIARIO/cotitular de un pre-contrato, con COD_CARACTER_TITULAR y COD_PARENTEZCO variables (no fijos en 'titular'). Antes de invocar: verificar_persona con el documento (reusar COD_CLIENTE si ya existe; respetar ACCION), o listar_integrantes_precontrato si se está editando uno ya cargado en este contrato. Opcionalmente se puede copiar el teléfono/email/domicilio del titular (ver listar_integrantes_precontrato, fila TIPO_CARACTER='Titular') en vez de pedirlos de nuevo — en ese caso mandar los mismos valores del titular en los campos de domicilio/contacto correspondientes.",
+      "parametros": [
+        {
+          "nombre": "COD_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato al que se agrega el beneficiario.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CLIENTE",
+          "tipo": "entero",
+          "descripcion": "Cliente ya existente a asociar como beneficiario (ver verificar_persona → COD_CLIENTE), o beneficiario ya cargado en este contrato a editar (ver listar_integrantes_precontrato). Omitir para dar de alta uno nuevo."
+        },
+        {
+          "nombre": "ORDEN",
+          "tipo": "entero",
+          "descripcion": "Orden del beneficiario dentro del contrato. Omitir al dar de alta uno nuevo (se asigna automáticamente)."
+        },
+        {
+          "nombre": "COD_CARACTER_TITULAR",
+          "tipo": "entero",
+          "descripcion": "Carácter del integrante (ver listar_catalogo catalogo='caracteres'; distinto de 1, que corresponde al titular).",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_PARENTEZCO",
+          "tipo": "entero",
+          "descripcion": "Parentesco respecto del titular (ver listar_catalogo catalogo='parentescos'; distinto del código fijo usado para el titular mismo, ver verificar_persona → COD_PARENTEZCO_TITULAR).",
+          "requerido": true
+        },
+        {
+          "nombre": "TIPO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Tipo de documento del beneficiario (ver listar_catalogo catalogo='tipo_documento').",
+          "requerido": true
+        },
+        {
+          "nombre": "NRO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Número de documento del beneficiario.",
+          "requerido": true
+        },
+        {
+          "nombre": "NOMBRE_SOLO",
+          "tipo": "texto",
+          "descripcion": "Nombre del beneficiario.",
+          "requerido": true
+        },
+        {
+          "nombre": "APELLIDO_SOLO",
+          "tipo": "texto",
+          "descripcion": "Apellido paterno del beneficiario.",
+          "requerido": true
+        },
+        {
+          "nombre": "APELLIDO_MATERNO",
+          "tipo": "texto",
+          "descripcion": "Apellido materno del beneficiario. Requerido salvo en proyectos de Paraguay (precompilador PRJ_PY_JDPAZ)."
+        },
+        {
+          "nombre": "SEXO",
+          "tipo": "texto",
+          "descripcion": "Género del beneficiario (ver listar_catalogo catalogo='sexo').",
+          "requerido": true
+        },
+        {
+          "nombre": "FECHA_NACIMIENTO",
+          "tipo": "texto",
+          "descripcion": "Fecha de nacimiento (ISO 8601).",
+          "requerido": true
+        },
+        {
+          "nombre": "EMAIL",
+          "tipo": "texto",
+          "descripcion": "Email del beneficiario. Se puede copiar del titular (ver listar_integrantes_precontrato → EMAIL de la fila del titular)."
+        },
+        {
+          "nombre": "TELEFONO_MOVIL",
+          "tipo": "texto",
+          "descripcion": "Teléfono del beneficiario. Se puede copiar del titular.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_PROVINCIA",
+          "tipo": "entero",
+          "descripcion": "Provincia del domicilio del beneficiario. Opcional, se puede copiar del titular."
+        },
+        {
+          "nombre": "COD_LOCALIDAD",
+          "tipo": "entero",
+          "descripcion": "Localidad del domicilio. Opcional, se puede copiar del titular."
+        },
+        {
+          "nombre": "COD_BARRIO",
+          "tipo": "entero",
+          "descripcion": "Barrio del domicilio. Opcional, se puede copiar del titular."
+        },
+        {
+          "nombre": "COD_CALLE",
+          "tipo": "entero",
+          "descripcion": "Calle del domicilio. Opcional, se puede copiar del titular."
+        },
+        {
+          "nombre": "ALTURA",
+          "tipo": "entero",
+          "descripcion": "Altura del domicilio. Opcional, se puede copiar del titular."
+        },
+        {
+          "nombre": "PISO_DEPARTAMENTO",
+          "tipo": "texto",
+          "descripcion": "Piso/departamento. Opcional, se puede copiar del titular."
+        },
+        {
+          "nombre": "OBSERVACIONES",
+          "tipo": "texto",
+          "descripcion": "Observaciones de domicilio. Opcional, se puede copiar del titular."
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "eliminar_beneficiario_precontrato",
+      "titulo": "➖ Quitando beneficiario",
+      "metodo": "ws_crm_eliminar_cliente_del_contrato",
+      "descripcion": "Quita a un beneficiario/cotitular de un pre-contrato (ver listar_integrantes_precontrato). No aplica al titular — esta tool no permite eliminar al titular de un pre-contrato.",
+      "parametros": [
+        {
+          "nombre": "COD_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato del que se elimina el beneficiario.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CLIENTE",
+          "tipo": "entero",
+          "descripcion": "Beneficiario a eliminar (no usar con el COD_CLIENTE del titular).",
+          "requerido": true
+        }
+      ],
+      "escritura": true,
+      "destructiva": true
+    },
+    {
+      "tipo": "agrupadora",
+      "nombre": "listar_catalogo",
+      "titulo": "📋 Consultando catálogos",
+      "descripcion": "Catálogos de referencia para armar y cargar el precontrato. Elegí el catálogo con catalogo; los que dicen 'requiere codPadre' necesitan el código del catálogo padre. Nunca inventes un código: resolvelo siempre con esta tool. Los marcados [buscar] aceptan un texto aproximado (tolera errores de tipeo).",
+      "parametros": [
+        {
+          "nombre": "catalogo",
+          "descripcion": "Catálogo a listar."
+        },
+        {
+          "nombre": "codPadre",
+          "descripcion": "Código del catálogo padre (ver descripción)."
+        },
+        {
+          "nombre": "buscar",
+          "descripcion": "Texto aproximado, tal como lo dijo el usuario (solo catálogos [buscar])."
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "comercializadoras",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_COMERCIALIZADORAS",
+      "descripcion": "Catálogo comercializadoras.",
+      "uso": "codigo → registrar_comercializadora_precontrato.COD_COMERCIALIZADORA",
+      "salida": [
+        {
+          "columna": "COD_ENTIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "NOMBRE"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "campanias",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_CAMPANIAS_VENTAS",
+      "descripcion": "Catálogo campanias.",
+      "uso": "codigo → registrar_comercializadora_precontrato.COD_CAMPANIA (ofrecer solo ACTIVA=1)",
+      "salida": [
+        {
+          "columna": "COD_CAMPANIA_VENTA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CAMPANIAS_VENTAS",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "ACTIVA",
+          "nombre": "activa",
+          "tipo": "booleano"
+        },
+        {
+          "columna": "FECHA_FIN",
+          "nombre": "fechaFin",
+          "tipo": "fecha"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "CAMPANIAS_VENTAS"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "canales",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_TODOS_LOS_CANALES",
+      "descripcion": "Catálogo canales.",
+      "uso": "codigo → registrar_comercializadora_precontrato.COD_CANAL",
+      "salida": [
+        {
+          "columna": "COD_CANAL",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "DESCRIPCION",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "DESCRIPCION"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "sexo",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_DOMINIO",
+      "descripcion": "Catálogo sexo.",
+      "uso": "nombre (CADENA, mandarlo tal cual) → SEXO de cargar_titular_precontrato / cargar_beneficiario_precontrato",
+      "parametros": [
+        {
+          "nombre": "NOMBRE_DOMINIO",
+          "tipo": "texto",
+          "valorFijo": "SEXO"
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_DOMINIO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CADENA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "tipo_documento",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_DOMINIO",
+      "descripcion": "Catálogo tipo documento.",
+      "uso": "nombre (CADENA, mandarlo tal cual) → TIPO_DOCUMENTO de cargar_*_precontrato y TIPO_DOCUMENTO de verificar_persona",
+      "parametros": [
+        {
+          "nombre": "NOMBRE_DOMINIO",
+          "tipo": "texto",
+          "valorFijo": "TIPO_DOCUMENTO"
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_DOMINIO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CADENA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "nacionalidades",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_NACIONALIDADES",
+      "descripcion": "Catálogo nacionalidades.",
+      "uso": "codigo → cargar_titular_precontrato.COD_NACIONALIDAD",
+      "salida": [
+        {
+          "columna": "COD_NACIONALIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NACIONALIDAD",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "NACIONALIDAD"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "parentescos",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_PARENTEZCO",
+      "descripcion": "Catálogo parentescos.",
+      "uso": "codigo → cargar_beneficiario_precontrato.COD_PARENTEZCO (elegir por DESCRIPCION; el del titular sale de verificar_persona → COD_PARENTEZCO_TITULAR, no de acá)",
+      "salida": [
+        {
+          "columna": "COD_PARENTEZCO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "DESCRIPCION",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "caracteres",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_TIPOS_CARACTERES",
+      "descripcion": "Catálogo caracteres.",
+      "uso": "codigo → cargar_beneficiario_precontrato.COD_CARACTER_TITULAR (ya excluye 'titular')",
+      "parametros": [
+        {
+          "nombre": "FILTRAR_TITULARES",
+          "tipo": "booleano",
+          "valorFijo": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_CARACTER_TITULAR",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "provincias",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_PROVINCIAS",
+      "descripcion": "Catálogo provincias.",
+      "uso": "codigo → COD_PROVINCIA de cargar_*_precontrato",
+      "salida": [
+        {
+          "columna": "COD_PROVINCIA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "NOMBRE"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "localidades",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_LOCALIDADES_X_PROV",
+      "descripcion": "Catálogo localidades.",
+      "uso": "codigo → COD_LOCALIDAD de cargar_*_precontrato",
+      "parametros": [
+        {
+          "nombre": "COD_PROVINCIA_ENTRA",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_LOCALIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "CODIGO_POSTAL",
+          "nombre": "codigoPostal",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_PROVINCIA_ENTRA",
+        "catalogo": "provincias"
+      },
+      "busqueda": {
+        "campos": [
+          "NOMBRE"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "barrios",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_BARRIOS_X_LOCAL",
+      "descripcion": "Catálogo barrios.",
+      "uso": "codigo y codigoPostal → cargar_*_precontrato",
+      "parametros": [
+        {
+          "nombre": "COD_LOCALIDAD_ENTRA",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_BARRIO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "CODIGO_POSTAL",
+          "nombre": "codigoPostal",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_LOCALIDAD_ENTRA",
+        "catalogo": "localidades"
+      },
+      "busqueda": {
+        "campos": [
+          "NOMBRE"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "calles",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_CALLES",
+      "descripcion": "Catálogo calles.",
+      "uso": "codigo → COD_CALLE de cargar_*_precontrato (solo proyectos con calles catalogadas; si no, CALLE en texto libre)",
+      "salida": [
+        {
+          "columna": "COD_CALLE",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "CODIGO_POSTAL",
+          "nombre": "codigoPostal",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "NOMBRE"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "registrar_comercializadora_precontrato",
+      "titulo": "🏢 Registrando comercializadora y canal",
+      "metodo": "ws_crm_abona_primera_cuota1",
+      "descripcion": "Registra la comercializadora, campaña y canal de venta del pre-contrato (ver listar_catalogo con catalogo='comercializadoras' / 'campanias' / 'canales'), marcando además la primera cuota como pagada. Siempre muestra las opciones disponibles para comercializadoras, campañas y canal para el usuario para que escoja, los usuarios no saben las opciones. Es el primer paso del flujo de facturación, antes de finalizar_carga_contrato. ",
+      "parametros": [
+        {
+          "nombre": "COD_PRE_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato a actualizar.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_COMERCIALIZADORA",
+          "tipo": "entero",
+          "descripcion": "Comercializadora elegida (ver listar_catalogo catalogo='comercializadoras').",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CAMPANIA",
+          "tipo": "entero",
+          "descripcion": "Campaña de venta elegida (ver listar_catalogo catalogo='campanias').",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CANAL",
+          "tipo": "entero",
+          "descripcion": "Canal de venta elegido (ver listar_catalogo catalogo='canales').",
+          "requerido": true
+        },
+        {
+          "nombre": "OBSERVACIONES",
+          "tipo": "texto",
+          "descripcion": "Fijo en cadena vacía.",
+          "valorFijo": ""
+        },
+        {
+          "nombre": "PRIMERA_CUOTA_PAGADA",
+          "tipo": "entero",
+          "descripcion": "Fijo en 1.",
+          "valorFijo": 1
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "finalizar_carga_contrato",
+      "titulo": "✅ Cerrando la carga del contrato",
+      "metodo": "ws_crm_completar_datos_precontrato",
+      "descripcion": "Último paso del flujo — ejecutarla cuando el usuario confirme que todos los datos cargados del contrato son correctos. Se llama después de registrar_comercializadora_precontrato. No devuelve datos usados por el resto del flujo.",
+      "parametros": [
+        {
+          "nombre": "COD_PRE_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato a completar.",
+          "requerido": true
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_parcelas",
+      "titulo": "🔎 Buscando parcelas disponibles",
+      "metodo": "PROC_MCP_LISTAR_PARCELAS",
+      "descripcion": "Parcelas disponibles para un pre-contrato de tipo 'Parcela', con su parque y zona, en UNA llamada (el plan, la lista de precio y el tipo de contrato se toman del pre-contrato). El COD_PARCELA elegido va a asignar_parcela_precontrato. No ofrecer parcelas con BLOQUEADO=1.",
+      "campoVendedor": "COD_VENDEDOR",
+      "parametros": [
+        {
+          "nombre": "COD_PRE_CONTRATO",
+          "tipo": "entero",
+          "descripcion": "Pre-contrato (ver crear_precontrato_venta → COD_CONTRATO).",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_VENDEDOR",
+          "tipo": "entero",
+          "descripcion": "Vendedor de la sesión.",
+          "requerido": true
+        },
+        {
+          "nombre": "CONDICION",
+          "tipo": "texto",
+          "descripcion": "Filtro opcional de disponibilidad — omitir para traer todas."
+        }
+      ],
+      "salida": [
+        "COD_PARCELA",
+        "LEGAJO",
+        "NOMBRE_MANZANA",
+        "PARQUE",
+        "ZONA",
+        "TOTAL_LUGARES",
+        "BLOQUEADO",
+        "ESTADO"
+      ],
+      "busqueda": {
+        "campos": [
+          "LEGAJO",
+          "NOMBRE_MANZANA"
+        ],
+        "cacheMinutos": 1
+      }
+    }
+  ]
+}

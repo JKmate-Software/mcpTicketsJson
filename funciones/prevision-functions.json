@@ -1,0 +1,1679 @@
+{
+  "$schema": "./functions.schema.json",
+  "servidor": {
+    "nombre": "mcp-prevision-json",
+    "claimRequerida": "COD_VENDEDOR"
+  },
+  "tools": [
+    {
+      "tipo": "agrupadora",
+      "nombre": "listar_catalogo",
+      "titulo": "📋 Consultando catálogos",
+      "descripcion": "Catálogos de referencia para cotizar y cargar el contrato de previsión. Elegí el catálogo con catalogo; los que dicen 'requiere codPadre' necesitan el código del catálogo padre. Nunca inventes un código: resolvelo siempre con esta tool. Los marcados [buscar] aceptan un texto aproximado (tolera errores de tipeo).",
+      "parametros": [
+        {
+          "nombre": "catalogo",
+          "descripcion": "Catálogo a listar."
+        },
+        {
+          "nombre": "codPadre",
+          "descripcion": "Código del catálogo padre (ver descripción)."
+        },
+        {
+          "nombre": "buscar",
+          "descripcion": "Texto aproximado, tal como lo dijo el usuario (solo catálogos [buscar])."
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "categorias_titular",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_CAT_AFILIADOS_CRM",
+      "descripcion": "Catálogo categorias titular.",
+      "uso": "codigo → COD_CATEGORIA_AFILIADO del TITULAR (en GRUPO_FAMILIAR de cotizar_planes_prevision y en cargar_integrante_prevision)",
+      "parametros": [
+        {
+          "nombre": "SOLO_TITULAR",
+          "tipo": "entero",
+          "valorFijo": 1
+        },
+        {
+          "nombre": "SOLO_SIN_COBERTURA",
+          "tipo": "entero",
+          "valorFijo": 0
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_CATEGORIA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "DESCRIPCION",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "categorias_integrante",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_CAT_AFILIADOS_CRM",
+      "descripcion": "Catálogo categorias integrante.",
+      "uso": "codigo → COD_CATEGORIA_AFILIADO del resto del grupo familiar (cónyuge, hijo, mascota…); elegir por DESCRIPCION según el parentesco que diga el usuario",
+      "parametros": [
+        {
+          "nombre": "SOLO_TITULAR",
+          "tipo": "entero",
+          "valorFijo": 0
+        },
+        {
+          "nombre": "SOLO_SIN_COBERTURA",
+          "tipo": "entero",
+          "valorFijo": 0
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_CATEGORIA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "DESCRIPCION",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "tipo_documento",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_tipo_documentos",
+      "descripcion": "Catálogo tipo documento.",
+      "uso": "nombre (CADENA, mandarlo tal cual) → TIPO_DOCUMENTO de verificar_persona y cargar_integrante_prevision (no aplica a mascotas)",
+      "salida": [
+        {
+          "columna": "COD_DOMINIO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CADENA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "sexo",
+      "grupo": "listar_catalogo",
+      "metodo": "getTiposGenero",
+      "descripcion": "Catálogo sexo.",
+      "uso": "nombre (CADENA, mandarlo tal cual) → SEXO de cargar_integrante_prevision",
+      "salida": [
+        {
+          "columna": "COD_DOMINIO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CADENA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "tipos_mascota",
+      "grupo": "listar_catalogo",
+      "metodo": "getTiposMascotas",
+      "descripcion": "Catálogo tipos mascota.",
+      "uso": "codigo → cargar_integrante_prevision.COD_TIPO_MASCOTA (solo mascotas)",
+      "salida": [
+        {
+          "columna": "COD_TIPO_MASCOTA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "TIPO_MASCOTA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "razas_mascota",
+      "grupo": "listar_catalogo",
+      "metodo": "getRazasMascotas",
+      "descripcion": "Catálogo razas mascota.",
+      "uso": "codigo → cargar_integrante_prevision.COD_RAZA_MASCOTA",
+      "parametros": [
+        {
+          "nombre": "PCOD_TIPO_MASCOTA",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_RAZA_MASCOTA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "RAZA_MASCOTA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "PCOD_TIPO_MASCOTA",
+        "catalogo": "tipos_mascota"
+      },
+      "busqueda": {
+        "campos": [
+          "RAZA_MASCOTA"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "paises_residencia",
+      "grupo": "listar_catalogo",
+      "metodo": "getPaisesResidencia",
+      "descripcion": "Catálogo paises residencia.",
+      "uso": "codigo → padre de 'provincias'; NOMBRE → TEXTO_PAIS de cargar_integrante_prevision (residencia en el exterior)",
+      "salida": [
+        {
+          "columna": "COD_PAIS",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "NOMBRE"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_paises_prestacion",
+      "titulo": "🌎 Consultando países de prestación",
+      "metodo": "getPaisesPrestacionUniversal",
+      "descripcion": "Países de prestación universal (solo nombre, sin código propio)."
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "provincias",
+      "grupo": "listar_catalogo",
+      "metodo": "getProvinciasXPais",
+      "descripcion": "Catálogo provincias.",
+      "uso": "codigo → cargar_integrante_prevision.COD_PROVINCIA",
+      "parametros": [
+        {
+          "nombre": "COD_PAIS_ENTRA",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_PROVINCIA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_PAIS_ENTRA",
+        "catalogo": "paises_residencia"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "localidades",
+      "grupo": "listar_catalogo",
+      "metodo": "getLocalidadesXProv",
+      "descripcion": "Catálogo localidades.",
+      "uso": "codigo → cargar_integrante_prevision.COD_LOCALIDAD",
+      "parametros": [
+        {
+          "nombre": "COD_PROVINCIA_ENTRA",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_LOCALIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "CODIGO_POSTAL",
+          "nombre": "codigoPostal",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_PROVINCIA_ENTRA",
+        "catalogo": "provincias"
+      },
+      "busqueda": {
+        "campos": [
+          "NOMBRE"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "comercializadoras",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_listar_canales_ventas_prospeccion",
+      "descripcion": "Catálogo comercializadoras.",
+      "uso": "codigo → registrar_comercializadora_configuracion.COD_COMERCIALIZADORA",
+      "parametros": [
+        {
+          "nombre": "MACRO",
+          "tipo": "texto",
+          "valorFijo": "COMERCIALI"
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_ENTIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "NOMBRE"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "canales",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_listar_canales_ventas",
+      "descripcion": "Catálogo canales.",
+      "uso": "codigo → registrar_comercializadora_configuracion.COD_CANAL",
+      "salida": [
+        {
+          "columna": "COD_CANAL",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "DESCRIPCION",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "DESCRIPCION"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "campanias",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_CAMPANIAS_VENTAS_VIG",
+      "descripcion": "Catálogo campanias.",
+      "uso": "codigo → registrar_comercializadora_configuracion.COD_CAMPANIA (ya vienen solo las vigentes)",
+      "salida": [
+        {
+          "columna": "COD_CAMPANIA_VENTA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CAMPANIAS_VENTAS",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "CAMPANIAS_VENTAS"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "sucursales",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_SUCURSALES_X_USU",
+      "descripcion": "Catálogo sucursales.",
+      "uso": "codigo → COD_SUCURSAL de cotizar_planes_prevision — solo si el usuario la pide",
+      "campoUsuario": "PCOD_USUARIO",
+      "parametros": [
+        {
+          "nombre": "PCOD_USUARIO",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_SUCURSAL",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "SUCURSAL",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "modalidades_cobranza",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_medios_cobros_movil",
+      "descripcion": "Catálogo modalidades cobranza.",
+      "uso": "codPadre = COD_PLANTILLA_CUOTA_PERIODICA de listar_plantillas_cuota_periodica. COD_MODALIDAD_COBRANZA → cotizar_planes_prevision y guardar_medio_cobro_temporal; TIPO_MEDIO_COBRO dice qué datos de pago pedir",
+      "parametros": [
+        {
+          "nombre": "COD_PLANTILLA",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_MODALIDAD_COBRANZA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "DESCRIPCION",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "TIPO_MEDIO_COBRO",
+          "nombre": "tipoMedioCobro",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_PLANTILLA"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "zonas_cobranza",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_filtrar_zonas",
+      "descripcion": "Catálogo zonas cobranza.",
+      "uso": "codigo → guardar_medio_cobro_temporal.COD_ZONA_COBRANZA; padre de bancos/convenios/tarjetas (sin zonas no se puede usar esa modalidad)",
+      "parametros": [
+        {
+          "nombre": "COD_MODALIDAD",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_ZONA_COBRANZA",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "DESCRIPCION",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_MODALIDAD",
+        "catalogo": "modalidades_cobranza"
+      },
+      "busqueda": {
+        "campos": [
+          "DESCRIPCION"
+        ],
+        "maxSinBusqueda": 100
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "bancos",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_listar_bancos",
+      "descripcion": "Catálogo bancos.",
+      "uso": "codigo → guardar_medio_cobro_temporal.COD_BANCO (modalidad banco)",
+      "parametros": [
+        {
+          "nombre": "COD_ZONA_COBRANZA",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_BANCO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "BANCO",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_ZONA_COBRANZA",
+        "catalogo": "zonas_cobranza"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "tipo_cuenta",
+      "grupo": "listar_catalogo",
+      "metodo": "PROC_GET_DOMINIO",
+      "descripcion": "Catálogo tipo cuenta.",
+      "uso": "nombre (CADENA, mandarlo tal cual) → guardar_medio_cobro_temporal.TIPO_CUENTA (débito bancario; mandar la CADENA exacta)",
+      "parametros": [
+        {
+          "nombre": "NOMBRE_DOMINIO",
+          "tipo": "texto",
+          "valorFijo": "TIPO_CUENTA_BANCO"
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_DOMINIO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "CADENA",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "convenios",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_listar_convenios",
+      "descripcion": "Catálogo convenios.",
+      "uso": "codigo → guardar_medio_cobro_temporal.COD_ENTIDAD (convenio de cobranza)",
+      "parametros": [
+        {
+          "nombre": "PCOD_ZONA_COBRANZA",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_ENTIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "PCOD_ZONA_COBRANZA",
+        "catalogo": "zonas_cobranza"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "tarjetas",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_listar_tarjetas",
+      "descripcion": "Catálogo tarjetas.",
+      "uso": "codigo → guardar_medio_cobro_temporal.COD_EMPRESA_TARJETA (tarjeta / débito automático)",
+      "parametros": [
+        {
+          "nombre": "COD_ZONA_COBRANZA",
+          "tipo": "entero",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        {
+          "columna": "COD_ENTIDAD",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        }
+      ],
+      "padre": {
+        "parametro": "COD_ZONA_COBRANZA",
+        "catalogo": "zonas_cobranza"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "barrios_cobranza",
+      "grupo": "listar_catalogo",
+      "metodo": "ws_crm_listar_barrios",
+      "descripcion": "Catálogo barrios cobranza.",
+      "uso": "codigo → guardar_medio_cobro_temporal.COD_BARRIO (cobro a domicilio)",
+      "salida": [
+        {
+          "columna": "COD_BARRIO",
+          "nombre": "codigo",
+          "tipo": "entero"
+        },
+        {
+          "columna": "NOMBRE",
+          "nombre": "nombre",
+          "tipo": "texto"
+        },
+        {
+          "columna": "CODIGO_POSTAL",
+          "nombre": "codigoPostal",
+          "tipo": "texto"
+        }
+      ],
+      "busqueda": {
+        "campos": [
+          "NOMBRE"
+        ],
+        "cacheMinutos": 60,
+        "cacheAlcance": "global"
+      }
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_plantillas_cuota_periodica",
+      "titulo": "📂 Buscando plantillas de previsión",
+      "metodo": "PROC_GET_PLANTILLAS_X_VEND_JK3",
+      "descripcion": "Catálogo de plantillas de cuota periódica disponibles para un vendedor (y opcionalmente una categoría de producto) — primer dato a elegir en el flujo de cotización. Su código se usa en cotizar_planes_prevision (parámetro COD_PLANTILLA_CUOTA_PERIODICA). Primer paso del flujo: llamarla y mostrarle al usuario el listado de opciones directo, por nombre — no preguntarle por 'convenio' ni 'institución' antes de mostrarle la lista, y tampoco preguntarle en este momento por sucursal ni por modalidad de cobranza (ver notas de listar_catalogo catalogo='sucursales' y listar_catalogo catalogo='modalidades_cobranza').",
+      "campoVendedor": "COD_VENDEDOR",
+      "parametros": [
+        {
+          "nombre": "COD_VENDEDOR",
+          "tipo": "entero",
+          "descripcion": "Vendedor de la sesión.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CATEGORIA",
+          "tipo": "entero",
+          "descripcion": "Categoría de producto a filtrar. Omitir para no filtrar."
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "cotizar_planes_prevision",
+      "titulo": "🧮 Cotizando planes",
+      "metodo": "PROC_MCP_COTIZAR_TODOS",
+      "descripcion": "Cotiza en UNA sola llamada TODOS los planes compatibles con la plantilla para el grupo familiar armado; no preguntarle al usuario qué plan quiere antes de cotizar. Devuelve una fila por plan (PRODUCTO, PRECIO, DETALLES_PRODUCTO separado por '|' con cada detalle en formato 'texto;detalle;incluido(0/1)', y COD_CONFIGURACION) y el FILTRO que identifica toda la cotización (el mismo en todas las filas). 1) Mostrarle solo los planes con RESULTADO=1, con su nombre y precio (un RESULTADO distinto es un plan que no se pudo cotizar: no ofrecerlo). COD_CONFIGURACION es un dato interno: no mostrarlo en este paso. 2) Guardar el FILTRO. 3) Después de mostrar los precios, preguntarle SIEMPRE cómo quiere seguir: (a) CONTINUAR LA CARGA DEL CONTRATO: que elija un plan; su COD_CONFIGURACION es la clave del resto del flujo; o (b) ENVIARLE LA COTIZACIÓN A ALGUIEN POR EMAIL: pedirle nombre, apellido, email y, opcional, teléfono móvil, confirmar qué planes se envían y llamar enviar_cotizacion con FILTRO_COTIZACION = este FILTRO (y CONFIGURACIONES solo si elige algunos planes, no todos). Después del envío, preguntarle si además quiere continuar con la carga del contrato. Si cambia el grupo familiar, la plantilla o la modalidad, volver a llamarla: genera una cotización nueva con otro FILTRO.",
+      "campoUsuario": "COD_USUARIO",
+      "campoVendedor": "COD_VENDEDOR",
+      "parametros": [
+        {
+          "nombre": "COD_PLANTILLA_CUOTA_PER",
+          "alias": "COD_PLANTILLA_CUOTA_PERIODICA",
+          "tipo": "entero",
+          "descripcion": "Plantilla de cuota periódica elegida (ver listar_plantillas_cuota_periodica).",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_MODALIDAD_COBRANZA",
+          "tipo": "entero",
+          "descripcion": "Modalidad de cobranza (ver listar_catalogo catalogo='modalidades_cobranza' con codPadre = la plantilla). Si el usuario todavía no eligió, usar la primera de la lista sin preguntarle."
+        },
+        {
+          "nombre": "GRUPO_FAMILIAR",
+          "tipo": "texto",
+          "descripcion": "Descripción del grupo familiar en formato texto plano: 'ORDEN:x;EDAD:x;COD_CATEGORIA_AFILIADO:x;FECHA_NACIMIENTO:x' por integrante, separados por '|' (ej. 'ORDEN:1;EDAD:30;COD_CATEGORIA_AFILIADO:90;FECHA_NACIMIENTO:1995-01-01|ORDEN:2;EDAD:5;COD_CATEGORIA_AFILIADO:5;FECHA_NACIMIENTO:2020-01-01'). Las categorías vienen de listar_catalogo catalogo='categorias_titular' / 'categorias_integrante'.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_LOCALIDAD",
+          "tipo": "entero",
+          "descripcion": "Localidad del cliente, si afecta el precio. Opcional."
+        },
+        {
+          "nombre": "COD_SUCURSAL",
+          "tipo": "entero",
+          "descripcion": "Sucursal elegida (ver listar_catalogo catalogo='sucursales'). Solo si el usuario la pide."
+        },
+        {
+          "nombre": "COD_GRUPO",
+          "tipo": "entero",
+          "descripcion": "Grupo/categoría de producto a filtrar. Opcional: omitir para cotizar todos."
+        },
+        {
+          "nombre": "COD_USUARIO",
+          "tipo": "entero",
+          "descripcion": "Usuario de la sesión.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_VENDEDOR",
+          "tipo": "entero",
+          "descripcion": "Vendedor de la sesión.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "FILTRO",
+        "COD_CONFIGURACION",
+        "PRODUCTO",
+        "PRECIO",
+        "DETALLES_PRODUCTO",
+        "RESULTADO",
+        "MENSAJE_ERROR"
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "obtener_datos_configuracion_nuevo",
+      "titulo": "💲 Revisando precios por integrante",
+      "metodo": "PROC_GET_DATOS_CONFIG_CRM_NUEVO",
+      "descripcion": "Importe por integrante (IMPORTE) y total (IMPORTE_TOTAL) de una configuración ya cotizada, con el plan de cada uno — sirve para el resumen de precios con adicionales (paso de confirmación del precio final).",
+      "parametros": [
+        {
+          "nombre": "COD_CONFIG",
+          "alias": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración a consultar (ver cotizar_planes_prevision → COD_CONFIGURACION).",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "COD_CLIENTE",
+        "NOMBRE",
+        "EDAD",
+        "ORDEN",
+        "CATEGORIA_AFILIADO",
+        "ES_TITULAR",
+        "PLAN_SERVICIO_SOC",
+        "PRODUCTO_SERV_SOC",
+        "IMPORTE",
+        "IMPORTE_TOTAL"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_adicionales_grupales_disponibles",
+      "titulo": "🔎 Buscando adicionales grupales",
+      "metodo": "ws_crm_listar_planes_grupales_adicionales_disponib",
+      "descripcion": "Lista los adicionales GRUPALES disponibles para agregar a una configuración (aplican a todo el contrato, no a un integrante puntual). Nota: COD_PLAN_SERVICIO (filtro, el plan principal) y COD_PLAN (resultado, el adicional candidato) salen del mismo catálogo de planes — son roles distintos sobre los mismos códigos, no dos catálogos separados. Ver también listar_adicionales_individuales_disponibles para adicionales por integrante.",
+      "parametros": [
+        {
+          "nombre": "PCOD_CONFIGURACION",
+          "alias": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración cotizada.",
+          "requerido": true
+        },
+        {
+          "nombre": "PCOD_PLAN_SERVICIO",
+          "alias": "COD_PLAN_SERVICIO",
+          "tipo": "entero",
+          "descripcion": "Filtrar por plan de servicio puntual. Omitir para no filtrar."
+        },
+        {
+          "nombre": "FECHA",
+          "tipo": "texto",
+          "descripcion": "Fecha de referencia (ISO 8601). Usar la fecha actual si no hay una puntual.",
+          "requerido": true
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "agregar_adicional_grupal",
+      "titulo": "➕ Agregando adicional grupal",
+      "metodo": "ws_crm_agregar_plan_grupal",
+      "descripcion": "Agrega un adicional grupal a la configuración. Después de llamarla, recotizar con recotizar_configuracion y refrescar con listar_adicionales_grupales_asignados.",
+      "parametros": [
+        {
+          "nombre": "PCOD_CONFIGURACION",
+          "alias": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración cotizada.",
+          "requerido": true
+        },
+        {
+          "nombre": "FECHA",
+          "tipo": "texto",
+          "descripcion": "Fecha de alta (ISO 8601). Usar la fecha actual.",
+          "requerido": true
+        },
+        {
+          "nombre": "PCOD_PLAN",
+          "alias": "COD_PLAN",
+          "tipo": "entero",
+          "descripcion": "Adicional grupal elegido (ver listar_adicionales_grupales_disponibles).",
+          "requerido": true
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "eliminar_adicional_grupal",
+      "titulo": "➖ Quitando adicional grupal",
+      "metodo": "ws_crm_eliminar_plan_grupal",
+      "descripcion": "Quita un adicional grupal ya agregado a la configuración. Después de llamarla, recotizar con recotizar_configuracion.",
+      "parametros": [
+        {
+          "nombre": "PCOD_CONFIGURACION",
+          "alias": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración cotizada.",
+          "requerido": true
+        },
+        {
+          "nombre": "PORDEN",
+          "alias": "ORDEN",
+          "tipo": "entero",
+          "descripcion": "Orden del adicional grupal a quitar (ver listar_adicionales_grupales_asignados).",
+          "requerido": true
+        }
+      ],
+      "escritura": true,
+      "destructiva": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_adicionales_grupales_asignados",
+      "titulo": "📑 Revisando adicionales grupales",
+      "metodo": "ws_crm_listar_planes_grupales",
+      "descripcion": "Lista los adicionales grupales ya asignados a una configuración.",
+      "parametros": [
+        {
+          "nombre": "PCOD_CONFIGURACION",
+          "alias": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración cotizada.",
+          "requerido": true
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_adicionales_individuales_disponibles",
+      "titulo": "🔎 Buscando adicionales individuales",
+      "metodo": "crmListarPlanesIndividualesDisponibles",
+      "descripcion": "Lista los adicionales INDIVIDUALES disponibles (aplican a un integrante puntual, no a todo el contrato).",
+      "parametros": [
+        {
+          "nombre": "PCOD_CONFIGURACION",
+          "alias": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración cotizada.",
+          "requerido": true
+        },
+        {
+          "nombre": "PCOD_PLAN_SERVICIO",
+          "alias": "COD_PLAN_SERVICIO",
+          "tipo": "entero",
+          "descripcion": "Filtrar por plan de servicio puntual. Omitir para no filtrar."
+        },
+        {
+          "nombre": "FECHA",
+          "tipo": "texto",
+          "descripcion": "Fecha de referencia (ISO 8601). Usar la fecha actual.",
+          "requerido": true
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "agregar_adicional_individual",
+      "titulo": "➕ Agregando adicional individual",
+      "metodo": "crmAgregarPlanIndividual",
+      "descripcion": "Agrega un adicional individual a un integrante puntual de la configuración. Después de llamarla, recotizar con recotizar_configuracion y refrescar con listar_adicionales_individuales_asignados.",
+      "campoVendedor": "COD_VENDEDOR",
+      "parametros": [
+        {
+          "nombre": "PCOD_CONFIGURACION",
+          "alias": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración cotizada.",
+          "requerido": true
+        },
+        {
+          "nombre": "PCOD_CLIENTE",
+          "alias": "COD_CLIENTE",
+          "tipo": "entero",
+          "descripcion": "Cliente/integrante al que se agrega el adicional (ver listar_integrantes_configuracion → COD_CLIENTE).",
+          "requerido": true
+        },
+        {
+          "nombre": "PORDEN",
+          "alias": "ORDEN",
+          "tipo": "entero",
+          "descripcion": "Orden del integrante dentro del grupo familiar.",
+          "requerido": true
+        },
+        {
+          "nombre": "PCOD_PLAN",
+          "alias": "COD_PLAN",
+          "tipo": "entero",
+          "descripcion": "Adicional individual elegido (ver listar_adicionales_individuales_disponibles).",
+          "requerido": true
+        },
+        {
+          "nombre": "FECHA",
+          "tipo": "texto",
+          "descripcion": "Fecha de alta (ISO 8601). Usar la fecha actual.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_VENDEDOR",
+          "tipo": "entero",
+          "descripcion": "Vendedor de la sesión.",
+          "requerido": true
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "eliminar_adicional_individual",
+      "titulo": "➖ Quitando adicional individual",
+      "metodo": "crmEliminarPlanIndividual",
+      "descripcion": "Quita un adicional individual de un integrante puntual. Después de llamarla, recotizar con recotizar_configuracion.",
+      "parametros": [
+        {
+          "nombre": "PCOD_CONFIGURACION",
+          "alias": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración cotizada.",
+          "requerido": true
+        },
+        {
+          "nombre": "PCOD_CLIENTE",
+          "alias": "COD_CLIENTE",
+          "tipo": "entero",
+          "descripcion": "Cliente/integrante al que se le quita el adicional.",
+          "requerido": true
+        },
+        {
+          "nombre": "PORDEN",
+          "alias": "ORDEN",
+          "tipo": "entero",
+          "descripcion": "Orden del integrante dentro del grupo familiar.",
+          "requerido": true
+        }
+      ],
+      "escritura": true,
+      "destructiva": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_adicionales_individuales_asignados",
+      "titulo": "📑 Revisando adicionales individuales",
+      "metodo": "crmPlanesIndividualesAsignados",
+      "descripcion": "Lista los adicionales individuales ya asignados en una configuración (por integrante).",
+      "parametros": [
+        {
+          "nombre": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración cotizada.",
+          "requerido": true
+        }
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "recotizar_configuracion",
+      "titulo": "🧮 Calculando precio final",
+      "metodo": "jkmtEvalConfig",
+      "descripcion": "Recalcula el importe total de una configuración — se llama después de cada alta/baja de adicional (grupal o individual) para refrescar el precio. Paso obligatorio antes de seguir a la carga de integrantes: aunque el usuario no haya agregado ningún adicional, llamarla igual y mostrarle el precio final confirmado (con el detalle de cada adicional agregado, si hay) antes de continuar. Devuelve NUEVO_IMPORTE, o MENSAJE_ERROR si algo falló.",
+      "parametros": [
+        {
+          "nombre": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración a recotizar.",
+          "requerido": true
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "cargar_integrante_prevision",
+      "titulo": "📝 Guardando datos del integrante",
+      "metodo": "ws_crm_agregar_beneficiario",
+      "descripcion": "Da de alta o actualiza UN integrante del grupo familiar dentro de una configuración — se llama una vez por cada integrante (titular incluido). Antes de invocar, SIEMPRE: verificar_persona con el documento del integrante (no aplica a mascotas). Su resultado determina el valor OBLIGATORIO de COD_CLIENTE y COD_CLIENTE_EXISTENTE — ver la descripción de cada uno, van siempre coordinados entre sí, nunca se omiten ni se fijan en un valor único. No comentarle al usuario nada de esta mecánica (códigos de cliente, registros provisorios, nombres de parámetros) — simplemente pedirle los datos reales de la persona y seguir. Se puede llamar más de una vez para el mismo integrante sin problema, por ejemplo para corregir un dato ya cargado.",
+      "parametros": [
+        {
+          "nombre": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración a la que se agrega el integrante.",
+          "requerido": true
+        },
+        {
+          "nombre": "ORDEN",
+          "tipo": "entero",
+          "descripcion": "Orden del integrante dentro del grupo familiar (debe coincidir con el usado al cotizar).",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CATEGORIA_AFILIADO",
+          "tipo": "entero",
+          "descripcion": "Categoría/parentesco del integrante (ver listar_catalogo catalogo='categorias_titular' / 'categorias_integrante').",
+          "requerido": true
+        },
+        {
+          "nombre": "NOMBRE",
+          "tipo": "texto",
+          "descripcion": "Nombre del integrante (o de la mascota, si CATEGORIA_AFILIADO es de tipo mascota).",
+          "requerido": true
+        },
+        {
+          "nombre": "APELLIDO",
+          "tipo": "texto",
+          "descripcion": "Apellido — no aplica si el integrante es una mascota."
+        },
+        {
+          "nombre": "FECHA_NACIMIENTO",
+          "tipo": "texto",
+          "descripcion": "Fecha de nacimiento (ISO 8601) — debe coincidir con la usada al cotizar (ver cotizar_planes_prevision → GRUPO_FAMILIAR).",
+          "requerido": true
+        },
+        {
+          "nombre": "EDAD",
+          "tipo": "entero",
+          "descripcion": "Edad del integrante."
+        },
+        {
+          "nombre": "TIPO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Tipo de documento (ver listar_catalogo catalogo='tipo_documento'). No aplica a mascotas."
+        },
+        {
+          "nombre": "NRO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Número de documento — no aplica a mascotas."
+        },
+        {
+          "nombre": "CUIT",
+          "tipo": "texto",
+          "descripcion": "CUIT, si aplica."
+        },
+        {
+          "nombre": "SEXO",
+          "tipo": "texto",
+          "descripcion": "Género (ver listar_catalogo catalogo='sexo')."
+        },
+        {
+          "nombre": "COD_CLIENTE",
+          "tipo": "entero",
+          "descripcion": "OBLIGATORIO — nunca omitir, no existe alta 'sin cliente'. Si verificar_persona devolvió EXISTE_CLIENTE=1 (ya es cliente), enviar ese código de cliente REAL detectado (y COD_CLIENTE_EXISTENTE=1). Si no la encontró (alta nueva), enviar el código de cliente PROVISORIO/plantilla que este mismo integrante ya tiene en listar_integrantes_configuracion (y COD_CLIENTE_EXISTENTE=0) — nunca inventar un código ni dejarlo vacío.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CLIENTE_EXISTENTE",
+          "tipo": "entero",
+          "descripcion": "OBLIGATORIO — nunca omitir ni usar siempre el mismo valor. Coordina con COD_CLIENTE (ver esa descripción): 1 si la persona ya existe como cliente (verificar_persona → EXISTE_CLIENTE=1) y COD_CLIENTE lleva su código real; 0 si es un alta nueva y COD_CLIENTE lleva el código provisorio de listar_integrantes_configuracion.",
+          "requerido": true
+        },
+        {
+          "nombre": "TELEFONO",
+          "tipo": "texto",
+          "descripcion": "Teléfono fijo (con CARACTERISTICA_PARTICULAR como código de área)."
+        },
+        {
+          "nombre": "CARACTERISTICA_PARTICULAR",
+          "tipo": "texto",
+          "descripcion": "Código de área del teléfono fijo."
+        },
+        {
+          "nombre": "TELEFONO_MOVIL",
+          "tipo": "texto",
+          "descripcion": "Teléfono móvil (con CARACTERISTICA_MOVIL como código de área)."
+        },
+        {
+          "nombre": "CARACTERISTICA_MOVIL",
+          "tipo": "texto",
+          "descripcion": "Código de área del teléfono móvil."
+        },
+        {
+          "nombre": "EMAIL",
+          "tipo": "texto",
+          "descripcion": "Email del integrante."
+        },
+        {
+          "nombre": "COD_NACIONALIDAD",
+          "tipo": "entero",
+          "descripcion": "Nacionalidad, si aplica."
+        },
+        {
+          "nombre": "COD_PROVINCIA",
+          "tipo": "entero",
+          "descripcion": "Provincia del domicilio. Fijo en -1 si el domicilio es de tipo 'residencia en el exterior'."
+        },
+        {
+          "nombre": "PROVINCIA_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se marcó 'mismo domicilio que el titular' para la provincia."
+        },
+        {
+          "nombre": "COD_LOCALIDAD",
+          "tipo": "entero",
+          "descripcion": "Localidad del domicilio (ver listar_catalogo catalogo='localidades')."
+        },
+        {
+          "nombre": "LOCALIDAD_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se marcó 'mismo domicilio que el titular' para la localidad."
+        },
+        {
+          "nombre": "COD_BARRIO",
+          "tipo": "entero",
+          "descripcion": "Barrio del domicilio."
+        },
+        {
+          "nombre": "BARRIO_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se marcó 'mismo domicilio que el titular' para el barrio."
+        },
+        {
+          "nombre": "COD_CALLE",
+          "tipo": "entero",
+          "descripcion": "Calle catalogada, si hay un catálogo de calles disponible. Alternativo a CALLE."
+        },
+        {
+          "nombre": "CALLE",
+          "tipo": "texto",
+          "descripcion": "Calle en texto libre. Alternativo a COD_CALLE."
+        },
+        {
+          "nombre": "CALLE_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se marcó 'mismo domicilio que el titular' para la calle."
+        },
+        {
+          "nombre": "ALTURA",
+          "tipo": "entero",
+          "descripcion": "Altura del domicilio. En integrantes tipo mascota, se reusa este campo para el peso."
+        },
+        {
+          "nombre": "ALTURA_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se marcó 'mismo domicilio que el titular' para la altura."
+        },
+        {
+          "nombre": "OBSERVACIONES",
+          "tipo": "texto",
+          "descripcion": "Observaciones de domicilio."
+        },
+        {
+          "nombre": "DOMICILIO",
+          "tipo": "texto",
+          "descripcion": "Domicilio armado en texto libre. Tres casos posibles: (1) si ya se cargó por separado COD_PROVINCIA/COD_LOCALIDAD/COD_CALLE/ALTURA, dejar este campo vacío; (2) si el domicilio es de tipo 'residencia en el exterior', mandar literalmente 'NombrePaís, NombreProvincia' (ej. 'Chile, Santiago'); (3) en cualquier otro caso, mandar la dirección completa en texto libre (ej. 'Av. Rivadavia 1234, piso 3')."
+        },
+        {
+          "nombre": "TELEFONO_LABORAL",
+          "tipo": "texto",
+          "descripcion": "Teléfono laboral, opcional."
+        },
+        {
+          "nombre": "COD_BARRIO_LABORAL",
+          "tipo": "entero",
+          "descripcion": "Barrio del domicilio laboral, opcional."
+        },
+        {
+          "nombre": "COD_CALLE_LABORAL",
+          "tipo": "entero",
+          "descripcion": "Calle del domicilio laboral, opcional."
+        },
+        {
+          "nombre": "ALTURA_LABORAL",
+          "tipo": "entero",
+          "descripcion": "Altura del domicilio laboral, opcional."
+        },
+        {
+          "nombre": "DOMICILIO_LABORAL",
+          "tipo": "texto",
+          "descripcion": "Domicilio laboral en texto libre, opcional."
+        },
+        {
+          "nombre": "DEPARTAMENTO_LABORAL",
+          "tipo": "texto",
+          "descripcion": "Departamento/piso del domicilio laboral, opcional."
+        },
+        {
+          "nombre": "TELEFONO_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se copió el teléfono del titular."
+        },
+        {
+          "nombre": "TELEFONO_MOVIL_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se copió el teléfono móvil del titular."
+        },
+        {
+          "nombre": "EMAIL_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se copió el email del titular."
+        },
+        {
+          "nombre": "OBSERVACIONES_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se copiaron las observaciones del titular."
+        },
+        {
+          "nombre": "DOMICILIO_TITULAR",
+          "tipo": "booleano",
+          "descripcion": "true si se copió el domicilio completo del titular."
+        },
+        {
+          "nombre": "COD_RAZA_MASCOTA",
+          "tipo": "entero",
+          "descripcion": "Raza (ver listar_catalogo catalogo='razas_mascota') — solo si el integrante es de categoría 'Mascota'."
+        },
+        {
+          "nombre": "COD_TIPO_MASCOTA",
+          "tipo": "entero",
+          "descripcion": "Tipo/especie (ver listar_catalogo catalogo='tipos_mascota') — solo mascotas."
+        },
+        {
+          "nombre": "TEXTO_PAIS",
+          "tipo": "texto",
+          "descripcion": "País en texto libre, para domicilio de residencia en el exterior."
+        },
+        {
+          "nombre": "TEXTO_PROVINCIA",
+          "tipo": "texto",
+          "descripcion": "Provincia/estado en texto libre, para domicilio de residencia en el exterior."
+        },
+        {
+          "nombre": "TELEFONO_REFERENCIA",
+          "tipo": "texto",
+          "descripcion": "Teléfono de una persona de referencia, opcional."
+        },
+        {
+          "nombre": "PERSONA_REFERENCIA",
+          "tipo": "texto",
+          "descripcion": "Nombre de la persona de referencia, opcional."
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "verificar_persona",
+      "titulo": "🔍 Verificando persona",
+      "metodo": "PROC_MCP_VERIFICAR_PERSONA",
+      "descripcion": "Verifica a una persona por su documento antes de cargarla como integrante (no aplica a mascotas), en UNA llamada: si ya es cliente (EXISTE_CLIENTE=1 → en cargar_integrante_prevision mandar COD_CLIENTE = este COD_CLIENTE y COD_CLIENTE_EXISTENTE=1), si el documento está en uso por otro cliente (DOCUMENTO_VALIDO=0), y sus contratos activos (CANT_CONTRATOS; CONTRATOS = 'PLAN (Nro X)' separados por '|' — mostrárselos al usuario llamando 'Número de contrato' al Nro). Devuelve la ACCION: CONTINUAR, ADVERTIR (contarle al usuario y seguir solo si confirma) o DENEGAR (explicarle el MENSAJE y no cargarla). Solo busca por documento exacto.",
+      "parametros": [
+        {
+          "nombre": "TIPO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Tipo de documento (ver listar_catalogo catalogo='tipo_documento'). Si se omite, se busca solo por número."
+        },
+        {
+          "nombre": "NRO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Número de documento de la persona.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "EXISTE_CLIENTE",
+        "COD_CLIENTE",
+        "NOMBRE_SOLO",
+        "APELLIDO_SOLO",
+        "FECHA_NACIMIENTO",
+        "SEXO",
+        "TELEFONO_MOVIL",
+        "EMAIL",
+        "DOMICILIO",
+        "DOCUMENTO_VALIDO",
+        "CONTRATO_ACTIVO",
+        "CANT_CONTRATOS",
+        "CONTRATOS",
+        "ACCION",
+        "MENSAJE"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "enviar_cotizacion",
+      "titulo": "📧 Enviando cotización por email",
+      "metodo": "PROC_MCP_ENVIAR_COTIZACION",
+      "descripcion": "Envía por email al prospecto la cotización hecha con cotizar_planes_prevision (todos sus planes o solo los que elija), en UNA llamada: da de alta el prospecto (o reutiliza el del vendedor con el mismo email) y encola el email. Usar cuando el usuario quiere mandarle la cotización a alguien en vez de (o antes de) cargar el contrato. Pedirle nombre, apellido, email y, opcionalmente, teléfono móvil, y confirmar qué planes se envían. RESULTADO=0 → explicarle el MENSAJE. RESULTADO=1 → confirmarle que la cotización quedó en camino a ese email y, ENSEGUIDA, llamar pdf_cotizacion con FILTRO_COTIZACION = el FILTRO que devuelve ESTA tool (el del envío, no el de la cotización) y COD_CONFIGURACION = cualquiera de los planes enviados, y mostrarle al usuario la URL del PDF como enlace para que verifique cómo le llegó la cotización al cliente. Se puede llamar más de una vez con el mismo FILTRO_COTIZACION para enviar la misma cotización a otra persona.",
+      "campoUsuario": "COD_USUARIO",
+      "campoVendedor": "COD_VENDEDOR",
+      "parametros": [
+        {
+          "nombre": "NOMBRE_SOLO",
+          "alias": "NOMBRE",
+          "tipo": "texto",
+          "descripcion": "Nombre del prospecto.",
+          "requerido": true
+        },
+        {
+          "nombre": "APELLIDO_SOLO",
+          "alias": "APELLIDO",
+          "tipo": "texto",
+          "descripcion": "Apellido del prospecto.",
+          "requerido": true
+        },
+        {
+          "nombre": "EMAIL",
+          "tipo": "texto",
+          "descripcion": "Email al que se envía la cotización.",
+          "requerido": true
+        },
+        {
+          "nombre": "TELEFONO_MOVIL",
+          "tipo": "texto",
+          "descripcion": "Teléfono móvil del prospecto. Opcional."
+        },
+        {
+          "nombre": "FILTRO_COTIZACION",
+          "tipo": "entero",
+          "descripcion": "FILTRO que devolvió cotizar_planes_prevision: identifica la cotización a enviar.",
+          "requerido": true
+        },
+        {
+          "nombre": "CONFIGURACIONES",
+          "tipo": "texto",
+          "descripcion": "Solo si el usuario quiere enviar ALGUNOS planes: sus COD_CONFIGURACION (de cotizar_planes_prevision) separados por coma, ej. '1234,1235'. Omitir para enviar todos los planes cotizados."
+        },
+        {
+          "nombre": "COD_USUARIO",
+          "tipo": "entero",
+          "descripcion": "Usuario de la sesión.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_VENDEDOR",
+          "tipo": "entero",
+          "descripcion": "Vendedor de la sesión.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "RESULTADO",
+        "MENSAJE",
+        "FILTRO",
+        "CANT_CONFIGURACIONES"
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "listar_integrantes_configuracion",
+      "titulo": "👥 Revisando integrantes",
+      "metodo": "ws_crm_listar_beneficiarios_plan_1",
+      "descripcion": "Lista los integrantes ya cargados en una configuración — ES LA TOOL OFICIAL para consultar los datos reales de cada persona en cualquier momento del flujo, incluido un resumen antes de confirmar/finalizar. Llamarla apenas el usuario elige el plan (cotizar_planes_prevision ya generó un registro provisorio por integrante en cada plan) y ANTES de ofrecer adicionales individuales o de cargar los datos reales de cada persona — da el código de cliente y el orden de cada integrante, dato necesario para agregar_adicional_individual y para cargar_integrante_prevision. Es información de uso interno de las tools: no mencionársela al usuario de ninguna forma.",
+      "parametros": [
+        {
+          "nombre": "COD_CONFIGURACION_IN",
+          "alias": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración a consultar.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "COD_CLIENTE",
+        "COD_CLIENTE_EXISTENTE",
+        "ORDEN",
+        "EDAD",
+        "COD_CATEGORIA_AFILIADO",
+        "NOMBRE_CATEGORIA_AFILIADO",
+        "NOMBRE",
+        "APELLIDO",
+        "TIPO_DOCUMENTO",
+        "NRO_DOCUMENTO",
+        "FECHA_NACIMIENTO",
+        "SEXO",
+        "TELEFONO_MOVIL",
+        "EMAIL",
+        "COD_PROVINCIA",
+        "PROVINCIA",
+        "COD_LOCALIDAD",
+        "LOCALIDAD",
+        "COD_BARRIO",
+        "BARRIO",
+        "CALLE",
+        "ALTURA",
+        "DOMICILIO",
+        "TIPO_MASCOTA",
+        "RAZA_MASCOTA",
+        "PLAN_SERVICIO"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "obtener_terminos_condiciones_configuracion",
+      "titulo": "📄 Leyendo términos y condiciones",
+      "metodo": "ws_crm_mostrar_datos_contrato_tmp",
+      "descripcion": "Trae el texto de la póliza / términos y condiciones de una configuración (DETALLE_POLIZA) y el nombre del plan (DESC_PLAN). Paso opcional.",
+      "parametros": [
+        {
+          "nombre": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración a consultar.",
+          "requerido": true
+        }
+      ],
+      "salida": [
+        "DESC_PLAN",
+        "DETALLE_POLIZA"
+      ]
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "registrar_comercializadora_configuracion",
+      "titulo": "🏢 Registrando comercializadora y canal",
+      "metodo": "ws_crm_abona_primera_cuota",
+      "descripcion": "Registra comercializadora/canal/campaña de una configuración — paso opcional, después de cargar todos los integrantes. Proponerle al usuario registrar cómo llegó a la venta; si no tiene o no quiere dar esos datos, omitir este paso sin insistir.",
+      "parametros": [
+        {
+          "nombre": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración del contrato.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_COMERCIALIZADORA",
+          "tipo": "entero",
+          "descripcion": "Comercializadora elegida (ver listar_catalogo catalogo='comercializadoras').",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CAMPANIA",
+          "tipo": "entero",
+          "descripcion": "Campaña elegida (ver listar_catalogo catalogo='campanias').",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_CANAL",
+          "tipo": "entero",
+          "descripcion": "Canal elegido (ver listar_catalogo catalogo='canales').",
+          "requerido": true
+        },
+        {
+          "nombre": "OBSERVACIONES",
+          "tipo": "texto",
+          "descripcion": "Observación del vendedor, si corresponde."
+        },
+        {
+          "nombre": "PRIMERA_CUOTA_PAGADA",
+          "tipo": "entero",
+          "descripcion": "1 si la primera cuota ya está pagada, 0 si no.",
+          "requerido": true
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "guardar_medio_cobro_temporal",
+      "titulo": "💳 Guardando medio de pago",
+      "metodo": "setMediosCobroVssTemp",
+      "descripcion": "Guarda el medio de cobro elegido en una tabla temporal, asociado a la configuración — paso obligatorio previo a finalizar_contrato_prevision. Esta tool acepta TODOS los campos posibles de los 3 tipos de medio de cobro a la vez; solo hay que completar los relevantes según COD_MODALIDAD_COBRANZA, el resto se omite. Después de guardarlo, mostrarle al usuario un resumen de cómo quedó configurado el medio de pago y pedirle que confirme, u ofrecerle corregirlo.",
+      "parametros": [
+        {
+          "nombre": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración del contrato.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_MODALIDAD_COBRANZA",
+          "tipo": "entero",
+          "descripcion": "Modalidad de cobranza elegida (ver listar_catalogo catalogo='modalidades_cobranza') — determina cuáles de los campos siguientes son relevantes.",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_ZONA_COBRANZA",
+          "tipo": "entero",
+          "descripcion": "Zona de cobranza elegida (ver listar_catalogo catalogo='zonas_cobranza').",
+          "requerido": true
+        },
+        {
+          "nombre": "COD_DOMICILIO",
+          "tipo": "entero",
+          "descripcion": "Valor fijo.",
+          "valorFijo": 0
+        },
+        {
+          "nombre": "COD_PROVINCIA",
+          "tipo": "entero",
+          "descripcion": "Solo modalidad 'A domicilio': provincia de cobranza."
+        },
+        {
+          "nombre": "COD_LOCALIDAD",
+          "tipo": "entero",
+          "descripcion": "Solo 'A domicilio': localidad de cobranza."
+        },
+        {
+          "nombre": "DOMICILIO",
+          "tipo": "texto",
+          "descripcion": "Solo 'A domicilio': domicilio en texto libre."
+        },
+        {
+          "nombre": "COD_BARRIO",
+          "tipo": "entero",
+          "descripcion": "Solo 'A domicilio': barrio de cobranza (ver listar_catalogo catalogo='barrios_cobranza')."
+        },
+        {
+          "nombre": "COD_CALLE",
+          "tipo": "entero",
+          "descripcion": "Solo 'A domicilio': calle de cobranza."
+        },
+        {
+          "nombre": "TELEFONO",
+          "tipo": "texto",
+          "descripcion": "Solo 'A domicilio': teléfono de contacto."
+        },
+        {
+          "nombre": "COD_BANCO",
+          "tipo": "entero",
+          "descripcion": "Solo modalidad 'Banco' (ver listar_catalogo catalogo='bancos')."
+        },
+        {
+          "nombre": "TIPO_CUENTA",
+          "tipo": "texto",
+          "descripcion": "Solo 'Banco' (débito bancario): tipo de cuenta — mandar exactamente la CADENA de listar_catalogo catalogo='tipo_cuenta' (ej. 'Caja de Ahorro', 'Cuenta Corriente'). Preguntárselo al usuario mostrándole esas opciones."
+        },
+        {
+          "nombre": "NRO_CUENTA",
+          "tipo": "texto",
+          "descripcion": "Solo 'Banco': número de cuenta."
+        },
+        {
+          "nombre": "CBU",
+          "tipo": "texto",
+          "descripcion": "Solo 'Banco': CBU."
+        },
+        {
+          "nombre": "TIPO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Solo 'Banco': tipo de documento del titular de la cuenta."
+        },
+        {
+          "nombre": "NRO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Solo 'Banco': documento del titular de la cuenta."
+        },
+        {
+          "nombre": "TITULAR",
+          "tipo": "texto",
+          "descripcion": "Solo 'Banco': nombre del titular de la cuenta."
+        },
+        {
+          "nombre": "NUMERO_TARJETA",
+          "tipo": "texto",
+          "descripcion": "Solo modalidad 'Débito automático': número de tarjeta."
+        },
+        {
+          "nombre": "COD_EMPRESA_TARJETA",
+          "tipo": "entero",
+          "descripcion": "Solo 'Débito automático': empresa de la tarjeta (ver listar_catalogo catalogo='tarjetas')."
+        },
+        {
+          "nombre": "TARJETA_TITULAR",
+          "tipo": "texto",
+          "descripcion": "Solo 'Débito automático': nombre del titular de la tarjeta."
+        },
+        {
+          "nombre": "TARJETA_TIPO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Solo 'Débito automático': tipo de documento del titular de la tarjeta."
+        },
+        {
+          "nombre": "TARJETA_NRO_DOCUMENTO",
+          "tipo": "texto",
+          "descripcion": "Solo 'Débito automático': documento del titular de la tarjeta."
+        },
+        {
+          "nombre": "TARJETA_FECHA_VENCIMIENTO",
+          "tipo": "texto",
+          "descripcion": "Solo 'Débito automático': fecha de vencimiento (ISO 8601)."
+        },
+        {
+          "nombre": "OBSERVACIONES_DEBITO",
+          "tipo": "texto",
+          "descripcion": "Observaciones del débito automático, opcional."
+        },
+        {
+          "nombre": "TARJETA_CODIGO_SEG",
+          "tipo": "texto",
+          "descripcion": "Código de seguridad de la tarjeta, opcional."
+        },
+        {
+          "nombre": "COD_ENTIDAD",
+          "tipo": "entero",
+          "descripcion": "Entidad/convenio de cobranza (ver listar_catalogo catalogo='convenios'), si aplica."
+        },
+        {
+          "nombre": "COMISION",
+          "tipo": "decimal",
+          "descripcion": "Comisión de cobranza, si aplica."
+        },
+        {
+          "nombre": "PROVINCIA",
+          "tipo": "texto",
+          "descripcion": "Nombre de provincia en texto libre (además del código)."
+        },
+        {
+          "nombre": "LOCALIDAD",
+          "tipo": "texto",
+          "descripcion": "Nombre de localidad en texto libre (además del código)."
+        },
+        {
+          "nombre": "BARRIO",
+          "tipo": "texto",
+          "descripcion": "Nombre de barrio en texto libre (además del código)."
+        },
+        {
+          "nombre": "CALLE",
+          "tipo": "texto",
+          "descripcion": "Nombre de calle en texto libre (además del código)."
+        },
+        {
+          "nombre": "DIA_DESDE",
+          "tipo": "entero",
+          "descripcion": "Día desde el cual se puede cobrar, opcional."
+        },
+        {
+          "nombre": "DIA_HASTA",
+          "tipo": "entero",
+          "descripcion": "Día hasta el cual se puede cobrar, opcional."
+        },
+        {
+          "nombre": "OBSERVACIONES_DOMICILIO",
+          "tipo": "texto",
+          "descripcion": "Observaciones del domicilio de cobranza, opcional."
+        }
+      ],
+      "escritura": true
+    },
+    {
+      "tipo": "webservice",
+      "nombre": "finalizar_contrato_prevision",
+      "titulo": "✅ Cerrando el contrato",
+      "metodo": "ws_crm_guardar_contrato_final",
+      "descripcion": "Graba el contrato definitivo — mueve la configuración de las tablas temporales a las definitivas. Devuelve COD_CONTRATO. Requiere haber guardado antes el medio de cobro (ver guardar_medio_cobro_temporal). Antes de llamarla, mostrarle al usuario un resumen completo (nombre del plan, monto total, integrantes con sus datos principales, medio de pago) y pedirle confirmación EXPLÍCITA para guardar. Una vez guardado, comunicarle al usuario el 'Número de contrato' (nunca 'código de configuración') usando el valor que devuelve ESTA llamada — no asumir que es el mismo COD_CONFIGURACION que se venía mostrando antes, puede cambiar al finalizar.",
+      "parametros": [
+        {
+          "nombre": "COD_CONFIGURACION",
+          "tipo": "entero",
+          "descripcion": "Configuración a finalizar.",
+          "requerido": true
+        },
+        {
+          "nombre": "NUEVO",
+          "tipo": "entero",
+          "descripcion": "Valor fijo.",
+          "valorFijo": 1
+        },
+        {
+          "nombre": "CUOTA_CERO",
+          "tipo": "booleano",
+          "descripcion": "Indica si corresponde cuota cero para este contrato."
+        }
+      ],
+      "escritura": true
+    }
+  ]
+}
